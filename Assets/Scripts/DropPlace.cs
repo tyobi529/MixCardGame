@@ -17,49 +17,44 @@ public class DropPlace : MonoBehaviour, IDropHandler
         CardController card = eventData.pointerDrag.GetComponent<CardController>();
         if (card != null)
         {
-            if (type == TYPE.HAND)
-            {
-                //Debug.Log(card.movement.siblingIndex);
-                //card.transform.SetSiblingIndex(card.movement.siblingIndex);
-                return;
-            }
+
 
             if (!card.movement.isDraggable)
             {
                 return;
             }
 
-            //if (card.movement.defaultParent == this.transform)
-            //{
-            //    return;
-            //}
-
             card.movement.defaultParent = this.transform;
-            //if (card.model.isFieldCard)
-            //{
-            //    return;
-            //}
 
-            //コストが少なければおけない
-            //if (this.transform.childCount == 1)
+
+            //if (type == TYPE.HAND)
             //{
-            //    if (GameManager.instance.playerID == 1 && GameManager.instance.player.mixCost < 2)
-            //    {
-            //        card.MoveToHand();
-            //        return;
-            //    }
-            //    if (GameManager.instance.playerID == 2 && GameManager.instance.enemy.mixCost < 2)
-            //    {
-            //        card.MoveToHand();
-            //        return;
-            //    }
+            //    card.OnField(false);
+            //}
+            //else if (type == TYPE.FIELD)
+            //{
+            //    card.OnField(true);
+
+
             //}
 
 
-            card.OnField(true);
+            if (type == TYPE.HAND)
+            {
+                card.MoveToHand();
+            }
+            else if (type == TYPE.FIELD)
+            {
+                card.MoveToField();
 
-            //相手側と同期する
-            card.MoveToField();
+
+            }
+
+
+
+
+
+
         }
     }
 }

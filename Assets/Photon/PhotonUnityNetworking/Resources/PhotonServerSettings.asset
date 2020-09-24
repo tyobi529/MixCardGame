@@ -52,6 +52,11 @@ MonoBehaviour:
   - PlusMixCount
   - PlusMixCost
   - Show_RPC
+  - MoveCard
+  - Heal1
+  - Heal2
+  - PlusMixCost1
+  - PlusMixCost2
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

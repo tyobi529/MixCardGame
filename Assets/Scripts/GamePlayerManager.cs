@@ -8,7 +8,9 @@ public class GamePlayerManager : MonoBehaviour
 
     public int heroHp;
     public int mixCost;
-    public int defaultMixCost;
+    public int necessaryCost;
+
+    //public int defaultMixCost;
 
     public void Init(List<int> cardDeck)
     {
@@ -18,9 +20,9 @@ public class GamePlayerManager : MonoBehaviour
         //defaultMixCost = 10;
     }
 
-    public void IncreaseManaCost()
-    {
-        defaultMixCost++;
-        mixCost = defaultMixCost;
-    }
+    //public void IncreaseManaCost()
+    //{
+    //    defaultMixCost++;
+    //    mixCost = defaultMixCost;
+    //}
 }

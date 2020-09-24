@@ -23,6 +23,8 @@ public class CardModel
     public bool isFieldCard;
     //public bool isPlayerCard;
 
+    public int cardID;
+
     public int playerID;
    
 
@@ -42,9 +44,11 @@ public class CardModel
         kind = cardEntity.kind;
         spellNum = cardEntity.spellNum;
 
-
+        isFieldCard = false;
         //isAlive = true;
         //isPlayerCard = isPlayer;
+
+        this.cardID = cardID;
 
         playerID = ID;
 

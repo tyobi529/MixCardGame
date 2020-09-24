@@ -58,6 +58,23 @@ public class CardController : MonoBehaviourPunCallbacks
     }
 
 
+    [PunRPC]
+    void MoveToHand_RPC()
+    {
+
+        if (model.playerID == 1)
+            this.gameObject.transform.SetParent(GameManager.instance.playerHandTransform);
+        else
+            this.gameObject.transform.SetParent(GameManager.instance.enemyHandTransform);
+
+    }
+
+    public void MoveToHand()
+    {
+        photonView.RPC(nameof(MoveToHand_RPC), RpcTarget.Others);
+    }
+
+
     public void Attack(CardController enemyCard)
     {
         //model.Attack(enemyCard);
@@ -109,18 +126,29 @@ public class CardController : MonoBehaviourPunCallbacks
         switch (spellNum)
         {
             case 1:
-                photonView.RPC(nameof(Heal), RpcTarget.All, ID);
+                photonView.RPC(nameof(Heal1), RpcTarget.All, ID);
                 break;
             case 2:
-                photonView.RPC(nameof(PlusMixCost), RpcTarget.All, ID);
+                photonView.RPC(nameof(Heal2), RpcTarget.All, ID);
+                break;
+            case 3:
+                photonView.RPC(nameof(PlusMixCost1), RpcTarget.All, ID);
+                break;
+            case 4:
+                photonView.RPC(nameof(PlusMixCost2), RpcTarget.All, ID);
                 break;
             default:
                 break;
         }
     }
 
+
+
+
+    //特殊カード
+
     [PunRPC]
-    void Heal(int ID)
+    void Heal1(int ID)
     {
         if (ID == 1)
             GameManager.instance.player.heroHp += 5;
@@ -128,11 +156,24 @@ public class CardController : MonoBehaviourPunCallbacks
             GameManager.instance.enemy.heroHp += 5;
 
         Debug.Log("HPを５回復");
+
+    }
+
+    [PunRPC]
+    void Heal2(int ID)
+    {
+        if (ID == 1)
+            GameManager.instance.player.heroHp += 10;
+        else
+            GameManager.instance.enemy.heroHp += 10;
+
+        Debug.Log("HPを10回復");
+
     }
 
 
     [PunRPC]
-    void PlusMixCost(int ID)
+    void PlusMixCost1(int ID)
     {
         if (ID == 1)
             GameManager.instance.player.mixCost += 2;
@@ -140,6 +181,18 @@ public class CardController : MonoBehaviourPunCallbacks
             GameManager.instance.enemy.mixCost += 2;
 
         Debug.Log("合成コスト+2");
+    }
+
+
+    [PunRPC]
+    void PlusMixCost2(int ID)
+    {
+        if (ID == 1)
+            GameManager.instance.player.mixCost += 4;
+        else
+            GameManager.instance.enemy.mixCost += 4;
+
+        Debug.Log("合成コスト+4");
     }
 
     //public void CheckAlive()

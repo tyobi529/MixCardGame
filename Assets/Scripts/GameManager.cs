@@ -36,6 +36,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     FrequencyController frequencyController;
 
+    //List<int> moveCardIndex;
+
+
+
     //シングルトン化（どこからでもアクセスできるようにする）
     public static GameManager instance;
     private void Awake()
@@ -140,8 +144,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         //SetCardToHand();
 
 
-        
+
         //TurnCalc();
+
+        //カード並び替え
+        LineUpCard(playerHandTransform);
+        LineUpCard(enemyHandTransform);
+
     }
 
 
@@ -247,15 +256,50 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         CardController[] fieldCardList;
 
+
+
         if (playerID == 1)
             fieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
         else
             fieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
 
-        //カードを表にする
+        //コスト不足
+        if (fieldCardList.Length == 2)
+        {
+            if ((playerID == 1 && player.mixCost < player.necessaryCost) || (playerID == 2 && enemy.mixCost < enemy.necessaryCost))
+            {
+                Debug.Log("コスト不足");
+                return;
+            }
+        }
+
+
+        //カードを移動を共有して表にする
         foreach (CardController card in fieldCardList)
         {
             card.Show();
+
+            //photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
+
+            //if (playerID == 1)
+            //{
+            //    CardController moveCard = playerFieldTransform.GetChild(card.movement.siblingIndex).GetComponent<CardController>();
+            //    //moveCard.movement.MoveToField(playerFieldTransform);
+
+            //    photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
+
+            //    //moveCard.Show();
+            //}
+            //else
+            //{
+            //    CardController moveCard = enemyFieldTransform.GetChild(card.movement.siblingIndex).GetComponent<CardController>();
+            //    //moveCard.movement.MoveToField(playerFieldTransform);
+
+            //    photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
+
+            //    //moveCard.Show();
+            //}
+
         }
 
         if (fieldCardList.Length == 2)
@@ -307,6 +351,31 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         }
     }
+
+
+    [PunRPC]
+    void MoveCard(int ID, int Index)
+    {
+        if (ID == 1)
+        {
+            CardController card = playerFieldTransform.GetChild(Index).GetComponent<CardController>();
+
+            card.movement.MoveToField(playerFieldTransform);
+
+            card.Show();
+        }
+        else
+        {
+            CardController card = enemyFieldTransform.GetChild(Index).GetComponent<CardController>();
+
+            card.movement.MoveToField(enemyFieldTransform);
+
+            card.Show();
+        }
+
+    }
+
+
 
 
 
@@ -513,7 +582,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-        
+
+
+
 
 
         if (attackID == 1)
@@ -547,6 +618,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         enemy.mixCost++;
         uiManager.ShowHeroHP(player.heroHp, enemy.heroHp);
         uiManager.ShowMixCost(player.mixCost, enemy.mixCost);
+
+
+        LineUpCard(playerHandTransform);
+        LineUpCard(enemyHandTransform);
+
         //TurnCalc();
     }
 
@@ -620,6 +696,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         StopAllCoroutines();
         uiManager.ShowResultPanel(heroHp);
+
+
+    }
+
+
+    //カードを番号順に並べる
+    public void LineUpCard(Transform field)
+    {
+        List<GameObject> objList = new List<GameObject>();
+
+        // 子階層のGameObject取得
+        var childCount = field.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            objList.Add(field.GetChild(i).gameObject);
+        }
+
+        //objList.Sort((obj1, obj2) => int.Compare(obj1.model.cardID, obj2.model.cardID));
+        objList.Sort((a, b) => a.GetComponent<CardController>().model.cardID - b.GetComponent<CardController>().model.cardID);
+
+        foreach (var obj in objList)
+        {
+            //obj.SetSiblingIndex(childCount - 1);
+            obj.transform.SetSiblingIndex(childCount - 1);
+
+        }
 
 
     }

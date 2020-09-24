@@ -606,9 +606,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: 
-  heroHp: 10
+  heroHp: 20
   mixCost: 0
-  defaultMixCost: 0
+  necessaryCost: 3
 --- !u!1 &394108601
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,9 +700,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: 
-  heroHp: 10
+  heroHp: 20
   mixCost: 0
-  defaultMixCost: 0
+  necessaryCost: 3
 --- !u!1 &468285179
 GameObject:
   m_ObjectHideFlags: 0
