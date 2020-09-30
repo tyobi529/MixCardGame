@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class CardController : MonoBehaviourPunCallbacks
+public class CardController : MonoBehaviour
 {
     public CardView view; //見かけに関することを操作（view）
-    public CardModel model; //データ（model）関することを操作（view）
-    public CardMovement movement; //移動（movement）関することを操作（view）
+    public CardModel model; //データ（model）関することを操作
+    public CardMovement movement; //移動（movement）関することを操作
 
 
     private void Awake()
@@ -18,61 +17,56 @@ public class CardController : MonoBehaviourPunCallbacks
 
     }
 
-    [PunRPC]
-    public void Init_RPC(int cardID, int ID)
+    //public void Init(int cardID, int ID, bool isMix)
+    public void Init(int kind, int cardID, bool isMix)
     {
-        model = new CardModel(cardID, ID);
+        model = new CardModel(kind, cardID, isMix);
         view.SetCard(model);
 
-        //手札に移動する
-        if (model.playerID == 1)
-        {
-            this.gameObject.transform.SetParent(GameManager.instance.playerHandTransform);
-
-        }
-        else
-        {
-            this.gameObject.transform.SetParent(GameManager.instance.enemyHandTransform);
-        }
-    }
-
-    public void Init(int cardID, int ID)
-    {
-        photonView.RPC(nameof(Init_RPC), RpcTarget.All, cardID, ID);
-    }
-
-    [PunRPC]
-    void MoveToField_RPC()
-    {
-
-        if (model.playerID == 1)
-            this.gameObject.transform.SetParent(GameManager.instance.playerFieldTransform);
-        else
-            this.gameObject.transform.SetParent(GameManager.instance.enemyFieldTransform);
-
-    }
-
-    public void MoveToField()
-    {
-        photonView.RPC(nameof(MoveToField_RPC), RpcTarget.Others);
     }
 
 
-    [PunRPC]
-    void MoveToHand_RPC()
-    {
+    //public void Init(int cardID, int ID, bool isMix)
+    //public void SpecialInit(int cardID, bool isMix)
+    //{
+    //    model = new CardModel(cardID, isMix);
+    //    view.SetCard(model);
 
-        if (model.playerID == 1)
-            this.gameObject.transform.SetParent(GameManager.instance.playerHandTransform);
-        else
-            this.gameObject.transform.SetParent(GameManager.instance.enemyHandTransform);
+    //}
 
-    }
 
-    public void MoveToHand()
-    {
-        photonView.RPC(nameof(MoveToHand_RPC), RpcTarget.Others);
-    }
+    //[PunRPC]
+    //void MoveToField_RPC()
+    //{
+
+    //    if (model.playerID == 1)
+    //        this.gameObject.transform.SetParent(GameManager.instance.playerFieldTransform);
+    //    else
+    //        this.gameObject.transform.SetParent(GameManager.instance.enemyFieldTransform);
+
+    //}
+
+    //public void MoveToField()
+    //{
+    //    photonView.RPC(nameof(MoveToField_RPC), RpcTarget.All);
+    //}
+
+
+    //[PunRPC]
+    //void MoveToHand_RPC()
+    //{
+
+    //    if (model.playerID == 1)
+    //        this.gameObject.transform.SetParent(GameManager.instance.playerHandTransform);
+    //    else
+    //        this.gameObject.transform.SetParent(GameManager.instance.enemyHandTransform);
+
+    //}
+
+    //public void MoveToHand()
+    //{
+    //    photonView.RPC(nameof(MoveToHand_RPC), RpcTarget.All);
+    //}
 
 
     public void Attack(CardController enemyCard)
@@ -100,24 +94,24 @@ public class CardController : MonoBehaviourPunCallbacks
     }
 
 
-    public void Destroy()
-    {
-        PhotonNetwork.Destroy(this.gameObject);
+    //public void Destroy()
+    //{
+    //    PhotonNetwork.Destroy(this.gameObject);
 
-    }
+    //}
 
-    [PunRPC]
-    void Show_RPC()
-    {
-        view.Show();
-    }
+    //[PunRPC]
+    //void Show_RPC()
+    //{
+    //    view.Show();
+    //}
 
 
-    public void Show()
-    {
-        photonView.RPC(nameof(Show_RPC), RpcTarget.All);
+    //public void Show()
+    //{
+    //    photonView.RPC(nameof(Show_RPC), RpcTarget.All);
 
-    }
+    //}
 
 
 
@@ -125,17 +119,17 @@ public class CardController : MonoBehaviourPunCallbacks
     {
         switch (spellNum)
         {
+            case 0:
+                Heal1(ID);
+                break;
             case 1:
-                photonView.RPC(nameof(Heal1), RpcTarget.All, ID);
+                Heal2(ID);
                 break;
             case 2:
-                photonView.RPC(nameof(Heal2), RpcTarget.All, ID);
+                PlusMixCost1(ID);
                 break;
             case 3:
-                photonView.RPC(nameof(PlusMixCost1), RpcTarget.All, ID);
-                break;
-            case 4:
-                photonView.RPC(nameof(PlusMixCost2), RpcTarget.All, ID);
+                PlusMixCost2(ID);
                 break;
             default:
                 break;
@@ -147,7 +141,6 @@ public class CardController : MonoBehaviourPunCallbacks
 
     //特殊カード
 
-    [PunRPC]
     void Heal1(int ID)
     {
         if (ID == 1)
@@ -159,7 +152,6 @@ public class CardController : MonoBehaviourPunCallbacks
 
     }
 
-    [PunRPC]
     void Heal2(int ID)
     {
         if (ID == 1)
@@ -172,7 +164,6 @@ public class CardController : MonoBehaviourPunCallbacks
     }
 
 
-    [PunRPC]
     void PlusMixCost1(int ID)
     {
         if (ID == 1)
@@ -184,7 +175,6 @@ public class CardController : MonoBehaviourPunCallbacks
     }
 
 
-    [PunRPC]
     void PlusMixCost2(int ID)
     {
         if (ID == 1)
@@ -195,43 +185,9 @@ public class CardController : MonoBehaviourPunCallbacks
         Debug.Log("合成コスト+4");
     }
 
-    //public void CheckAlive()
-    //{
-    //    if (model.isAlive)
-    //    {
-    //        view.Refresh(model);
-    //    }
-    //    else
-    //    {
-    //        Destroy(this.gameObject);
-    //    }
-    //}
 
 
-    //public void UseSpellTo(CardController target)
-    //{
-    //    switch (model.spell)
-    //    {
-    //        case SPELL.DAMAGE_ENEMY_CARD:
-    //            //特定の敵を攻撃する
-    //            Attack(target);
-    //            target.CheckAlive();
-    //            break;
-    //        case SPELL.DAMAGE_ENEMY_CARDS:
-    //            break;
-    //        case SPELL.DAMAGE_ENEMY_HERO:
-    //            break;
-    //        case SPELL.HEAL_FRIEND_CARD:
-    //            break;
-    //        case SPELL.HEAL_FRIEND_CARDS:
-    //            break;
-    //        case SPELL.HEAL_FRIEND_HERO:
-    //            break;
-    //        case SPELL.NONE:
-    //            return;
-    //    }
 
-    //    Destroy(this.gameObject);
-    //}
+
 
 }

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef7bdd32685e740409e91b24200952ad, type: 3}
+  m_Name: Card4
+  m_EditorClassIdentifier: 
+  name: "\u9244\u306E\u76FE"
+  cal: 250
+  icon: {fileID: 21300000, guid: 30949c73be65742f1bb6dd1fdec6d479, type: 3}
+  kind: 1
+  nutrtion: 0
+  spellNum: 0
+  partnerID: 
+  specialMixID: 

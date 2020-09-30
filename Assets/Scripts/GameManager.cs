@@ -4,8 +4,13 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
+
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    //CardController cardPrefab;
+    GameObject cardPrefab;
+
+
     public GamePlayerManager player;
     public GamePlayerManager enemy;
 
@@ -16,7 +21,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField]
     public Transform playerHandTransform, playerFieldTransform, enemyHandTransform, enemyFieldTransform;
 
-    [SerializeField] CardController cardPrefab;
+    //[SerializeField] CardController cardPrefab;
+
+
+    Transform basicFieldTransform, additionalFieldTransform;
+
 
     GameObject reverseObject;
 
@@ -39,6 +48,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     //List<int> moveCardIndex;
 
 
+    //GameObject attackButton;
+    //GameObject mixButton;
+    //GameObject throwButton;
+
+    public bool isAttackButton = true;
+    public bool isMixButton = false;
+    public bool isThrowButton = false;
+
+    //public bool isDefence = false;
+
+    GameObject attackButtons;
+
+    MixController mixController;
+
+
+
 
     //シングルトン化（どこからでもアクセスできるようにする）
     public static GameManager instance;
@@ -48,6 +73,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             instance = this;
         }
+
+        cardPrefab = (GameObject)Resources.Load("Card");
 
         player = GameObject.Find("PlayerHero").GetComponent<GamePlayerManager>();
         enemy = GameObject.Find("EnemyHero").GetComponent<GamePlayerManager>();
@@ -59,38 +86,85 @@ public class GameManager : MonoBehaviourPunCallbacks
         enemyHandTransform = GameObject.Find("EnemyHand").transform;
         enemyFieldTransform = GameObject.Find("EnemyField").transform;
 
+        basicFieldTransform = GameObject.Find("BasicField").transform;
+        additionalFieldTransform = GameObject.Find("AdditionalField").transform;
+
         reverseObject = GameObject.Find("ReverseObject");
 
         frequencyController = GameObject.Find("FrequencyController").GetComponent<FrequencyController>();
 
 
+        attackButtons = GameObject.Find("AttackButtons");
+
+        //battleObjects = GameObject.Find("BattleObjects");
+
+        mixController = GameObject.Find("MixController").GetComponent<MixController>();
+
         playerID = PhotonNetwork.LocalPlayer.ActorNumber;
 
-        if (playerID == 2)
-            reverseObject.transform.localScale = new Vector3(1, -1, 1);
 
-        
+        if (playerID == 2)
+        {
+            //reverseObject.transform.localScale = new Vector3(-1, -1, 1);
+            Vector3 tmp = playerFieldTransform.position;
+            playerFieldTransform.position = enemyFieldTransform.position;
+            enemyFieldTransform.transform.position = tmp;
+
+            tmp = playerHandTransform.position;
+            playerHandTransform.position = enemyHandTransform.position;
+            enemyHandTransform.transform.position = tmp;
+
+            tmp = player.transform.position;
+            player.transform.position = enemy.transform.position;
+            enemy.transform.position = tmp;
+
+        }
+
+
         //デッキ生成
         if (playerID == 1)
         {
-            player.deck = new List<int>();
+            //player.deck = new List<int>();
             for (int i = 0; i < 20; i++)
             {
-                int num = UnityEngine.Random.Range(0, frequencyController.sum);
-                
-                player.deck.Add(frequencyController.DecideCard(num));
+                //int num = UnityEngine.Random.Range(0, frequencyController.sum);
+
+                (int kind, int cardID) = frequencyController.DecideCard();
+
+                //player.deck.Add(frequencyController.DecideCard(num));
+                player.deck_cardKind.Add(kind);
+                player.deck_cardID.Add(cardID);
             }
+
+            //相手のDropPlaceを消す
+            GameObject.Find("EnemyHand").GetComponent<DropPlace>().enabled = false;
+            GameObject.Find("EnemyField").GetComponent<DropPlace>().enabled = false;
         }
         else
         {
-            enemy.deck = new List<int>();
+            //enemy.deck = new List<int>();
             for (int i = 0; i < 20; i++)
             {
-                int num = UnityEngine.Random.Range(0, frequencyController.sum);
+                //int num = UnityEngine.Random.Range(0, frequencyController.sum);
 
-                enemy.deck.Add(frequencyController.DecideCard(num));
+                //(int kind, int cardID) = frequencyController.DecideCard(num);
+                //enemy.deck[i].Add(kind);
+                //enemy.deck[i].Add(cardID);
+
+                //enemy.deck.Add(frequencyController.DecideCard(num));
+
+                (int kind, int cardID) = frequencyController.DecideCard();
+
+                //player.deck.Add(frequencyController.DecideCard(num));
+                enemy.deck_cardKind.Add(kind);
+                enemy.deck_cardID.Add(cardID);
 
             }
+
+
+            //相手のDropPlaceを消す
+            GameObject.Find("PlayerHand").GetComponent<DropPlace>().enabled = false;
+            GameObject.Find("PlayerField").GetComponent<DropPlace>().enabled = false;
         }
 
 
@@ -118,20 +192,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     void StartGame()
     {
         uiManager.HideResultPanel();
-        player.Init(player.deck);
-        enemy.Init(enemy.deck);
+        //player.Init(player.deck);
+        //enemy.Init(enemy.deck);
 
 
         //プレイヤー１が先行
         attackID = 1;
-        if (playerID == 1)
-        {
-            isMyTurn = true;
-        }
-        else
-        {
-            isMyTurn = false;
-        }
+        //if (playerID == 1)
+        //{
+        //    isMyTurn = true;
+        //}
+        //else
+        //{
+        //    isMyTurn = false;
+        //}
 
 
         uiManager.ShowTurn(attackID);
@@ -145,11 +219,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-        //TurnCalc();
 
         //カード並び替え
         LineUpCard(playerHandTransform);
         LineUpCard(enemyHandTransform);
+
+        //TurnCalc();
+
+        StartAttack();
+
 
     }
 
@@ -189,18 +267,18 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         //デッキ生成
-        player.deck = new List<int>();
-        for (int i = 0; i < 20; i++)
-        {
-            int cardID = UnityEngine.Random.Range(1, 7);
-            player.deck.Add(cardID);
-        }
-        enemy.deck = new List<int>();
-        for (int i = 0; i < 20; i++)
-        {
-            int cardID = UnityEngine.Random.Range(1, 7);
-            enemy.deck.Add(cardID);
-        }
+        //player.deck = new List<int>();
+        //for (int i = 0; i < 20; i++)
+        //{
+        //    int cardID = UnityEngine.Random.Range(1, 7);
+        //    player.deck.Add(cardID);
+        //}
+        //enemy.deck = new List<int>();
+        //for (int i = 0; i < 20; i++)
+        //{
+        //    int cardID = UnityEngine.Random.Range(1, 7);
+        //    enemy.deck.Add(cardID);
+        //}
 
         StartGame();
     }
@@ -208,13 +286,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     void SettingInitHand()
     {
         //カードをそれぞれに5枚配る
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
 
             if (playerID == 1)
-                GiveCardToHand(player.deck, playerHandTransform);
+                GiveCardToHand(player.deck_cardKind, player.deck_cardID, playerHandTransform);
             else
-                GiveCardToHand(enemy.deck, enemyHandTransform);
+                GiveCardToHand(enemy.deck_cardKind, enemy.deck_cardID, enemyHandTransform);
 
 
 
@@ -223,190 +301,102 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
-    void GiveCardToHand(List<int> deck, Transform hand)
+    void GiveCardToHand(List<int> deck_cardKind ,List<int> deck_cardID, Transform hand)
     {
-        if (deck.Count == 0)
+        if (deck_cardKind.Count == 0)
         {
             return;
         }
-        int cardID = deck[0];
+        int kind = deck_cardKind[0];
+        int cardID = deck_cardID[0];
 
-        deck.RemoveAt(0);
-        CreateCard(cardID, hand);
+        deck_cardKind.RemoveAt(0);
+        deck_cardID.RemoveAt(0);
 
-
-    }
-
-    void CreateCard(int cardID, Transform hand)
-    {
-        GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
-
-        Card.GetComponent<CardController>().Init(cardID, playerID);
-
+        CreateCard(kind, cardID, hand);
 
 
     }
 
-
-    public void OnClickTurnEndButton()
+    void CreateCard(int kind, int cardID, Transform hand)
     {
-        if (!isMyTurn)
-            return;
+        //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject card = Instantiate(cardPrefab, hand, false);
+        card.GetComponent<CardController>().Init(kind, cardID, false);
+        //Card.GetComponent<CardController>().Init(cardID, playerID);
 
 
-        CardController[] fieldCardList;
+
+    }
 
 
+    public void OnDecideButton()
+    {
+        //CardController[] fieldCardList;
 
-        if (playerID == 1)
-            fieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        else
-            fieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-
-        //コスト不足
-        if (fieldCardList.Length == 2)
-        {
-            if ((playerID == 1 && player.mixCost < player.necessaryCost) || (playerID == 2 && enemy.mixCost < enemy.necessaryCost))
-            {
-                Debug.Log("コスト不足");
-                return;
-            }
-        }
-
+        //if (playerID == 1)
+        //    fieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+        //else
+        //    fieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
 
         //カードを移動を共有して表にする
-        foreach (CardController card in fieldCardList)
+        //foreach (CardController card in fieldCardList)
+        //{
+        //    card.MoveToField();
+        //    card.Show();
+        //}
+
+        if (playerID == attackID)
         {
-            card.Show();
-
-            //photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
-
-            //if (playerID == 1)
-            //{
-            //    CardController moveCard = playerFieldTransform.GetChild(card.movement.siblingIndex).GetComponent<CardController>();
-            //    //moveCard.movement.MoveToField(playerFieldTransform);
-
-            //    photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
-
-            //    //moveCard.Show();
-            //}
-            //else
-            //{
-            //    CardController moveCard = enemyFieldTransform.GetChild(card.movement.siblingIndex).GetComponent<CardController>();
-            //    //moveCard.movement.MoveToField(playerFieldTransform);
-
-            //    photonView.RPC(nameof(MoveCard), RpcTarget.Others, playerID, card.movement.siblingIndex);
-
-            //    //moveCard.Show();
-            //}
+            CheckField();
 
         }
-
-        if (fieldCardList.Length == 2)
+        else
         {
-            //合成
-            //通常合成
-            photonView.RPC(nameof(Mix), RpcTarget.All, playerID);
+            CardController[] fieldCardList;
 
-        }
-        else if (fieldCardList.Length == 1)
-        {
-            //攻撃カードなら
-
-            //特殊カードなら
-            if (fieldCardList[0].model.kind == KIND.SPELL)
+            //相手側に防御側のカードの作成
+            if (playerID == 1)
             {
-                fieldCardList[0].Spell(playerID, fieldCardList[0].model.spellNum);
-                photonView.RPC(nameof(ChangeTurn), RpcTarget.All);
-                return;
+                fieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
 
+                //foreach (Transform card in playerFieldTransform)
+                //{
+                //    Destroy(card.gameObject);
+                //}
+            }
+            else
+            {
+                fieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+
+                //foreach (Transform card in enemyFieldTransform)
+                //{
+                //    Destroy(card.gameObject);
+                //}
             }
 
 
-        }
-        //カードを出さなかった時
-        else
-        {
-            if (attackID == playerID)
+
+            foreach (CardController card in fieldCardList)
             {
-                photonView.RPC(nameof(ChangeTurn), RpcTarget.All);
-                return;
+                photonView.RPC(nameof(CreateDefenceCard), RpcTarget.Others, card.model.kind, card.model.cardID, playerID);
+
             }
 
-        }
-
-
-        //攻撃側がターンエンドを押した時
-        if (attackID == playerID)
-        {
-            photonView.RPC(nameof(StartDefence), RpcTarget.All);
-
-        }
-
-        else
-        {
             photonView.RPC(nameof(Battle), RpcTarget.All);
-
             photonView.RPC(nameof(ChangeTurn), RpcTarget.All);
-
         }
-    }
+
+       
 
 
-    [PunRPC]
-    void MoveCard(int ID, int Index)
-    {
-        if (ID == 1)
-        {
-            CardController card = playerFieldTransform.GetChild(Index).GetComponent<CardController>();
+  
 
-            card.movement.MoveToField(playerFieldTransform);
-
-            card.Show();
-        }
-        else
-        {
-            CardController card = enemyFieldTransform.GetChild(Index).GetComponent<CardController>();
-
-            card.movement.MoveToField(enemyFieldTransform);
-
-            card.Show();
-        }
 
     }
 
 
 
-
-
-
-    [PunRPC]
-    void Mix(int ID)
-    {
-        Debug.Log("合成");
-
-        CardController[] fieldCardList;
-
-        if (ID == 1)
-        {
-            fieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-            player.mixCost -= 2;
-        }
-        else
-        {
-            fieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-            enemy.mixCost -= 2;
-        }
-
-        //合成
-        //通常合成
-        fieldCardList[0].model.at += fieldCardList[1].model.at;
-        fieldCardList[0].model.de += fieldCardList[1].model.de;
-
-        Destroy(fieldCardList[1].gameObject);
-        fieldCardList[0].view.Refresh(fieldCardList[0].model);
-
-    }
 
 
     //攻撃を実行する
@@ -415,43 +405,51 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("バトル");
 
-        CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        CardController[] enemyFieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+        //CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+        //CardController[] enemyFieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
 
-        int damage = 0;
-
-        //Debug.Log(enemyFieldCardList);
+        CardController[] attackCardList;
+        CardController[] defenceCardList;
 
         if (attackID == 1)
         {
-            if (enemyFieldCardList.Length != 0)
-                damage = playerFieldCardList[0].model.at - enemyFieldCardList[0].model.de;
-            else
-                damage = playerFieldCardList[0].model.at;
-
-            if (damage < 0)
-                damage = 0;
-
-            enemy.heroHp -= damage;
+            attackCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
+            defenceCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
         }
         else
         {
-            if (playerFieldCardList.Length != 0)
-                damage = enemyFieldCardList[0].model.at - playerFieldCardList[0].model.de;
-            else
-                damage = enemyFieldCardList[0].model.at;
-
-            if (damage < 0)
-                damage = 0;
-
-
-            player.heroHp -= damage;
-
+            attackCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
+            defenceCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
         }
 
+        //Debug.Log(defenceCardList[0].model.cal);
+
+
+        int damage = attackCardList[0].model.cal;
+
+        Debug.Log(damage);
+
+        foreach (CardController card in defenceCardList)
+        {
+            Debug.Log(card.model.cal);
+
+            damage -= card.model.cal;
+        }
+
+        Debug.Log(damage);
+
+        if (damage < 0)
+            damage = 0;
+
+        if (attackID == 1)
+            enemy.heroHp += damage;
+        else
+            player.heroHp += damage;
 
         Debug.Log("プレイヤー" + attackID + "の攻撃");
         Debug.Log(damage + "ダメージ");
+
+
 
 
 
@@ -476,22 +474,176 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Destroy(card.gameObject);
         }
+
+
+        //一旦ここにかく
+        StartAttack();
     }
 
+   
+       
 
-    //void TurnCalc()
+    //攻撃側の開始
+    void StartAttack()
+    {
+        Debug.Log("攻撃開始");
+        //フィールドのImageを消す
+        //uiManager.ShowFieldImage(false);
+
+        //battleObjects.SetActive(false);
+
+        CardController[] handCardList;
+
+        if (playerID == 1)
+            handCardList = playerHandTransform.GetComponentsInChildren<CardController>();
+        else
+            handCardList = enemyHandTransform.GetComponentsInChildren<CardController>();
+
+        if (playerID == attackID)
+        {
+            isMyTurn = true;
+
+
+
+            foreach (CardController card in handCardList)
+            {
+                if (card.model.kind == 0 || card.model.kind == 2)
+                {
+                    card.movement.isDraggable = true;
+                }
+                else
+                {
+                    card.movement.isDraggable = false;
+                }
+
+            }
+
+            uiManager.attackFields.SetActive(true);
+            uiManager.defenceFields.SetActive(false);
+
+            //uiManager.buttonsObj.SetActive(true);
+            uiManager.ShowButtonObj(true);
+
+            
+
+        }
+        else
+        {
+            isMyTurn = false;
+
+            foreach (CardController card in handCardList)
+            {
+
+                card.movement.isDraggable = false;
+            
+            }
+
+            //uiManager.buttonsObj.SetActive(false);
+
+            isAttackButton = false;
+            isMixButton = false;
+            isThrowButton = false;
+
+
+            uiManager.attackFields.SetActive(false);
+            uiManager.defenceFields.SetActive(false);
+
+        }
+
+        //決定ボタン消す
+        uiManager.decideButtonObj.SetActive(false);
+        uiManager.ShowTurn(attackID);
+
+
+    }
+
+    //防御側の開始
+    [PunRPC]
+    public void StartDefence()
+    {
+        //フィールドのImageを消す
+        //uiManager.ShowFieldImage(true);
+
+        //battleObjects.SetActive(true);
+
+        CardController[] handCardList;
+
+        if (playerID == 1)
+            handCardList = playerHandTransform.GetComponentsInChildren<CardController>();
+        else
+            handCardList = enemyHandTransform.GetComponentsInChildren<CardController>();
+
+        if (playerID != attackID)
+        {
+            isMyTurn = true;
+
+
+
+            //自分のフィールドだけ表示
+            ////if (playerID == 1)
+            //    uiManager.playerFieldImage.enabled = true;
+            ////else
+            //    uiManager.enemyFieldImage.enabled = true;
+
+
+
+            foreach (CardController card in handCardList)
+            {
+                if (card.model.kind == 1)
+                {
+                    card.movement.isDraggable = true;
+                }
+                else
+                {
+                    card.movement.isDraggable = false;
+
+                }
+
+            }
+
+            //決定ボタン表示
+            uiManager.decideButtonObj.SetActive(true);
+
+            uiManager.attackFields.SetActive(false);
+            uiManager.defenceFields.SetActive(true);
+        }
+        else
+        {
+            isMyTurn = false;
+
+            foreach (CardController card in handCardList)
+            {
+
+                card.movement.isDraggable = false;
+
+            }
+
+            uiManager.attackFields.SetActive(false);
+            uiManager.defenceFields.SetActive(true);
+        }
+
+
+        //attackButtons.SetActive(false);
+
+
+        //自分のフィールドだけ表示
+        //if (playerID == 1)
+        uiManager.playerFieldImage.enabled = true;
+        //else
+        uiManager.enemyFieldImage.enabled = true;
+
+        uiManager.ShowTurn(attackID);
+
+    }
+
+    //防御側の開始
+    //[PunRPC]
+    //void StartDefence()
     //{
-    //    StopAllCoroutines();
-    //    StartCoroutine(CountDown());
+    //    isMyTurn = !isMyTurn;
 
-    //    if (isMyTurn)
-    //    {
-    //        PlayerTurn();
-    //    }
-    //    else
-    //    {
-    //        //StartCoroutine(enemyAI.EnemyTurn());
-    //    }
+    //    uiManager.ShowTurn(attackID);
+
     //}
 
     IEnumerator CountDown()
@@ -522,38 +674,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    //攻撃側の開始
-    //[PunRPC]
-    //void StartAttack()
-    //{
-    //    isMyTurn = !isMyTurn;
-
-    //    if (isMyTurn)
-    //    {
-    //        if (playerID == 1)
-    //            GiveCardToHand(player.deck, playerHandTransform);
-    //        else
-    //            GiveCardToHand(enemy.deck, enemyHandTransform);
-    //    }
-    //}
-
-    //防御側の開始
-    [PunRPC]
-    void StartDefence()
-    {
-        isMyTurn = !isMyTurn;
-
-        uiManager.ShowTurn(attackID);
 
 
-        //if (isMyTurn)
-        //{
-        //    if (playerID == 1)
-        //        GiveCardToHand(player.deck, playerHandTransform);
-        //    else
-        //        GiveCardToHand(enemy.deck, enemyHandTransform);
-        //}
-    }
 
     //次のターンへ移る
     [PunRPC]
@@ -562,29 +684,23 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         //フィールドのカード消去
         StartCoroutine(CleanField());
-
+        //CleanField();
 
         //手札補充
         if (playerID == 1)
         {
-            while (playerHandTransform.childCount < 5)
+            while (playerHandTransform.childCount < 6)
             {
-                GiveCardToHand(player.deck, playerHandTransform);
+                GiveCardToHand(player.deck_cardKind, player.deck_cardID, playerHandTransform);
             }
         }
         else
         {
-            while (enemyHandTransform.childCount < 5)
+            while (enemyHandTransform.childCount < 6)
             {
-                GiveCardToHand(enemy.deck, enemyHandTransform);
+                GiveCardToHand(enemy.deck_cardKind, enemy.deck_cardID, enemyHandTransform);
             }
         }
-
-
-
-
-
-
 
 
         if (attackID == 1)
@@ -592,27 +708,24 @@ public class GameManager : MonoBehaviourPunCallbacks
         else if (attackID == 2)
             attackID = 1;
 
-        if (attackID == playerID)
-            isMyTurn = true;
-        else
-            isMyTurn = false;
+        //if (attackID == playerID)
+        //    isMyTurn = true;
+        //else
+        //    isMyTurn = false;
 
-        //Debug.Log("プレイヤー" + attackID + "の攻撃");
 
-        uiManager.ShowTurn(attackID);
+        //uiManager.ShowTurn(attackID);
 
         //isMyTurn = !isMyTurn;
 
         CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-        //SettingCanAttackView(playerFieldCardList, false);
         CardController[] enemyFieldCardList = enemyFieldTransform.GetComponentsInChildren<CardController>();
-        //SettingCanAttackView(enemyFieldCardList, false);
 
 
-        //if (isMyTurn)
-        //{
 
-        //}
+        isAttackButton = false;
+        isMixButton = false;
+        isThrowButton = false;
 
         player.mixCost++;
         enemy.mixCost++;
@@ -623,60 +736,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         LineUpCard(playerHandTransform);
         LineUpCard(enemyHandTransform);
 
-        //TurnCalc();
+        //CleanFieldに記載
+        //StartAttack();
     }
 
-    //public void SettingCanAttackView(CardController[] fieldCardList, bool canAttack)
-    //{
-    //    foreach (CardController card in fieldCardList)
-    //    {
-    //        //カードを攻撃可能にする
-    //        card.SetCanAttack(canAttack);
-    //    }
-    //}
-
-    //void PlayerTurn()
-    //{
-    //    Debug.Log("プレイヤーのターン");
-    //    //フィールドのカードを攻撃可能にする
-    //    CardController[] playerFieldCardList = playerFieldTransform.GetComponentsInChildren<CardController>();
-    //    //SettingCanAttackView(playerFieldCardList, true);
-    //}
-
-    
-
-    //public void CardsBattle(CardController attacker, CardController defender)
-    //{
-    //    Debug.Log("CardsBattle");
-    //    Debug.Log("attacker HP" + attacker.model.hp);
-    //    Debug.Log("defender HP" + defender.model.hp);
-
-    //    attacker.Attack(defender);
-    //    defender.Attack(attacker);
-
-    //    Debug.Log("attacker HP" + attacker.model.hp);
-    //    Debug.Log("defender HP" + defender.model.hp);
-
-    //    //attacker.CheckAlive();
-    //    //defender.CheckAlive();
-    //}
 
 
 
 
-    public void AttackToHero(CardController attacker, bool isPlayerCard)
-    {
-        if (isPlayerCard)
-        {
-            enemy.heroHp -= attacker.model.at;
-        }
-        else
-        {
-            player.heroHp -= attacker.model.at;
-        }
-        attacker.SetCanAttack(false);
-        uiManager.ShowHeroHP(player.heroHp, enemy.heroHp);
-    }
 
 
     public void CheckHeroHP()
@@ -714,7 +781,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         //objList.Sort((obj1, obj2) => int.Compare(obj1.model.cardID, obj2.model.cardID));
-        objList.Sort((a, b) => a.GetComponent<CardController>().model.cardID - b.GetComponent<CardController>().model.cardID);
+        objList.Sort((a, b) => a.GetComponent<CardController>().model.kind - b.GetComponent<CardController>().model.kind);
 
         foreach (var obj in objList)
         {
@@ -726,21 +793,131 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
-    //[PunRPC]
-    //public void CardMoveShare_RPC(GameObject CardPrefab, Transform field)
-    //{
-    //    //場に出すカードを選択
-    //    CardController card = CardPrefab.GetComponent<CardController>();
-    //    //カードを移動
-    //    StartCoroutine(card.movement.MoveToField(field));
+    [PunRPC]
+    void MoveCard(int ID, int Index)
+    {
+        if (ID == 1)
+        {
+            CardController card = playerFieldTransform.GetChild(Index).GetComponent<CardController>();
 
-    //}
+            card.movement.MoveToField(playerFieldTransform);
 
-    //public void CardMoveShare(GameObject CardPrefab , GameObject Field)
-    //{
-    //    photonView.RPC(nameof(ChangeTurn), RpcTarget.Others, CardPrefab, Field.transform);
+            //card.Show();
+        }
+        else
+        {
+            CardController card = enemyFieldTransform.GetChild(Index).GetComponent<CardController>();
 
-    //}
+            card.movement.MoveToField(enemyFieldTransform);
 
+            //card.Show();
+        }
+
+    }
+
+
+    public void CheckField()
+    {
+        //フィールドのカードを確認
+        if (additionalFieldTransform.childCount == 0)
+        {
+            //合成なし
+            CardController basicCardController = basicFieldTransform.GetChild(0).GetComponent<CardController>();
+
+            MixController.instance.CleanField();
+
+            photonView.RPC(nameof(SingleCard), RpcTarget.All, basicCardController.model.kind, basicCardController.model.cardID, playerID);
+
+
+        }
+        else
+        {
+            //合成
+            //int basicCardKind = basicFieldTransform.GetChild(0).GetComponent<CardController>().model.cardKind;
+            CardController basicCardController = basicFieldTransform.GetChild(0).GetComponent<CardController>();
+            //int additionalCardKind = additionalFieldTransform.GetChild(0).GetComponent<CardController>().model.cardKind;
+            //int additionalCardID = additionalFieldTransform.GetChild(0).GetComponent<CardController>().model.cardID;
+            CardController additionalCardController = additionalFieldTransform.GetChild(0).GetComponent<CardController>();
+
+
+            MixController.instance.CleanField();
+
+            photonView.RPC(nameof(MixCard), RpcTarget.All, basicCardController.model.kind, basicCardController.model.cardID, additionalCardController.model.kind, additionalCardController.model.cardID, playerID);
+
+        }
+
+        uiManager.ShowHeroHP(player.heroHp, enemy.heroHp);
+
+
+
+    }
+
+
+    [PunRPC]
+    void SingleCard(int kind, int cardID, int ID)
+    {
+        uiManager.attackFields.SetActive(false);
+        uiManager.defenceFields.SetActive(true);
+
+        //MixController.instance.MixCard(cardID_1, cardID_2, ID);
+
+        GameObject card;
+        //CardController
+        if (ID == 1)
+        {
+            //CreateCard(cardID, playerFieldTransform);
+            card = Instantiate(cardPrefab, playerFieldTransform, false);
+            card.GetComponent<CardController>().Init(kind, cardID, false);
+        }
+        else
+        {
+            //CreateCard(cardID, enemyFieldTransform);
+            card = Instantiate(cardPrefab, enemyFieldTransform, false);
+            card.GetComponent<CardController>().Init(kind, cardID, false);
+        }
+
+
+        CardController cardController = card.GetComponent<CardController>();
+
+        if (cardController.model.kind == 0)
+        {
+            StartDefence();
+        }
+        else if (cardController.model.kind == 2)
+        {
+            //スペルの場合は防御なしで次のターン
+            cardController.Spell(ID, cardController.model.spellNum);
+            ChangeTurn();
+        }
+    }
+
+    [PunRPC]
+    void MixCard(int kind_1, int cardID_1, int kind_2, int cardID_2, int ID)
+    {
+        uiManager.attackFields.SetActive(false);
+        uiManager.defenceFields.SetActive(true);
+        //MixController.instance.MixCard(cardID_1, cardID_2, ID);
+        StartCoroutine(mixController.MixCard(kind_1, cardID_1, kind_2, cardID_2, ID));
+    }
+
+
+    [PunRPC]
+    void CreateDefenceCard(int kind, int cardID, int ID)
+    {
+        GameObject card;
+
+        if (ID == 1)
+        {
+            //CreateCard(cardID, playerFieldTransform);
+            card = Instantiate(cardPrefab, playerFieldTransform, false);
+            card.GetComponent<CardController>().Init(kind, cardID, false);
+        }
+        else
+        {
+            //CreateCard(cardID, enemyFieldTransform);
+            card = Instantiate(cardPrefab, enemyFieldTransform, false);
+            card.GetComponent<CardController>().Init(kind, cardID, false);
+        }
+    }
 
 }

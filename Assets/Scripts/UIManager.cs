@@ -23,6 +23,27 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text turnText;
 
 
+    //[SerializeField] public GameObject buttonsObj;
+
+
+    [SerializeField] public GameObject decideButtonObj;
+    //[SerializeField] GameObject cancelButtonObj;
+
+    [SerializeField] public Image playerFieldImage;
+    [SerializeField] public Image enemyFieldImage;
+
+
+    [SerializeField] public Image basicFieldImage;
+    [SerializeField] public Image additionalFieldImage;
+    [SerializeField] public Image resultFieldImage;
+
+
+    [SerializeField] public GameObject attackFields;
+    [SerializeField] public GameObject defenceFields;
+
+
+
+    [SerializeField] public GameObject lackCostText;
 
 
 
@@ -86,9 +107,118 @@ public class UIManager : MonoBehaviour
 
     }
 
+
+
+
+
+
     //ターンエンドボタン
-    public void OnClickTurnEndButton()
+    public void OnDecideButton()
     {
-        GameManager.instance.OnClickTurnEndButton();
+        //if (GameManager.instance.playerID == 1)
+        //{
+        //    playerFieldImage.color = new Color(1, 1, 1, 100f / 255f);
+        //}
+        //else
+        //{
+        //    enemyFieldImage.color = new Color(1, 1, 1, 100f / 255f);
+        //}
+
+        //basicFieldImage.enabled = false;
+        //additionalFieldImage.enabled = false;
+        //resultFieldImage.enabled = false;
+
+        attackFields.SetActive(false);
+
+        playerFieldImage.enabled = true;
+        enemyFieldImage.enabled = true;
+
+
+
+
+        ////全てのボタンを消す
+        //buttonsObj.SetActive(false);
+
+        //GameManager.instance.CheckField();
+        GameManager.instance.OnDecideButton();
+
+        decideButtonObj.SetActive(false);
     }
+
+
+    //キャンセルボタン
+    public void OnCancelButton()
+    {
+        if (GameManager.instance.playerID == 1)
+        {
+            playerFieldImage.color = new Color(1, 1, 1, 100f / 255f);
+            playerFieldImage.enabled = false;
+
+        }
+        else
+        {
+            enemyFieldImage.color = new Color(1, 1, 1, 100f / 255f);
+            enemyFieldImage.enabled = false;
+
+        }
+
+        ShowButtonObj(true);
+
+    }
+
+
+
+
+
+    void ReturnFieldCard()
+    {
+        CardController[] fieldCardList;
+
+        if (GameManager.instance.playerID == 1)
+        {
+            fieldCardList = GameManager.instance.playerFieldTransform.GetComponentsInChildren<CardController>();
+        }
+        else
+        {
+            fieldCardList = GameManager.instance.enemyFieldTransform.GetComponentsInChildren<CardController>();
+        }
+
+        //フィールドのカードを手札に戻す
+        //foreach (CardController card in fieldCardList)
+        //{
+        //    card.MoveToHand();
+        //}
+
+        //カード並び替え
+        GameManager.instance.LineUpCard(GameManager.instance.playerFieldTransform);
+        GameManager.instance.LineUpCard(GameManager.instance.enemyFieldTransform);
+    }
+
+
+    //true:攻撃、合成ボタン出す
+    //false:決定、キャンセルボタン出す
+    public void ShowButtonObj(bool canView)
+    {
+
+
+        decideButtonObj.SetActive(!canView);
+        //cancelButtonObj.SetActive(!canView);
+
+    }
+
+    //falseにするとフィールドのimageを消す
+    public void ShowFieldImage(bool canView)
+    {
+
+        playerFieldImage.enabled = canView;
+        enemyFieldImage.enabled = canView;
+
+
+    }
+
+
+
+
+
+
 }

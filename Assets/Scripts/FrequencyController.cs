@@ -4,36 +4,119 @@ using UnityEngine;
 
 public class FrequencyController : MonoBehaviour
 {
-    public int[] percentage;
-    public int sum = 0;
+    public int[] attackCardPercentage;
+    public int[] defenceCardPercentage;
+    public int[] spellCardPercentage;
+
+
+    public int[] kindPercentage;
+    int kindSum;
+
+    int attackSum = 0;
+    int defenceSum = 0;
+    int spellSum = 0;
+    //public int kindNum = 0;
 
     private void Start()
     {
-        foreach (int a in percentage)
+        foreach (int a in kindPercentage)
         {
-            sum += a;
+            kindSum += a;
         }
+
+        foreach (int a in attackCardPercentage)
+        {
+            attackSum += a;
+        }
+        foreach (int a in defenceCardPercentage)
+        {
+            defenceSum += a;
+        }
+        foreach (int a in spellCardPercentage)
+        {
+            spellSum += a;
+        }
+
+        //kindNum = attackCardPercentage.Length + defenceCardPercentage.Length + spellCardPercentage.Length;
     }
 
 
-    public int DecideCard(int num)
+    public (int kind, int cardID) DecideCard()
     {
-        int cardID = 0;
+        int kind = -1;
+        int cardID = -1;
 
-        for (int i = 0; i < percentage.Length; i++)
+        int kindNum = Random.Range(0, kindSum);
+
+        for (int i = 0; i < kindPercentage.Length; i++)
         {
-            num -= percentage[i];
+            kindNum -= kindPercentage[i];
 
-            if (num < 0)
+            if (kindNum < 0)
             {
-                cardID = i;
+                kind = i;
                 break;
+            }
+
+
+        }
+
+
+        if (kind == 0)
+        {
+            int num = Random.Range(0, attackSum);
+
+            for (int i = 0; i < attackCardPercentage.Length; i++)
+            {
+                num -= attackCardPercentage[i];
+
+                if (num < 0)
+                {
+                    cardID = i;
+                    break;
+                }
+
+               
+            }
+
+        }
+        else if (kind == 1)
+        {
+            int num = Random.Range(0, defenceSum);
+
+            for (int i = 0; i < defenceCardPercentage.Length; i++)
+            {
+                num -= defenceCardPercentage[i];
+
+                if (num < 0)
+                {
+                    cardID = i;
+                    break;
+                }
+
 
             }
 
         }
+        else
+        {
+            int num = Random.Range(0, spellSum);
 
-        return cardID;
+            for (int i = 0; i < spellCardPercentage.Length; i++)
+            {
+                num -= spellCardPercentage[i];
+
+                if (num < 0)
+                {
+                    cardID = i;
+                    break;
+                }
+
+
+            }
+        }
+
+        return (kind, cardID);
 
     }
 }

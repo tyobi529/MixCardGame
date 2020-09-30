@@ -57,6 +57,11 @@ MonoBehaviour:
   - Heal2
   - PlusMixCost1
   - PlusMixCost2
+  - StartAttack
+  - DoAction
+  - MixCard
+  - SingleCard
+  - CreateDefenceCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

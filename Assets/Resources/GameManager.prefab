@@ -51,12 +51,13 @@ MonoBehaviour:
   playerFieldTransform: {fileID: 0}
   enemyHandTransform: {fileID: 0}
   enemyFieldTransform: {fileID: 0}
-  cardPrefab: {fileID: 5284491294628628744, guid: 05c6ae95ae387416a828865bcdb3a8d2,
-    type: 3}
   attackID: 0
   isMyTurn: 0
   playerHero: {fileID: 0}
   playerID: 0
+  isAttackButton: 1
+  isMixButton: 0
+  isThrowButton: 0
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0
