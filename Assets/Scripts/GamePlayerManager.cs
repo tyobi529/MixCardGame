@@ -13,6 +13,7 @@ public class GamePlayerManager : MonoBehaviour
 
 
     public int heroHp;
+    public int cal;
     public int mixCost;
     public int necessaryCost;
 

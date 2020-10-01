@@ -119,4 +119,60 @@ public class FrequencyController : MonoBehaviour
         return (kind, cardID);
 
     }
+
+
+
+    public (int kind, int cardID) ChangeCard(int disKind)
+    {
+        int kind = -1;
+
+        if (disKind == 0)
+            kind = 1;
+        else if (disKind == 1)
+            kind = 0;
+        
+        int cardID = -1;
+
+
+        if (kind == 0)
+        {
+            int num = Random.Range(0, attackSum);
+
+            for (int i = 0; i < attackCardPercentage.Length; i++)
+            {
+                num -= attackCardPercentage[i];
+
+                if (num < 0)
+                {
+                    cardID = i;
+                    break;
+                }
+
+
+            }
+
+        }
+        else if (kind == 1)
+        {
+            int num = Random.Range(0, defenceSum);
+
+            for (int i = 0; i < defenceCardPercentage.Length; i++)
+            {
+                num -= defenceCardPercentage[i];
+
+                if (num < 0)
+                {
+                    cardID = i;
+                    break;
+                }
+
+
+            }
+
+        }
+
+
+        return (kind, cardID);
+
+    }
 }

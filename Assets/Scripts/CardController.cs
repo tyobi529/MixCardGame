@@ -22,7 +22,7 @@ public class CardController : MonoBehaviour
     {
         model = new CardModel(kind, cardID, isMix);
         view.SetCard(model);
-
+        movement.isDraggable = false;
     }
 
 

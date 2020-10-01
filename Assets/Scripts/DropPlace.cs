@@ -9,6 +9,9 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
     //[SerializeField] Transform basicField;
     //[SerializeField] Transform additionalField;
+    //[SerializeField] MixController mixController;
+
+    [SerializeField] UIManager uiManager;
 
 
     public enum TYPE
@@ -43,6 +46,11 @@ public class DropPlace : MonoBehaviour, IDropHandler
             if (transform.childCount == 1)
             {
                 return;
+            }
+
+            if (type == TYPE.BASICFIELD)
+            {
+                uiManager.decideButtonObj.SetActive(true);
             }
         }
 

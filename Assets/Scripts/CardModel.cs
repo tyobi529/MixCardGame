@@ -7,9 +7,11 @@ public class CardModel
 {
     public string name;
     //public int hp;
-    //public int at;
-    //public int de;
+
     public int cal;
+    public int at;
+    public int de;
+
     //public int cost;
     public Sprite icon;
     //public ABILITY ability;
@@ -84,6 +86,8 @@ public class CardModel
         //at = cardEntity.at;
         //de = cardEntity.de;
         cal = cardEntity.cal;
+        at = cardEntity.at;
+        de = cardEntity.de;
         //cost = cardEntity.cost;
         icon = cardEntity.icon;
         //ability = cardEntity.ability;

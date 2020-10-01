@@ -7,7 +7,9 @@ public class CardView : MonoBehaviour
 {
     [SerializeField] Text nameText;
     //[SerializeField] Text hpText;
-    [SerializeField] Text effectText;
+    [SerializeField] Text calText;
+    [SerializeField] Text atText;
+    [SerializeField] Text deText;
     //[SerializeField] Text deText;
     [SerializeField] Image iconImage;
     [SerializeField] GameObject selectablePanel;
@@ -53,7 +55,9 @@ public class CardView : MonoBehaviour
 
         if (cardModel.kind == 0)
         {
-            effectText.text = cardModel.cal + "Cal";
+            calText.text = cardModel.cal + "Cal";
+            atText.text = cardModel.at.ToString();
+            deText.text = cardModel.at.ToString();
 
             attackPanel.SetActive(true);
             defencePanel.SetActive(false);
@@ -61,8 +65,8 @@ public class CardView : MonoBehaviour
         }
         else if (cardModel.kind == 1)
         {
-            effectText.text = cardModel.cal + "Cal";
-            effectText.color = Color.blue;
+            calText.text = cardModel.cal + "Cal";
+            //calText.color = Color.blue;
 
             attackPanel.SetActive(false);
             defencePanel.SetActive(true);
@@ -71,6 +75,8 @@ public class CardView : MonoBehaviour
         }
         else if (cardModel.kind == 2)
         {
+            calText.text = cardModel.cal + "Cal";
+
             attackPanel.SetActive(false);
             defencePanel.SetActive(false);
             spellPanel.SetActive(true);
@@ -100,18 +106,25 @@ public class CardView : MonoBehaviour
     {
         if (cardModel.kind == 0)
         {
-            effectText.text = cardModel.cal + "Cal";
+            calText.text = cardModel.cal + "Cal";
+            atText.text = cardModel.at.ToString();
+            deText.text = cardModel.at.ToString();
         }
         else if (cardModel.kind == 1)
         {
-            effectText.text = cardModel.cal + "Cal";
+            calText.text = cardModel.cal + "Cal";
         }
         //hpText.text = cardModel.hp.ToString();
         //atText.text = cardModel.at.ToString();
         //deText.text = cardModel.de.ToString();
 
         //合成カード
-        if (cardModel.isMix)
+        if (cardModel.isSpecialMix)
+        {
+            nameText.text = cardModel.name;
+
+        }
+        else if (cardModel.isMix)
         {
             nameText.text = cardModel.name + "+";
             mixPanel.SetActive(true);

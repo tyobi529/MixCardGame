@@ -9,7 +9,8 @@ public class CardEntity : ScriptableObject
     public new string name;
     //public int hp;
     public int cal;
-    //public int de;
+    public int at;
+    public int de;
 
     //public int cost;
     public Sprite icon;

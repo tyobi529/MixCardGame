@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\u30D1\u30F3"
   cal: 156
+  at: 6
+  de: 5
   icon: {fileID: 21300000, guid: 1004589abe47a4095bede1e4974d2268, type: 3}
   kind: 0
   nutrtion: 1

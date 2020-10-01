@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text playerHeroHpText;
     [SerializeField] Text enemyHeroHpText;
 
+    [SerializeField] Text playerHeroCalText;
+    [SerializeField] Text enemyHeroCalText;
+
     [SerializeField] Text playerManaCostText;
     [SerializeField] Text enemyManaCostText;
 
@@ -38,12 +41,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] public Image resultFieldImage;
 
 
-    [SerializeField] public GameObject attackFields;
+    [SerializeField] public GameObject mixFields;
     [SerializeField] public GameObject defenceFields;
 
 
 
     [SerializeField] public GameObject lackCostText;
+
+
+    [SerializeField] public GameObject changeCardButtonObj;
 
 
 
@@ -69,6 +75,12 @@ public class UIManager : MonoBehaviour
     {
         playerHeroHpText.text = playerHeroHp.ToString();
         enemyHeroHpText.text = enemyHeroHp.ToString();
+    }
+
+    public void ShowHeroCal(int playerHeroCal, int enemyHeroCal)
+    {
+        playerHeroCalText.text = playerHeroCal + "Cal";
+        enemyHeroCalText.text = enemyHeroCal + "Cal";
     }
 
     public void ShowResultPanel(int heroHp)
@@ -128,7 +140,7 @@ public class UIManager : MonoBehaviour
         //additionalFieldImage.enabled = false;
         //resultFieldImage.enabled = false;
 
-        attackFields.SetActive(false);
+        mixFields.SetActive(false);
 
         playerFieldImage.enabled = true;
         enemyFieldImage.enabled = true;
@@ -204,6 +216,8 @@ public class UIManager : MonoBehaviour
         decideButtonObj.SetActive(!canView);
         //cancelButtonObj.SetActive(!canView);
 
+        //changeCardButtonObj.SetActive(!canView);
+
     }
 
     //falseにするとフィールドのimageを消す
@@ -216,6 +230,23 @@ public class UIManager : MonoBehaviour
 
     }
 
+
+    public void OnChangeCardButton()
+    {
+        GameManager.instance.isChangeCard = !GameManager.instance.isChangeCard;
+
+        if (GameManager.instance.isChangeCard)
+        {
+            changeCardButtonObj.GetComponent<Image>().color = Color.yellow;
+        }
+        else
+        {
+            changeCardButtonObj.GetComponent<Image>().color = Color.white;
+
+        }
+
+        ShowButtonObj(!GameManager.instance.isChangeCard);
+    }
 
 
 
