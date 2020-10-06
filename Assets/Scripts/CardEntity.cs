@@ -9,8 +9,7 @@ public class CardEntity : ScriptableObject
     public new string name;
     //public int hp;
     public int cal;
-    public int at;
-    public int de;
+    //public int de;
 
     //public int cost;
     public Sprite icon;
@@ -18,9 +17,14 @@ public class CardEntity : ScriptableObject
     //public SPELL spell;
     //public KIND kind;
     public int kind;
-    public NUTRITION nutrtion;
+    //public NUTRITION nutrtion;
+    public int red;
+    public int yellow;
+    public int green;
 
-    public int spellNum;
+    //public int spellNum;
+
+    public int special;
 
     //public string[] partnerName;
     public int[] partnerID;
@@ -30,21 +34,18 @@ public class CardEntity : ScriptableObject
 
 }
 
-public enum KIND
-{
-    ATTACK,
-    DEFENCE,
-    SPELL,
+//public enum SPECIAL
+//{
+//    NONE,
+//    POISON1,
+//    POISON2,
+//    HEAL1,
+//    HEAL2,
+
     
-}
+//}
 
-public enum NUTRITION
-{
-    RED,
-    YELLOW,
-    GREEN,
 
-}
 
 
 

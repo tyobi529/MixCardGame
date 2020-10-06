@@ -12,8 +12,8 @@ public class FrequencyController : MonoBehaviour
     public int[] kindPercentage;
     int kindSum;
 
-    int attackSum = 0;
-    int defenceSum = 0;
+    public int attackSum = 0;
+    public int defenceSum = 0;
     int spellSum = 0;
     //public int kindNum = 0;
 
@@ -41,18 +41,17 @@ public class FrequencyController : MonoBehaviour
     }
 
 
-    public (int kind, int cardID) DecideCard()
+    public int DecideCardKind()
     {
         int kind = -1;
-        int cardID = -1;
 
-        int kindNum = Random.Range(0, kindSum);
+        int num = Random.Range(0, kindSum);
 
         for (int i = 0; i < kindPercentage.Length; i++)
         {
-            kindNum -= kindPercentage[i];
+            num -= kindPercentage[i];
 
-            if (kindNum < 0)
+            if (num < 0)
             {
                 kind = i;
                 break;
@@ -60,6 +59,15 @@ public class FrequencyController : MonoBehaviour
 
 
         }
+
+        return kind;
+    }
+
+    public int DecideCardID(int kind)
+    {
+
+
+        int cardID = -1;
 
 
         if (kind == 0)
@@ -116,63 +124,7 @@ public class FrequencyController : MonoBehaviour
             }
         }
 
-        return (kind, cardID);
-
-    }
-
-
-
-    public (int kind, int cardID) ChangeCard(int disKind)
-    {
-        int kind = -1;
-
-        if (disKind == 0)
-            kind = 1;
-        else if (disKind == 1)
-            kind = 0;
-        
-        int cardID = -1;
-
-
-        if (kind == 0)
-        {
-            int num = Random.Range(0, attackSum);
-
-            for (int i = 0; i < attackCardPercentage.Length; i++)
-            {
-                num -= attackCardPercentage[i];
-
-                if (num < 0)
-                {
-                    cardID = i;
-                    break;
-                }
-
-
-            }
-
-        }
-        else if (kind == 1)
-        {
-            int num = Random.Range(0, defenceSum);
-
-            for (int i = 0; i < defenceCardPercentage.Length; i++)
-            {
-                num -= defenceCardPercentage[i];
-
-                if (num < 0)
-                {
-                    cardID = i;
-                    break;
-                }
-
-
-            }
-
-        }
-
-
-        return (kind, cardID);
+        return cardID;
 
     }
 }

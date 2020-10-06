@@ -7,23 +7,32 @@ public class CardView : MonoBehaviour
 {
     [SerializeField] Text nameText;
     //[SerializeField] Text hpText;
-    [SerializeField] Text calText;
-    [SerializeField] Text atText;
-    [SerializeField] Text deText;
+    [SerializeField] Text effectText;
     //[SerializeField] Text deText;
     [SerializeField] Image iconImage;
-    [SerializeField] GameObject selectablePanel;
-    //[SerializeField] GameObject shieldPanel;
-    [SerializeField] GameObject maskPanel;
+    //[SerializeField] GameObject selectablePanel;
+    //[SerializeField] GameObject maskPanel;
+
+
+    //[SerializeField] GameObject RedPanel;
+    //[SerializeField] GameObject YellowPanel;
+    //[SerializeField] GameObject GreenPanel;
+
 
 
     [SerializeField] GameObject attackPanel;
+    [SerializeField] GameObject nutrientsPanel;
     [SerializeField] GameObject defencePanel;
-    [SerializeField] GameObject spellPanel;
-
-
     [SerializeField] GameObject mixPanel;
-    [SerializeField] GameObject specialMixPanel;
+
+    //[SerializeField] GameObject spellPanel;
+
+
+    //[SerializeField] GameObject mixPanel;
+    //[SerializeField] GameObject specialMixPanel;
+
+    //[SerializeField] Image panelImage;
+
 
 
 
@@ -32,54 +41,87 @@ public class CardView : MonoBehaviour
     {
 
         //合成カード
-        if (cardModel.isSpecialMix)
-        {
-            Debug.Log("aa");
-            nameText.text = cardModel.name;
-            specialMixPanel.SetActive(true);
+        //if (cardModel.isSpecialMix)
+        //{
+        //    Debug.Log("aa");
+        //    nameText.text = cardModel.name;
+        //    specialMixPanel.SetActive(true);
 
-        }
-        else if (cardModel.isMix)
-        {
+        //}
+        //else if (cardModel.isMix)
+        //{
 
-            nameText.text = cardModel.name + "+";
-            mixPanel.SetActive(true);
-        }
-        else
-        {
-            nameText.text = cardModel.name;
+        //    nameText.text = cardModel.name + "+";
+        //    mixPanel.SetActive(true);
+        //}
+        //else
+        //{
+        nameText.text = cardModel.name;
 
-        }
+        //}
 
         //hpText.text = cardModel.hp.ToString();
 
         if (cardModel.kind == 0)
         {
-            calText.text = cardModel.cal + "Cal";
-            atText.text = cardModel.at.ToString();
-            deText.text = cardModel.at.ToString();
-
+            effectText.text = cardModel.cal + "Cal";
             attackPanel.SetActive(true);
-            defencePanel.SetActive(false);
-            spellPanel.SetActive(false);
+            nutrientsPanel.SetActive(true);
+
+            if (cardModel.red != 0)
+            {
+                nutrientsPanel.GetComponent<Image>().color = Color.red;
+            }
+            else if (cardModel.yellow != 0)
+            {
+                nutrientsPanel.GetComponent<Image>().color = Color.yellow;
+            }
+            else
+            {
+                nutrientsPanel.GetComponent<Image>().color = Color.green;
+            }
+
+            //attackPanel.SetActive(true);
+            //if (cardModel)
+            //RedPanel.GetComponent<Image>
+
+            //defencePanel.SetActive(false);
+            //spellPanel.SetActive(false);
+
+            //defencePanel.GetComponent<Image>().color = new Color(248f/255f, 109f/255f, 78f/255f, 1f);
+            //defencePanel.GetComponent<Image>().color = Color.h;
+
         }
         else if (cardModel.kind == 1)
         {
-            calText.text = cardModel.cal + "Cal";
-            //calText.color = Color.blue;
+            effectText.text = cardModel.cal + "Cal";
+            //effectText.color = Color.blue;
 
-            attackPanel.SetActive(false);
             defencePanel.SetActive(true);
-            spellPanel.SetActive(false);
+            //panelImage.color = new Color(78f / 255f, 192f / 255f, 248f / 255f, 1f);
+
+            //attackPanel.SetActive(false);
+            //defencePanel.SetActive(true);
+            //spellPanel.SetActive(false);
 
         }
-        else if (cardModel.kind == 2)
-        {
-            calText.text = cardModel.cal + "Cal";
+        //合成
+        //else if (cardModel.kind == 2)
+        //{
+        //    effectText.text = cardModel.cal + "Cal";
+        //    //effectText.color = Color.blue;
 
-            attackPanel.SetActive(false);
-            defencePanel.SetActive(false);
-            spellPanel.SetActive(true);
+
+        //    //panelImage.color = new Color(248f / 255f, 246f / 255f, 126f / 255f, 1f);
+        //    //attackPanel.SetActive(false);
+        //    //defencePanel.SetActive(false);
+        //    //spellPanel.SetActive(true);
+        //}
+
+        if (cardModel.isMix)
+        {
+            mixPanel.SetActive(true);
+
         }
         //deText.text = cardModel.de.ToString();
         iconImage.sprite = cardModel.icon;
@@ -96,50 +138,43 @@ public class CardView : MonoBehaviour
     }
 
 
-    public void Show()
-    {
-        maskPanel.SetActive(false);
+    //public void Show()
+    //{
+    //    maskPanel.SetActive(false);
 
-    }
+    //}
 
     public void Refresh(CardModel cardModel)
     {
         if (cardModel.kind == 0)
         {
-            calText.text = cardModel.cal + "Cal";
-            atText.text = cardModel.at.ToString();
-            deText.text = cardModel.at.ToString();
+            effectText.text = cardModel.cal + "Cal";
         }
         else if (cardModel.kind == 1)
         {
-            calText.text = cardModel.cal + "Cal";
+            effectText.text = cardModel.cal + "Cal";
         }
         //hpText.text = cardModel.hp.ToString();
         //atText.text = cardModel.at.ToString();
         //deText.text = cardModel.de.ToString();
 
         //合成カード
-        if (cardModel.isSpecialMix)
-        {
-            nameText.text = cardModel.name;
+        //if (cardModel.isMix)
+        //{
+        //    nameText.text = cardModel.name + "+";
+        //    mixPanel.SetActive(true);
+        //}
+        //else
+        //{
+        //    nameText.text = cardModel.name;
 
-        }
-        else if (cardModel.isMix)
-        {
-            nameText.text = cardModel.name + "+";
-            mixPanel.SetActive(true);
-        }
-        else
-        {
-            nameText.text = cardModel.name;
-
-        }
+        //}
 
 
     }
 
-    public void SetActiveSelectablePanel(bool flag)
-    {
-        selectablePanel.SetActive(flag);
-    }
+    //public void SetActiveSelectablePanel(bool flag)
+    //{
+    //    selectablePanel.SetActive(flag);
+    //}
 }

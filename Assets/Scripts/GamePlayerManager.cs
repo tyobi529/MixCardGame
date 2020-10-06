@@ -13,15 +13,24 @@ public class GamePlayerManager : MonoBehaviour
 
 
     public int heroHp;
-    public int cal;
+
+    public int heroRed;
+    public int heroYellow;
+    public int heroGreen;
+
     public int mixCost;
     public int necessaryCost;
 
+    //０：不健康、１：普通、２：健康
+    public int health = 2;
+    public bool isPoison = false;
+    public bool isDeadlyPoison = false;
+
+
     //public int defaultMixCost;
 
-    //public void Init(List<int> cardDeck)
+    //public void Init()
     //{
-    //    deck = cardDeck;
     //    //heroHp = 20;
     //    mixCost = 0;
     //    //defaultMixCost = 10;

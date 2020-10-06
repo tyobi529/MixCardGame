@@ -22,7 +22,7 @@ public class CardController : MonoBehaviour
     {
         model = new CardModel(kind, cardID, isMix);
         view.SetCard(model);
-        movement.isDraggable = false;
+
     }
 
 
@@ -69,18 +69,18 @@ public class CardController : MonoBehaviour
     //}
 
 
-    public void Attack(CardController enemyCard)
-    {
-        //model.Attack(enemyCard);
-        SetCanAttack(false);
-    }
+    //public void Attack(CardController enemyCard)
+    //{
+    //    //model.Attack(enemyCard);
+    //    SetCanAttack(false);
+    //}
 
-    public void SetCanAttack(bool canAttack)
-    {
-        //model.canAttack = canAttack;
-        view.SetActiveSelectablePanel(canAttack);
+    //public void SetCanAttack(bool canAttack)
+    //{
+    //    //model.canAttack = canAttack;
+    //    view.SetActiveSelectablePanel(canAttack);
 
-    }
+    //}
 
 
     public void OnField(bool isPlayer)

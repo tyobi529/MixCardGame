@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7bdd32685e740409e91b24200952ad, type: 3}
   m_Name: Card1
   m_EditorClassIdentifier: 
-  name: "\u3076\u305F\u306B\u304F"
-  cal: 183
-  at: 8
-  de: 4
+  name: "\u8D64\uFF12"
+  cal: 150
   icon: {fileID: 21300000, guid: 1004589abe47a4095bede1e4974d2268, type: 3}
   kind: 0
-  nutrtion: 0
-  spellNum: 0
-  partnerID: 0000000004000000050000000600000007000000090000000a000000
-  specialMixID: 0000000005000000060000000700000008000000090000000a000000
+  red: 1
+  yellow: 0
+  green: 0
+  special: 0
+  partnerID: 030000000400000005000000060000000700000008000000
+  specialMixID: 060000000700000008000000090000000a0000000b000000

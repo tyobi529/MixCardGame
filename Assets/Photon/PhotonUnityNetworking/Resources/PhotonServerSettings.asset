@@ -33,35 +33,19 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - Battle
+  - ChangeTurn
   - ClickRpc
+  - CreateDefenceCard
   - DestroyRpc
   - DestroySpaceship
   - Fire
-  - RespawnSpaceship
-  - ChangeTurn
-  - StartGame
-  - CardMoveShare_RPC
-  - SetCardToHand
-  - Init_RPC
-  - MoveToField_RPC
-  - StartDefence
-  - Mix
-  - Heal
-  - Battle
-  - MoveToHand_RPC
-  - PlusMixCount
-  - PlusMixCost
-  - Show_RPC
-  - MoveCard
-  - Heal1
-  - Heal2
-  - PlusMixCost1
-  - PlusMixCost2
-  - StartAttack
-  - DoAction
   - MixCard
+  - MoveCard
+  - RespawnSpaceship
   - SingleCard
-  - CreateDefenceCard
+  - StartDefence
+  - StartGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

@@ -7,11 +7,9 @@ public class CardModel
 {
     public string name;
     //public int hp;
-
+    //public int at;
+    //public int de;
     public int cal;
-    public int at;
-    public int de;
-
     //public int cost;
     public Sprite icon;
     //public ABILITY ability;
@@ -19,9 +17,12 @@ public class CardModel
     //public KIND kind;
     //0:攻撃　１：防御　３：スペル
     public int kind;
-    public NUTRITION nutrition;
+    //public NUTRITION nutrition;
+    public int red;
+    public int yellow;
+    public int green;
 
-    public int spellNum;
+    //public int spellNum;
 
 
 
@@ -34,6 +35,7 @@ public class CardModel
     public int cardID;
 
     //public int playerID;
+    public int special;
 
     public bool isMix;
 
@@ -79,23 +81,26 @@ public class CardModel
 
 
 
-
-        //CardEntity cardEntity = Resources.Load<CardEntity>("CardEntityList/Card" + cardID);
         name = cardEntity.name;
-        //hp = cardEntity.hp;
-        //at = cardEntity.at;
-        //de = cardEntity.de;
+
         cal = cardEntity.cal;
-        at = cardEntity.at;
-        de = cardEntity.de;
-        //cost = cardEntity.cost;
+        //if (kind == 1)
+        //{
+        //    cal = DecideDefenceCal();
+        //}
+
         icon = cardEntity.icon;
         //ability = cardEntity.ability;
         //spell = cardEntity.spell;
         this.kind = cardEntity.kind;
-        nutrition = cardEntity.nutrtion;
+        //nutrition = cardEntity.nutrtion;
 
-        spellNum = cardEntity.spellNum;
+        red = cardEntity.red;
+        yellow = cardEntity.yellow;
+        green = cardEntity.green;
+
+        //spellNum = cardEntity.spellNum;
+
 
         isFieldCard = false;
         //isAlive = true;
@@ -105,43 +110,24 @@ public class CardModel
 
         //playerID = ID;
 
+        special = cardEntity.special;
+
         partnerID = cardEntity.partnerID;
         specialMixID = cardEntity.specialMixID;
 
         this.isMix = isMix;
 
-        //isSpecialMix = cardEntity.isSpecialMix;
 
-        //partnerName = cardEntity.partnerName;
-        //specialMixID = cardEntity.specialMixID;
-
-        //for (int i = 0; i < cardEntity.partnerName.Length)
-        //{
-            
-        //}
-        //int i = 0;
-        //foreach (string name in cardEntity.partnerName)
-        //{
-        //    this.partnerName[i] = name;
-        //    i++;
-        //}
-
-        
 
     }
 
-    //void Damage(int dmg)
+
+    //int DecideDefenceCal()
     //{
-    //    hp -= dmg;
-    //    if (hp <= 0)
-    //    {
-    //        hp = 0;
-    //        //isAlive = false;
-    //    }
+    //    float num = Random.Range(0f, 2f);
+    //    int cal = (int)(50f * Mathf.Pow(2.0f, num));
+    //    return cal;
     //}
 
-    //public void Attack(CardController card)
-    //{
-    //    card.model.Damage(at);
-    //}
+
 }

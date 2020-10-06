@@ -7,12 +7,10 @@ public class DropPlace : MonoBehaviour, IDropHandler
 {
     [SerializeField] MixController mixController;
 
-    //[SerializeField] Transform basicField;
+    [SerializeField] Transform basicField;
     //[SerializeField] Transform additionalField;
-    //[SerializeField] MixController mixController;
 
-    [SerializeField] UIManager uiManager;
-
+    //[SerializeField] UIManager uiManager;
 
     public enum TYPE
     {
@@ -41,6 +39,26 @@ public class DropPlace : MonoBehaviour, IDropHandler
         //    return;
         //}
 
+        if (type == TYPE.ADDITIONALFIELD)
+        {
+            if (basicField.childCount == 0)
+                return;
+
+            if (card.model.red > 0 && basicField.GetChild(0).GetComponent<CardController>().model.red > 0)
+            {
+                return;
+            }
+            if (card.model.yellow > 0 && basicField.GetChild(0).GetComponent<CardController>().model.yellow > 0)
+            {
+                return;
+            }
+            if (card.model.green > 0 && basicField.GetChild(0).GetComponent<CardController>().model.green > 0)
+            {
+                return;
+            }
+
+        }
+
         if (type == TYPE.BASICFIELD || type == TYPE.ADDITIONALFIELD)
         {
             if (transform.childCount == 1)
@@ -48,10 +66,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 return;
             }
 
-            if (type == TYPE.BASICFIELD)
-            {
-                uiManager.decideButtonObj.SetActive(true);
-            }
+
         }
 
 
@@ -106,9 +121,9 @@ public class DropPlace : MonoBehaviour, IDropHandler
             card.movement.defaultParent = this.transform;
 
 
-            //if (type == TYPE.HAND)
+            //if (GameManager.)
             //{
-            //    card.OnField(false);
+            //    uiManager.ShowExpectDamage();
             //}
             //else if (type == TYPE.FIELD)
             //{

@@ -16,8 +16,24 @@ public class MixController : MonoBehaviour
     [SerializeField] UIManager uiManager;
 
 
-    [SerializeField] GamePlayerManager player;
-    [SerializeField] GamePlayerManager enemy;
+    //Inspectorに複数データを表示するためのクラス
+    //[System.SerializableAttribute]
+    //public class ValueList
+    //{
+    //    //public List<int> List = new List<int>();
+    //    public string[] list = new string[2];
+
+    //    public ValueList(string[] list)
+    //    {
+    //        this.list = list;
+    //    }
+    //}
+
+    //Inspectorに表示される
+    //[SerializeField]
+    //private string[] foodName = new string<ValueList>();
+
+    //private List<ValueList> _valueListList = new List<ValueList>();
 
 
     //シングルトン
@@ -37,6 +53,7 @@ public class MixController : MonoBehaviour
     //合成結果の予測
     public void ExpectMix()
     {
+
         //if (GameManager.instance.attackID != GameManager)
         if (resultFieldTransform.childCount != 0)
         {
@@ -48,28 +65,18 @@ public class MixController : MonoBehaviour
 
         }
 
-        //警告を消す
-        uiManager.lackCostText.SetActive(false);
-
         if (basicFieldTransform.childCount == 0)
         {
-            if (GameManager.instance.attackID == GameManager.instance.playerID)
-            {
-                //決定ボタンを消す
-                uiManager.decideButtonObj.SetActive(false);
-            }
-            else
-            {
-                //決定ボタンを出す
-                uiManager.decideButtonObj.SetActive(true);
-            }
+            //決定ボタンを消す
+            uiManager.decideButtonObj.SetActive(false);
             return;
 
         }
 
         //決定ボタンを出す
         uiManager.decideButtonObj.SetActive(true);
-
+        //警告を消す
+        uiManager.lackCostText.SetActive(false);
 
         GameObject basicCard = basicFieldTransform.GetChild(0).gameObject;
         CardController basicCardController = basicCard.GetComponent<CardController>();
@@ -82,23 +89,8 @@ public class MixController : MonoBehaviour
         if (additionalFieldTransform.childCount == 0)
         {
             GameObject cloneCard = Instantiate(basicCard, resultFieldTransform, false);
-            cloneCard.GetComponent<CardController>().movement.isDraggable = false;
             //cloneCard.GetComponent<CardController>().Init(basicCard.GetComponent<CardModel>().cardID, basicCard.GetComponent<CardModel>().playerID, true);
             //return;
-
-            //カロリー確認
-            if (CheckCal())
-            {
-
-            }
-            else
-            {
-                uiManager.decideButtonObj.SetActive(false);
-
-                uiManager.lackCostText.SetActive(true);
-
-                return;
-            }
         }
 
         //合成
@@ -115,15 +107,8 @@ public class MixController : MonoBehaviour
             if (specialMixID >= 0)
             {
                 GameObject specialCard = Instantiate(cardPrefab, resultFieldTransform, false);
-                CardController specialCardController = specialCard.GetComponent<CardController>();
-                specialCardController.Init(3, specialMixID, true);
+                specialCard.GetComponent<CardController>().Init(3, specialMixID, true);
 
-
-                //カロリー０、攻撃防御は和にする
-                specialCardController.model.at = basicCardController.model.at + additionalCardController.model.at;
-                specialCardController.model.cal = 0;
-                specialCardController.view.Refresh(specialCardController.model);
-                return;
             }
             else
             {
@@ -134,30 +119,15 @@ public class MixController : MonoBehaviour
 
                 //Debug.Log(cloneCard.GetComponent<CardController>().model);
                 cloneCardController.model.cal += additionalCardController.model.cal;
-                cloneCardController.model.at += additionalCardController.model.at;
-                cloneCardController.model.de += additionalCardController.model.de;
-                cloneCardController.movement.isDraggable = false;
                 cloneCardController.view.Refresh(cloneCardController.model);
             }
 
 
-            //カロリー確認
-            if (CheckCal())
-            {
 
-            }
-            else
-            {
-                uiManager.decideButtonObj.SetActive(false);
-
-                uiManager.lackCostText.SetActive(true);
-
-                //return;
-            }
 
             //コスト確認
-            //if (GameManager.instance.playerID == 1 && GameManager.instance.player.mixCost < player.mixCost ||
-            //    GameManager.instance.playerID == 2 && GameManager.instance.enemy.mixCost < enemy.mixCost)
+            //if (GameManager.instance.playerID == 1 && GameManager.instance.player.mixCost < 3 ||
+            //    GameManager.instance.playerID == 2 && GameManager.instance.enemy.mixCost < 3)
             //{
             //    uiManager.decideButtonObj.SetActive(false);
 
@@ -170,47 +140,6 @@ public class MixController : MonoBehaviour
 
 
 
-
-
-    }
-
-
-    bool CheckCal()
-    {
-        int cal = 0;
-        GameObject basicCard = basicFieldTransform.GetChild(0).gameObject;
-        CardController basicCardController = basicCard.GetComponent<CardController>();
-
-        cal += basicCardController.model.cal;
-
-
-
-        if (additionalFieldTransform.childCount != 0)
-        {           
-            GameObject additionalCard = additionalFieldTransform.GetChild(0).gameObject;
-            CardController additionalCardController = additionalCard.GetComponent<CardController>();
-            cal += additionalCardController.model.cal;
-        }
-
-        int currentCal = 0;
-
-        if (GameManager.instance.playerID == 1)
-        {
-            currentCal = player.cal;
-        }
-        else
-        {
-            currentCal = enemy.cal;
-        }
-
-        if (currentCal + cal <= 1000)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
 
 
     }
@@ -291,16 +220,8 @@ public class MixController : MonoBehaviour
         if (specialMixID >= 0)
         {
             GameObject specialCard = Instantiate(cardPrefab, field, false);
-            CardController specialCardController = specialCard.GetComponent<CardController>();
+            specialCard.GetComponent<CardController>().Init(3, specialMixID, true);
 
-            specialCardController.Init(3, specialMixID, true);
-
-
-            //カロリー０、攻撃防御は和にする
-            specialCardController.model.at = basicCardController.model.at + additionalCardController.model.at;
-            specialCardController.model.cal = 0;
-            specialCardController.view.Refresh(specialCardController.model);
-            //return;
         }
         else
         {
@@ -315,9 +236,6 @@ public class MixController : MonoBehaviour
 
             //Debug.Log(cloneCard.GetComponent<CardController>().model);
             cloneCardController.model.cal += additionalCardController.model.cal;
-            cloneCardController.model.at += additionalCardController.model.at;
-            cloneCardController.model.de += additionalCardController.model.de;
-            cloneCardController.movement.isDraggable = false;
             cloneCardController.view.Refresh(cloneCardController.model);
         }
 
@@ -362,9 +280,58 @@ public class MixController : MonoBehaviour
 
         return specialMixID;
 
+        //foreach (int partnerID in card_1.model.partnerID)
+        //{
+        //    if (partnerID == card_2.model.cardID)
+        //    {
+        //        //特殊合成
+        //    }
+        //}
+        //switch (cardName_1)
+        //{
+        //    case "たまご":
+        //        if (cardName_2 == "ごはん")
+        //        {
+        //            card = Instantiate(cardPrefab, field, false);
+        //            card.GetComponent<CardController>().Init(0, true, true);
+        //        }
+        //        break;
+        //    default:
+        //        break;
+        //}
+
+        //if ((cardName_1 == "たまご" && cardName_2 == "とりにく") || (cardName_1 == "とりにく" && cardName_2 == "たまご"))
+        //{
+        //    card = Instantiate(cardPrefab, field, false);
+        //    card.GetComponent<CardController>().Init(0, true, true);
+        //}
+        //else if ((cardName_1 == "ぎゅうにく" && cardName_2 == "じゃがいも") || (cardName_1 == "じゃがいも" && cardName_2 == "ぎゅうにく"))
+        //{
+        //    card = Instantiate(cardPrefab, field, false);
+        //    card.GetComponent<CardController>().Init(1, true, true);
+        //}
+        //else if ((cardName_1 == "ぶたにく" && cardName_2 == "ピーマン") || (cardName_1 == "ピーマン" && cardName_2 == "ぶたにく"))
+        //{
+        //    card = Instantiate(cardPrefab, field, false);
+        //    card.GetComponent<CardController>().Init(2, true, true);
+        //}
 
 
+        //if (card != null)
+        //{
+
+        //    return true;
+        //}
+        //else
+        //{
+        //    return false;
+        //}
     }
 
 
+
+    void Combine(string name1, string name2)
+    {
+
+    }
 }

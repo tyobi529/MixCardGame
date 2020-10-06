@@ -58,7 +58,8 @@ MonoBehaviour:
   isAttackButton: 1
   isMixButton: 0
   isThrowButton: 0
-  isChangeCard: 0
+  isChange: 0
+  maxHand: 5
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0

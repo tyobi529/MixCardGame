@@ -119,13 +119,20 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
 
         //合成予測
-
-        //if (GameManager.instance.attackID == GameManager.instance.playerID)
+        //if (defaultParent.GetComponent<DropPlace>().type == DropPlace.TYPE.BASICFIELD ||
+        //    defaultParent.GetComponent<DropPlace>().type == DropPlace.TYPE.ADDITIONALFIELD)
         //{
-        if (!GameManager.instance.isChangeCard && transform.GetComponent<CardController>().model.kind == 0)
+        //}
+        if (GameManager.instance.attackID == GameManager.instance.playerID)
+        {
             MixController.instance.ExpectMix();
 
-        //}
+        }
+        else
+        {
+            UIManager.instance.ShowExpectDamage();
+        }
+
 
     }
 
