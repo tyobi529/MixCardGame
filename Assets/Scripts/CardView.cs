@@ -8,6 +8,9 @@ public class CardView : MonoBehaviour
     [SerializeField] Text nameText;
     //[SerializeField] Text hpText;
     [SerializeField] Text effectText;
+
+    [SerializeField] Text hitText;
+
     //[SerializeField] Text deText;
     [SerializeField] Image iconImage;
     //[SerializeField] GameObject selectablePanel;
@@ -20,9 +23,9 @@ public class CardView : MonoBehaviour
 
 
 
-    [SerializeField] GameObject attackPanel;
-    [SerializeField] GameObject nutrientsPanel;
-    [SerializeField] GameObject defencePanel;
+    [SerializeField] GameObject ingredientPanel;
+    //[SerializeField] GameObject nutrientsPanel;
+    //[SerializeField] GameObject defencePanel;
     [SerializeField] GameObject mixPanel;
 
     //[SerializeField] GameObject spellPanel;
@@ -32,6 +35,8 @@ public class CardView : MonoBehaviour
     //[SerializeField] GameObject specialMixPanel;
 
     //[SerializeField] Image panelImage;
+
+    [SerializeField] public GameObject selectPanel;
 
 
 
@@ -62,98 +67,126 @@ public class CardView : MonoBehaviour
 
         //hpText.text = cardModel.hp.ToString();
 
-        if (cardModel.kind == 0)
+        if (cardModel.kind == KIND.INGREDIENT)
+        {
+
+            effectText.text = DecideEffectText(cardModel.cardID);
+            ingredientPanel.SetActive(true);
+
+            //if (cardModel.red != 0)
+            //{
+            //    //nutrientsPanel.GetComponent<Image>().color = Color.red;
+            //    ingredientPanel.GetComponent<Image>().color = Color.red;
+            //}
+            //else if (cardModel.yellow != 0)
+            //{
+            //    //nutrientsPanel.GetComponent<Image>().color = Color.yellow;
+            //    ingredientPanel.GetComponent<Image>().color = Color.yellow;
+            //}
+            //else
+            //{
+            //    //nutrientsPanel.GetComponent<Image>().color = Color.green;
+            //    ingredientPanel.GetComponent<Image>().color = Color.green;
+            //}
+
+
+        }
+        else if (cardModel.kind == KIND.DISH)
         {
             effectText.text = cardModel.cal + "Cal";
-            attackPanel.SetActive(true);
-            nutrientsPanel.SetActive(true);
+            hitText.text = cardModel.hit + "%";
 
-            if (cardModel.red != 0)
-            {
-                nutrientsPanel.GetComponent<Image>().color = Color.red;
-            }
-            else if (cardModel.yellow != 0)
-            {
-                nutrientsPanel.GetComponent<Image>().color = Color.yellow;
-            }
-            else
-            {
-                nutrientsPanel.GetComponent<Image>().color = Color.green;
-            }
-
-            //attackPanel.SetActive(true);
-            //if (cardModel)
-            //RedPanel.GetComponent<Image>
-
-            //defencePanel.SetActive(false);
-            //spellPanel.SetActive(false);
-
-            //defencePanel.GetComponent<Image>().color = new Color(248f/255f, 109f/255f, 78f/255f, 1f);
-            //defencePanel.GetComponent<Image>().color = Color.h;
+            //mixPanel.SetActive(true);
+            ingredientPanel.SetActive(true);
 
         }
-        else if (cardModel.kind == 1)
+
+        if (cardModel.nutrient == NUTRIENT.RED)
         {
-            effectText.text = cardModel.cal + "Cal";
-            //effectText.color = Color.blue;
-
-            defencePanel.SetActive(true);
-            //panelImage.color = new Color(78f / 255f, 192f / 255f, 248f / 255f, 1f);
-
-            //attackPanel.SetActive(false);
-            //defencePanel.SetActive(true);
-            //spellPanel.SetActive(false);
+            ingredientPanel.GetComponent<Image>().color = Color.red;
 
         }
-        //合成
-        //else if (cardModel.kind == 2)
-        //{
-        //    effectText.text = cardModel.cal + "Cal";
-        //    //effectText.color = Color.blue;
-
-
-        //    //panelImage.color = new Color(248f / 255f, 246f / 255f, 126f / 255f, 1f);
-        //    //attackPanel.SetActive(false);
-        //    //defencePanel.SetActive(false);
-        //    //spellPanel.SetActive(true);
-        //}
-
-        if (cardModel.isMix)
+        else if (cardModel.nutrient == NUTRIENT.YELLOW)
         {
-            mixPanel.SetActive(true);
+            ingredientPanel.GetComponent<Image>().color = Color.yellow;
 
         }
-        //deText.text = cardModel.de.ToString();
+        else if (cardModel.nutrient == NUTRIENT.GREEN)
+        {
+            ingredientPanel.GetComponent<Image>().color = Color.green;
+
+        }
+
         iconImage.sprite = cardModel.icon;
-
-
-
-        //相手のカードを裏返す
-        //if (cardModel.playerID != GameManager.instance.playerID)
-        //{
-        //    maskPanel.SetActive(true);
-        //}
 
 
     }
 
 
-    //public void Show()
-    //{
-    //    maskPanel.SetActive(false);
-
-    //}
-
-    public void Refresh(CardModel cardModel)
+    string DecideEffectText(int cardID)
     {
-        if (cardModel.kind == 0)
+        string effectText = null;
+
+        switch (cardID)
         {
-            effectText.text = cardModel.cal + "Cal";
+            case 0:
+                effectText = "攻撃UP";
+                break;
+            case 1:
+                effectText = "命中UP";
+                break;
+            case 2:
+                effectText = "バフ解除";
+                break;
+            case 3:
+                effectText = "毒特攻";
+                break;
+            case 4:
+                effectText = "暗闇特攻";
+                break;
+            case 5:
+                effectText = "HP差特攻";
+                break;
+            case 6:
+                effectText = "毒";
+                break;
+            case 7:
+                effectText = "暗闇";
+                break;
+            case 8:
+                effectText = "異常解除";
+                break;
+            default:
+                Debug.Log("範囲外");
+                break;
         }
-        else if (cardModel.kind == 1)
+
+        return effectText;
+    }
+
+    public void Refresh(CardModel cardModel, int attackUp, int hitUp)
+    {
+        effectText.text = cardModel.cal + "Cal";
+        hitText.text = cardModel.hit + "%";
+
+
+        if (attackUp != 0)
         {
-            effectText.text = cardModel.cal + "Cal";
+            effectText.color = Color.red;
         }
+        if (hitUp != 0)
+        {
+            hitText.color = Color.red;
+        }
+
+        //if (cardModel.kind == KIND.INGREDIENT)
+        //{
+        //    effectText.text = cardModel.cal + "Cal";
+        //}
+        //else if (cardModel.kind == KIND.DISH)
+        //{
+        //    effectText.text = cardModel.cal + "Cal";
+        //}
         //hpText.text = cardModel.hp.ToString();
         //atText.text = cardModel.at.ToString();
         //deText.text = cardModel.de.ToString();

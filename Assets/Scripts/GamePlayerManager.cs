@@ -12,19 +12,28 @@ public class GamePlayerManager : MonoBehaviour
     //public list = new List<List<int>>();
 
 
-    public int heroHp;
+    public int hp;
 
-    public int heroRed;
-    public int heroYellow;
-    public int heroGreen;
+    public int red;
+    public int yellow;
+    public int green;
 
     public int mixCost;
     public int necessaryCost;
 
-    //０：不健康、１：普通、２：健康
-    public int health = 2;
-    public bool isPoison = false;
-    public bool isDeadlyPoison = false;
+    public bool ishealth;
+
+    public bool isPoison;
+    public int poisonCount;
+
+    public bool isDark;
+    //public bool isDeadlyPoison = false;
+
+    //追加攻撃
+    public int attackUp = 0;
+    //追加守備
+    //public int addDefence = 0;
+    public int hitUp = 0;
 
 
     //public int defaultMixCost;

@@ -20,8 +20,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text enemyHeroYellowText;
     [SerializeField] Text enemyHeroGreenText;
 
-    [SerializeField] Text playerStatusText;
-    [SerializeField] Text enemyStatusText;
+    [SerializeField] Text playerPoisonText;
+    [SerializeField] Text enemyPoisonText;
+    [SerializeField] Text playerDarkText;
+    [SerializeField] Text enemyDarkText;
+
+    [SerializeField] Text playerAttackUpText;
+    [SerializeField] Text enemyAttackUpText;
+    [SerializeField] Text playerHitUpText;
+    [SerializeField] Text enemyHitUpText;
 
     [SerializeField] Text playerHealthText;
     [SerializeField] Text enemyHealthText;
@@ -67,6 +74,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] public GameObject lackCostText;
 
+    [SerializeField] GamePlayerManager player;
+    [SerializeField] GamePlayerManager enemy;
 
 
     //シングルトン化（どこからでもアクセスできるようにする）
@@ -96,21 +105,35 @@ public class UIManager : MonoBehaviour
         timeCountText.text = timeCount.ToString();
     }
 
-    public void ShowHeroHP(int playerHeroHp, int enemyHeroHp)
+    public void ShowHP()
     {
-        playerHeroHpText.text = playerHeroHp.ToString();
-        enemyHeroHpText.text = enemyHeroHp.ToString();
+        playerHeroHpText.text = player.hp.ToString();
+        enemyHeroHpText.text = enemy.hp.ToString();
     }
 
-    public void ShowHeroNutrients(int playerHeroRed, int playerHeroYellow, int playerHeroGreen, int enemyHeroRed, int enemyHeroYellow, int enemyHeroGreen)
+    public void ShowNutrients()
     {
-        playerHeroRedText.text = playerHeroRed.ToString();
-        playerHeroYellowText.text = playerHeroYellow.ToString();
-        playerHeroGreenText.text = playerHeroGreen.ToString();
+        if (player.isDark)
+        {
+            playerHeroRedText.text = "?";
+            playerHeroYellowText.text = "?";
+            playerHeroGreenText.text = "?";
 
-        enemyHeroRedText.text = enemyHeroRed.ToString();
-        enemyHeroYellowText.text = enemyHeroYellow.ToString();
-        enemyHeroGreenText.text = enemyHeroGreen.ToString();
+            enemyHeroRedText.text = "?";
+            enemyHeroYellowText.text = "?";
+            enemyHeroGreenText.text = "?";
+        }
+        else
+        {
+            playerHeroRedText.text = player.red.ToString();
+            playerHeroYellowText.text = player.yellow.ToString();
+            playerHeroGreenText.text = player.green.ToString();
+
+            enemyHeroRedText.text = enemy.red.ToString();
+            enemyHeroYellowText.text = enemy.yellow.ToString();
+            enemyHeroGreenText.text = enemy.green.ToString();
+        }
+
     }
 
     public void ShowResultPanel(int heroHp)
@@ -150,36 +173,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void ShowPoison(bool playerPoison, bool playerDeadlyPoison, bool enemyPoison, bool enemyDeadlyPoison)
-    {
-        if (playerDeadlyPoison)
-        {
-            playerStatusText.text = "猛毒";
-        }
-        else if (playerPoison)
-        {
-            playerStatusText.text = "毒";
-        }
-        else
-        {
-            playerStatusText.text = "";
-        }
 
-        if (enemyDeadlyPoison)
-        {
-            enemyStatusText.text = "猛毒";
-        }
-        else if (enemyPoison)
-        {
-            enemyStatusText.text = "毒";
-        }
-        else
-        {
-            enemyStatusText.text = "";
-
-        }
-
-    }
 
 
 
@@ -189,115 +183,11 @@ public class UIManager : MonoBehaviour
     //ターンエンドボタン
     public void OnDecideButton()
     {
-        //if (GameManager.instance.playerID == 1)
-        //{
-        //    playerFieldImage.color = new Color(1, 1, 1, 100f / 255f);
-        //}
-        //else
-        //{
-        //    enemyFieldImage.color = new Color(1, 1, 1, 100f / 255f);
-        //}
-
-        //basicFieldImage.enabled = false;
-        //additionalFieldImage.enabled = false;
-        //resultFieldImage.enabled = false;
-
-        attackFields.SetActive(false);
-
-        playerFieldImage.enabled = true;
-        enemyFieldImage.enabled = true;
-
-
-
-
-        ////全てのボタンを消す
-        //buttonsObj.SetActive(false);
-
-        //GameManager.instance.CheckField();
         GameManager.instance.OnDecideButton();
 
-        decideButtonObj.SetActive(false);
     }
 
-    public void OnChangeButton()
-    {
-        GameManager.instance.isChange = !GameManager.instance.isChange;
-
-        Transform hand;
-
-        if (GameManager.instance.playerID == 1)
-        {
-            hand = GameManager.instance.playerHandTransform;
-        }
-        else
-        {
-            hand = GameManager.instance.enemyHandTransform;
-        }
-
-        if (GameManager.instance.isChange)
-        {
-            ChangeButtonObj.GetComponent<Image>().color = Color.yellow;
-
-            //防御カードも移動可能に
-            GameManager.instance.ChangeDraggable(hand, 1, true);
-        }
-        else
-        {
-            ChangeButtonObj.GetComponent<Image>().color = Color.white;
-
-            GameManager.instance.ChangeDraggable(hand, 1, false);
-        }
-    }
-
-
-    //キャンセルボタン
-    //public void OnCancelButton()
-    //{
-    //    if (GameManager.instance.playerID == 1)
-    //    {
-    //        playerFieldImage.color = new Color(1, 1, 1, 100f / 255f);
-    //        playerFieldImage.enabled = false;
-
-    //    }
-    //    else
-    //    {
-    //        enemyFieldImage.color = new Color(1, 1, 1, 100f / 255f);
-    //        enemyFieldImage.enabled = false;
-
-    //    }
-
-    //    ShowButtonObj(true);
-
-    //}
-
-
-
-
-
-    void ReturnFieldCard()
-    {
-        CardController[] fieldCardList;
-
-        if (GameManager.instance.playerID == 1)
-        {
-            fieldCardList = GameManager.instance.playerFieldTransform.GetComponentsInChildren<CardController>();
-        }
-        else
-        {
-            fieldCardList = GameManager.instance.enemyFieldTransform.GetComponentsInChildren<CardController>();
-        }
-
-        //フィールドのカードを手札に戻す
-        //foreach (CardController card in fieldCardList)
-        //{
-        //    card.MoveToHand();
-        //}
-
-        //カード並び替え
-        GameManager.instance.LineUpCard(GameManager.instance.playerFieldTransform);
-        GameManager.instance.LineUpCard(GameManager.instance.enemyFieldTransform);
-    }
-
+   
 
     //true:攻撃、合成ボタン出す
     //false:決定、キャンセルボタン出す
@@ -321,58 +211,135 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void ShowExpectDamage()
+
+
+    public void ShowHealth(bool playerHealth, bool enemyHealth)
     {
-        int damage = GameManager.instance.CalculateDamage();
-        expectDamageText.text = damage + "Cal";
+        if (playerHealth)
+        {
+            playerHealthText.text = "健康";
+
+        }
+        else
+        {
+            playerHealthText.text = "不調";
+
+        }
+
+        if (enemyHealth)
+        {
+            enemyHealthText.text = "健康";
+
+        }
+        else
+        {
+            enemyHealthText.text = "不調";
+
+        }
+
+       
     }
 
 
-    public void ShowHealth(int playerHealth, int enemyHealth)
+    public void ShowPoison(bool playerPoison, int playerPoisonCount, bool enemyPoison, int enemyPoisonCount)
     {
-        //if (playerHealth == 0)
-        //{
-        //    playerHealthText.text = "不調";
-        //}
-        //else if (playerHealth == 1)
-        //{
-        //    playerHealthText.text = "普通";
-        //}
-        //else if (playerHealth == 2)
-        //{
-        //    playerHealthText.text = "健康";
-        //}
-
-        switch (playerHealth)
+        if (playerPoison)
         {
-            case 0:
-                playerHealthText.text = "不調";
-                break;
-            case 1:
-                playerHealthText.text = "普通";
-                break;
-            case 2:
-                playerHealthText.text = "健康";
-                break;
-            default:
-                break;
+            playerPoisonText.text = "毒-" + playerPoisonCount * 10;
+        }
+        else
+        {
+            playerPoisonText.text = "";
         }
 
-        switch (enemyHealth)
+
+        if (enemyPoison)
         {
-            case 0:
-                enemyHealthText.text = "不調";
-                break;
-            case 1:
-                enemyHealthText.text = "普通";
-                break;
-            case 2:
-                enemyHealthText.text = "健康";
-                break;
-            default:
-                break;
+            enemyPoisonText.text = "毒-" + enemyPoisonCount * 10;
         }
+        else
+        {
+            enemyPoisonText.text = "";
+
+        }
+
     }
+
+    public void ShowDark(bool playerDark, bool enemyDark)
+    {
+        if (playerDark)
+        {
+            playerDarkText.text = "暗闇";
+        }
+        else
+        {
+            playerDarkText.text = "";
+        }
+
+
+        if (enemyDark)
+        {
+            enemyDarkText.text = "暗闇";
+        }
+        else
+        {
+            enemyDarkText.text = "";
+
+        }
+
+    }
+
+    public void ShowAttackUp(int playerAttackUp, int enemyAttackUp)
+    {
+        if (playerAttackUp == 0)
+        {
+            playerAttackUpText.text = "";
+        }
+        else
+        {
+            playerAttackUpText.text = "攻撃+" + playerAttackUp * 20;
+        }
+        
+
+        if (enemyAttackUp == 0)
+        {
+            enemyAttackUpText.text = "";
+        }
+        else
+        {
+            enemyAttackUpText.text = "攻撃+" + enemyAttackUp * 20;
+        }
+        
+
+    }
+
+
+    public void ShowHitUp(int playerHitUp, int enemyHitUp)
+    {
+        if (playerHitUp == 0)
+        {
+            playerHitUpText.text = "";
+        }
+        else
+        {
+            playerHitUpText.text = "命中+" + playerHitUp * 20;
+        }
+
+        if (enemyHitUp == 0)
+        {
+            enemyHitUpText.text = "";
+        }
+        else
+        {
+            enemyHitUpText.text = "命中+" + enemyHitUp * 20;
+        }
+        
+        
+
+    }
+
+
+
 
 
 

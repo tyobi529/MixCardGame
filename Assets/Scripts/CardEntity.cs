@@ -16,7 +16,12 @@ public class CardEntity : ScriptableObject
     //public ABILITY ability;
     //public SPELL spell;
     //public KIND kind;
-    public int kind;
+    //public int kind;
+    public NUTRIENT nutrient;
+    public KIND kind;
+
+    public int hit;
+
     //public NUTRITION nutrtion;
     public int red;
     public int yellow;
@@ -30,20 +35,27 @@ public class CardEntity : ScriptableObject
     public int[] partnerID;
     public int[] specialMixID;
 
-    bool isSpecialMix;
+    //bool isSpecialMix;
 
 }
 
-//public enum SPECIAL
-//{
-//    NONE,
-//    POISON1,
-//    POISON2,
-//    HEAL1,
-//    HEAL2,
 
+public enum NUTRIENT
+{
+    RED,
+    YELLOW,
+    GREEN,
+
+
+}
+
+public enum KIND
+{
+    INGREDIENT,
+    DISH,
     
-//}
+
+}
 
 
 

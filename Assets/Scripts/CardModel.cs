@@ -14,9 +14,13 @@ public class CardModel
     public Sprite icon;
     //public ABILITY ability;
     //public SPELL spell;
-    //public KIND kind;
+    public NUTRIENT nutrient;
+    public KIND kind;
+
+    public int hit;
+
     //0:攻撃　１：防御　３：スペル
-    public int kind;
+    //public int kind;
     //public NUTRITION nutrition;
     public int red;
     public int yellow;
@@ -37,7 +41,7 @@ public class CardModel
     //public int playerID;
     public int special;
 
-    public bool isMix;
+    //public bool isMix;
 
     public bool isSpecialMix;
 
@@ -45,39 +49,38 @@ public class CardModel
     public int[] specialMixID;
 
 
+    public bool isSelect;
+    //public int selectNum;
 
+
+    
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(int kind, int cardID, bool isMix)
+    public CardModel(KIND kind, int cardID)
     {
         CardEntity cardEntity = null;
 
-        FrequencyController frequencyController = GameObject.Find("FrequencyController").GetComponent<FrequencyController>();
+        //FrequencyController frequencyController = GameObject.Find("FrequencyController").GetComponent<FrequencyController>();
 
         this.kind = kind;
         this.cardID = cardID;
 
-        if (kind == 0)
-        {
-            cardEntity = Resources.Load<CardEntity>("CardEntityList/Attack/Card" + cardID);
-        }
-        else if (kind == 1)
-        {
-            cardEntity = Resources.Load<CardEntity>("CardEntityList/Defence/Card" + cardID);
 
-        }
-        else if (kind == 2)
+        if (kind == KIND.INGREDIENT)
         {
-            cardEntity = Resources.Load<CardEntity>("CardEntityList/Spell/Card" + cardID);
-
+            cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
+            hit = 100;
+            special = -1;
         }
-        else if (kind == 3)
+        else if (kind == KIND.DISH)
         {
-            cardEntity = Resources.Load<CardEntity>("CardEntityList/Special/Card" + cardID);
-            isSpecialMix = true;
+            cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
+            hit = cardEntity.hit;
+            special = cardEntity.special;
         }
 
+        this.nutrient = cardEntity.nutrient;
 
 
 
@@ -92,7 +95,7 @@ public class CardModel
         icon = cardEntity.icon;
         //ability = cardEntity.ability;
         //spell = cardEntity.spell;
-        this.kind = cardEntity.kind;
+        //this.kind = cardEntity.kind;
         //nutrition = cardEntity.nutrtion;
 
         red = cardEntity.red;
@@ -110,24 +113,20 @@ public class CardModel
 
         //playerID = ID;
 
-        special = cardEntity.special;
+        //special = cardEntity.special;
 
         partnerID = cardEntity.partnerID;
         specialMixID = cardEntity.specialMixID;
 
-        this.isMix = isMix;
+        //this.isMix = isMix;
 
+        isSelect = false;
+        //selectNum = 0;
 
 
     }
 
 
-    //int DecideDefenceCal()
-    //{
-    //    float num = Random.Range(0f, 2f);
-    //    int cal = (int)(50f * Mathf.Pow(2.0f, num));
-    //    return cal;
-    //}
 
 
 }

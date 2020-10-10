@@ -46,6 +46,8 @@ MonoBehaviour:
   - SingleCard
   - StartDefence
   - StartGame
+  - Attack_RPC
+  - DamageCal
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

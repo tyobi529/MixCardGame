@@ -7,380 +7,554 @@ public class SpecialController : MonoBehaviour
     public GamePlayerManager player;
     public GamePlayerManager enemy;
 
-    public void CheckSpecial(int special, int damage)
+    public void SpecialEffect(int special, bool isMyTurn, int damageCal)
     {
-        int attackID = GameManager.instance.attackID;
 
         switch (special)
         {
+            case 0:
+                AttackUp(isMyTurn);
+                break;
             case 1:
-                Heal1(attackID);
+                HitRateUp(isMyTurn);
                 break;
             case 2:
-                Heal2(attackID);
+                BuffRelease(isMyTurn, damageCal);
                 break;
             case 3:
-                Poison(attackID, damage);
+                PoisonSpecialAttack(isMyTurn);
                 break;
             case 4:
-                DeadlyPoison(attackID, damage);
+                DarkSpecialAttack(isMyTurn);
                 break;
             case 5:
-                ChangeHandCard(attackID);
+                HpSpecialAttack(isMyTurn);
                 break;
             case 6:
-                DecreaseRed(attackID, damage);
+                Poison(isMyTurn, damageCal);
                 break;
             case 7:
-                DecreaseYellow(attackID, damage);
+                Dark(isMyTurn, damageCal);
                 break;
             case 8:
-                DecreaseGreen(attackID, damage);
-                break;
-            case 9:
-                IncreaseRed(attackID);
-                break;
-            case 10:
-                IncreaseYellow(attackID);
-                break;
-            case 11:
-                IncreaseGreen(attackID);
-                break;
-            case 12:
-                IncreaseRed(attackID);
-                IncreaseYellow(attackID);
-                IncreaseGreen(attackID);
-                break;
-            case 13:
-                DecreaseHandCard(attackID, damage);
-                break;
-            case 14:
-                AbsorbHp(attackID, damage);
-                break;
-            case 15:
-                DecreaseMyHp1(attackID);
-                break;
-            case 16:
-                DecreaseMyHp2(attackID);
+                RecoverCondition(isMyTurn);
                 break;
             default:
+                Debug.Log("範囲外");
                 break;
         }
     }
 
 
-    void Poison(int attackID, int damage)
+
+    /// <summary>
+    /// 赤栄養素
+    /// </summary>
+
+
+    //攻撃アップ
+    void AttackUp(bool isMyTurn)
     {
-        if (damage == 0)
+        Debug.Log("攻撃アップ");
+        if (isMyTurn)
+        {
+            player.attackUp++;
+        }
+        else
+        {
+            enemy.attackUp++;
+        }
+    }
+
+    //命中アップ
+    void HitRateUp(bool isMyTurn)
+    {
+        Debug.Log("命中アップ");
+
+        if (isMyTurn)
+        {
+            player.hitUp++;
+        }
+        else
+        {
+            enemy.hitUp++;
+        }
+
+    }
+
+    //相手のバフ解除
+    void BuffRelease(bool isMyTurn, int damageCal)
+    {
+
+        if (damageCal == 0)
         {
             return;
         }
 
-        if (attackID == 1)
+        Debug.Log("バフ解除");
+
+        if (isMyTurn)
+        {
+            enemy.attackUp = 0;
+            enemy.hitUp = 0;
+        }
+        else
+        {
+            player.attackUp = 0;
+            player.hitUp = 0;
+        }
+    }
+
+    /// <summary>
+    /// 黄栄養素
+    /// </summary>
+
+    //毒特攻
+    void PoisonSpecialAttack(bool isMyTurn)
+    {
+        if (isMyTurn)
         {
             if (enemy.isPoison)
             {
-                enemy.isDeadlyPoison = true;
+                Debug.Log("毒特攻");
+                GameManager.instance.damageCal *= 2;
             }
-            else
-            {
-                enemy.isPoison = true;
 
-            }
         }
         else
         {
             if (player.isPoison)
             {
-                player.isDeadlyPoison = true;
+                Debug.Log("毒特攻");
+                GameManager.instance.damageCal *= 2;
             }
-            else
-            {
-                player.isPoison = true;
+        }
+    }
 
+
+    //暗闇特攻
+    void DarkSpecialAttack(bool isMyTurn)
+    {
+        if (isMyTurn)
+        {
+            if (enemy.isDark)
+            {
+                Debug.Log("暗闇特攻");
+                GameManager.instance.damageCal *= 2;
             }
+
+        }
+        else
+        {
+            if (player.isDark)
+            {
+                Debug.Log("暗闇特攻");
+                GameManager.instance.damageCal *= 2;
+            }
+        }
+    }
+
+
+    //HP差特攻
+    void HpSpecialAttack(bool isMyTurn)
+    {
+        if (isMyTurn)
+        {
+            if (player.hp + 1000 < enemy.hp)
+            {
+                Debug.Log("HP特攻");
+                GameManager.instance.damageCal *= 2;
+            }
+
+        }
+        else
+        {
+            if (enemy.hp + 1000 < player.hp)
+            {
+                Debug.Log("HP特攻");
+                GameManager.instance.damageCal *= 2;
+            }
+        }
+    }
+
+
+
+    /// <summary>
+    /// 緑栄養素
+    /// </summary>
+
+    //相手を毒に
+    void Poison(bool isMyTurn, int damageCal)
+    {
+        if (damageCal == 0)
+        {
+            return;
         }
 
         Debug.Log("毒付与");
+
+        if (isMyTurn)
+        {
+            enemy.isPoison = true;
+        }
+        else
+        {
+            player.isPoison = true;
+        }
     }
 
-    void DeadlyPoison(int attackID, int damage)
+    //相手を暗闇に
+    void Dark(bool isMyTurn, int damageCal)
     {
-        if (damage == 0)
+        if (damageCal == 0)
         {
             return;
         }
 
-        if (attackID == 1)
+        Debug.Log("暗闇付与");
+
+        if (isMyTurn)
         {
-
-            enemy.isDeadlyPoison = true;
-
+            enemy.isDark = true;
         }
         else
         {
-
-            player.isDeadlyPoison = true;
-
-
+            player.isDark = true;
         }
-
-        Debug.Log("猛毒付与");
     }
 
-    void Heal1(int attackID)
+    //毒解除
+    void RecoverCondition(bool isMyTurn)
     {
+        Debug.Log("状態異常解除");
 
-        if (attackID == 1)
+        if (isMyTurn)
         {
-            player.heroHp += 500;
+            player.isPoison = false;
+            player.isDark = false;
         }
         else
         {
-            enemy.heroHp += 500;
-
+            enemy.isPoison = false;
+            enemy.isDark = false;
         }
-
-        Debug.Log("500回復");
-    }
-
-    void Heal2(int attackID)
-    {
-
-        if (attackID == 1)
-        {
-            player.heroHp += 1000;
-        }
-        else
-        {
-            enemy.heroHp += 1000;
-
-        }
-
-        Debug.Log("1000回復");
-    }
-
-    void ChangeHandCard(int attackID)
-    {
-        int playerID = GameManager.instance.playerID;
-
-
-
-
-        Transform hand;
-        GamePlayerManager hero;
-
-        if (attackID == 1)
-        {
-            hand = GameManager.instance.playerHandTransform;
-            hero = player;
-        }
-        else
-        {
-            hand = GameManager.instance.enemyHandTransform;
-            hero = enemy;
-        }
-
-        foreach (Transform card in hand)
-        {
-            Destroy(card.gameObject);
-
-        }
-
-        Debug.Log("手札" + GameManager.instance.maxHand);
-        for (int i = 0; i < GameManager.instance.maxHand; i++)
-        {
-            GameManager.instance.GiveCardToHand(attackID);
-
-        }
-
-
-
-        //Debug.Log("手札" + hand.childCount);
-
-        //GameManager.instance.SettingInitHand();
-
-        Debug.Log("手札入れ替え");
     }
 
 
-    void DecreaseRed(int attackID, int damage)
-    {
-        if (damage == 0)
-        {
-            return;
-        }
+   
 
-        if (attackID == 1)
-        {
-            enemy.heroRed--;
+    //void Poison(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
 
-        }
-        else
-        {
-            player.heroRed--;
+    //    if (attackID == 1)
+    //    {
+    //        if (enemy.isPoison)
+    //        {
+    //            enemy.isDeadlyPoison = true;
+    //        }
+    //        else
+    //        {
+    //            enemy.isPoison = true;
 
-        }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        if (player.isPoison)
+    //        {
+    //            player.isDeadlyPoison = true;
+    //        }
+    //        else
+    //        {
+    //            player.isPoison = true;
 
-        Debug.Log("赤が１減った");
-    }
+    //        }
+    //    }
 
-    void DecreaseYellow(int attackID, int damage)
-    {
-        if (damage == 0)
-        {
-            return;
-        }
+    //    Debug.Log("毒付与");
+    //}
 
-        if (attackID == 1)
-        {
-            enemy.heroYellow--;
+    //void DeadlyPoison(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
 
-        }
-        else
-        {
-            player.heroYellow--;
+    //    if (attackID == 1)
+    //    {
 
-        }
+    //        enemy.isDeadlyPoison = true;
 
-        Debug.Log("黄が１減った");
-    }
+    //    }
+    //    else
+    //    {
 
-    void DecreaseGreen(int attackID, int damage)
-    {
-        if (damage == 0)
-        {
-            return;
-        }
+    //        player.isDeadlyPoison = true;
 
-        if (attackID == 1)
-        {
-            enemy.heroGreen--;
 
-        }
-        else
-        {
-            player.heroGreen--;
+    //    }
 
-        }
+    //    Debug.Log("猛毒付与");
+    //}
 
-        Debug.Log("緑が１減った");
-    }
+    //void Heal1(int attackID)
+    //{
 
-    void IncreaseRed(int attackID)
-    {
-        if (attackID == 1)
-        {
-            player.heroRed++;
+    //    if (attackID == 1)
+    //    {
+    //        player.hp += 500;
+    //    }
+    //    else
+    //    {
+    //        enemy.hp += 500;
 
-        }
-        else
-        {
-            enemy.heroRed++;
+    //    }
 
-        }
+    //    Debug.Log("500回復");
+    //}
 
-        Debug.Log("赤が１増えた");
-    }
+    //void Heal2(int attackID)
+    //{
 
-    void IncreaseYellow(int attackID)
-    {
-        if (attackID == 1)
-        {
-            player.heroYellow++;
+    //    if (attackID == 1)
+    //    {
+    //        player.hp += 1000;
+    //    }
+    //    else
+    //    {
+    //        enemy.hp += 1000;
 
-        }
-        else
-        {
-            enemy.heroYellow++;
+    //    }
 
-        }
+    //    Debug.Log("1000回復");
+    //}
 
-        Debug.Log("黄が１増えた");
-    }
-
-    void IncreaseGreen(int attackID)
-    {
-        if (attackID == 1)
-        {
-            player.heroGreen++;
-
-        }
-        else
-        {
-            enemy.heroGreen++;
-
-        }
-
-        Debug.Log("緑が１増えた");
-    }
+    //void ChangeHandCard(int attackID)
+    //{
+    //    int playerID = GameManager.instance.playerID;
 
 
 
-    void DecreaseHandCard(int attackID, int damage)
-    {
-        if (damage == 0)
-        {
-            return;
-        }
 
-        if (attackID != GameManager.instance.playerID)
-        {
-            GameManager.instance.maxHand--;
+    //    Transform hand;
+    //    GamePlayerManager hero;
 
-        }
+    //    if (attackID == 1)
+    //    {
+    //        hand = GameManager.instance.playerHandTransform;
+    //        hero = player;
+    //    }
+    //    else
+    //    {
+    //        hand = GameManager.instance.enemyHandTransform;
+    //        hero = enemy;
+    //    }
 
-        Debug.Log("最大手札が１減った");
-    }
+    //    foreach (Transform card in hand)
+    //    {
+    //        Destroy(card.gameObject);
 
-    void AbsorbHp(int attackID, int damage)
-    {
-        if (damage == 0)
-        {
-            return;
-        }
+    //    }
 
-        if (attackID == 1)
-        {
-            player.heroHp += damage;
-        }
-        else
-        {
-            enemy.heroHp += damage;
-        }
+    //    Debug.Log("手札" + GameManager.instance.maxHand);
+    //    for (int i = 0; i < GameManager.instance.maxHand; i++)
+    //    {
+    //        //GameManager.instance.GiveCardToHand(attackID);
 
-        Debug.Log(damage + "カロリー吸収した");
-    }
+    //    }
 
-    void DecreaseMyHp1(int attackID)
-    {
 
-        if (attackID == 1)
-        {
-            player.heroHp -= 100;
-        }
-        else
-        {
-            enemy.heroHp -= 100;
-        }
 
-        Debug.Log("100Calの反動");
-    }
+    //    //Debug.Log("手札" + hand.childCount);
 
-    void DecreaseMyHp2(int attackID)
-    {
+    //    //GameManager.instance.SettingInitHand();
 
-        if (attackID == 1)
-        {
-            player.heroHp -= 200;
-        }
-        else
-        {
-            enemy.heroHp -= 200;
-        }
+    //    Debug.Log("手札入れ替え");
+    //}
 
-        Debug.Log("200Calの反動");
-    }
+
+    //void DecreaseRed(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    if (attackID == 1)
+    //    {
+    //        enemy.red--;
+
+    //    }
+    //    else
+    //    {
+    //        player.red--;
+
+    //    }
+
+    //    Debug.Log("赤が１減った");
+    //}
+
+    //void DecreaseYellow(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    if (attackID == 1)
+    //    {
+    //        enemy.yellow--;
+
+    //    }
+    //    else
+    //    {
+    //        player.yellow--;
+
+    //    }
+
+    //    Debug.Log("黄が１減った");
+    //}
+
+    //void DecreaseGreen(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    if (attackID == 1)
+    //    {
+    //        enemy.green--;
+
+    //    }
+    //    else
+    //    {
+    //        player.green--;
+
+    //    }
+
+    //    Debug.Log("緑が１減った");
+    //}
+
+    //void IncreaseRed(int attackID)
+    //{
+    //    if (attackID == 1)
+    //    {
+    //        player.red++;
+
+    //    }
+    //    else
+    //    {
+    //        enemy.red++;
+
+    //    }
+
+    //    Debug.Log("赤が１増えた");
+    //}
+
+    //void IncreaseYellow(int attackID)
+    //{
+    //    if (attackID == 1)
+    //    {
+    //        player.yellow++;
+
+    //    }
+    //    else
+    //    {
+    //        enemy.yellow++;
+
+    //    }
+
+    //    Debug.Log("黄が１増えた");
+    //}
+
+    //void IncreaseGreen(int attackID)
+    //{
+    //    if (attackID == 1)
+    //    {
+    //        player.green++;
+
+    //    }
+    //    else
+    //    {
+    //        enemy.green++;
+
+    //    }
+
+    //    Debug.Log("緑が１増えた");
+    //}
+
+
+
+    //void DecreaseHandCard(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    if (attackID != GameManager.instance.playerID)
+    //    {
+    //        GameManager.instance.maxHand--;
+
+    //    }
+
+    //    Debug.Log("最大手札が１減った");
+    //}
+
+    //void AbsorbHp(int attackID, int damage)
+    //{
+    //    if (damage == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    if (attackID == 1)
+    //    {
+    //        player.hp += damage;
+    //    }
+    //    else
+    //    {
+    //        enemy.hp += damage;
+    //    }
+
+    //    Debug.Log(damage + "カロリー吸収した");
+    //}
+
+    //void DecreaseMyHp1(int attackID)
+    //{
+
+    //    if (attackID == 1)
+    //    {
+    //        player.hp -= 100;
+    //    }
+    //    else
+    //    {
+    //        enemy.hp -= 100;
+    //    }
+
+    //    Debug.Log("100Calの反動");
+    //}
+
+    //void DecreaseMyHp2(int attackID)
+    //{
+
+    //    if (attackID == 1)
+    //    {
+    //        player.hp -= 200;
+    //    }
+    //    else
+    //    {
+    //        enemy.hp -= 200;
+    //    }
+
+    //    Debug.Log("200Calの反動");
+    //}
 
 
     //相手の防御カード弱体
