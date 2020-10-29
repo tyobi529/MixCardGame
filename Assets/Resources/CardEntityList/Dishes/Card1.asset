@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\u8089\u3046\u3069\u3093"
   cal: 93
-  icon: {fileID: 21300000, guid: 1004589abe47a4095bede1e4974d2268, type: 3}
+  icon: {fileID: 21300000, guid: 3eccb546f2827453ebb0f185787ec153, type: 3}
+  selectIcon: {fileID: 0}
   nutrient: 1
   kind: 1
   hit: 100
-  red: 1
+  red: 2
   yellow: 2
   green: 0
   special: 4

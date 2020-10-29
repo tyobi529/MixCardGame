@@ -9,13 +9,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     //CardController cardPrefab;
     GameObject cardPrefab;
+    GameObject dishCardPrefab;
 
 
     public GamePlayerManager player;
     public GamePlayerManager enemy;
 
     //List<int> deck = new List<int>();
-    int[] deck = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    //int[,] deck = new int[2, 9] { { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 } };
+    int[] deck_0 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    int[] deck_1 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
 
     //[SerializeField] AI enemyAI;
@@ -24,13 +27,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [SerializeField]
     //public Transform playerHandTransform, playerFieldTransform, enemyHandTransform, enemyFieldTransform;
-    public Transform playerHandTransform;
+    public Transform[,] conveyorTransform = new Transform[2, 4];
+
+    //public object[] Conveyor = new object[2];
+
+    //public Transform playerHandTransform;
 
     //[SerializeField] CardController cardPrefab;
 
 
     //Transform basicFieldTransform, additionalFieldTransform;
-    Transform field1Transform, field2Transform, resultFieldTransform;
+    //Transform mixFieldTransform[0], field2Transform, resultFieldTransform;
+    Transform[] mixFieldTransform = new Transform[3];
 
 
     GameObject reverseObject;
@@ -49,7 +57,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public int playerID;
 
-    FrequencyController frequencyController;
+    
 
 
     SpecialController specialController;
@@ -92,8 +100,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     //bool isConfirm2 = false;
 
 
+    //CardController card1 = null;
+    //CardController card2 = null;
+    //CardController resultCard = null;
 
-    public CardController[] selectCard = new CardController[2] { null, null };
+    CardController[] cardController = new CardController[3] {null, null, null};
+
+
+
+    //public CardController[] selectCard = new CardController[2] { null, null };
+    //public int[,] selectCardPosition = new int[2, 2] {{-1, -1}, {-1, -1}};
+    int[] selectCardPosition_0 = new int[2] { -1, -1 };
+    int[] selectCardPosition_1 = new int[2] { -1, -1 };
 
     //シングルトン化（どこからでもアクセスできるようにする）
     public static GameManager instance;
@@ -105,24 +123,52 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         cardPrefab = (GameObject)Resources.Load("Card");
+        dishCardPrefab = (GameObject)Resources.Load("DishCard");
 
         player = GameObject.Find("Player").GetComponent<GamePlayerManager>();
         enemy = GameObject.Find("Enemy").GetComponent<GamePlayerManager>();
 
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
-        playerHandTransform = GameObject.Find("PlayerHand").transform;
+        //playerHandTransform = GameObject.Find("PlayerHand").transform;
+        //conveyorTransform[0] = GameObject.Find("Conveyor_1").transform;
+        //conveyorTransform[1] = GameObject.Find("Conveyor_2").transform;
+
+        //Conveyor[0] = GameObject.Find("Conveyor_1");
+        //Conveyor[1] = GameObject.Find("Conveyor_2");
+
+        GameObject[] conveyor = new GameObject[2];
+        for (int i = 0; i < 2; i++)
+        {
+            conveyor[i] = GameObject.Find("Conveyor_" + i.ToString());
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                conveyorTransform[i, j] = conveyor[i].transform.GetChild(j).transform;
+            }
+        }
+
+
+
         //playerFieldTransform = GameObject.Find("PlayerField").transform;
         //enemyHandTransform = GameObject.Find("EnemyHand").transform;
         //enemyFieldTransform = GameObject.Find("EnemyField").transform;
 
-        field1Transform = GameObject.Find("Field1").transform;
-        field2Transform = GameObject.Find("Field2").transform;
-        resultFieldTransform = GameObject.Find("ResultField").transform;
+        //mixFieldTransform[0] = GameObject.Find("Field1").transform;
+        //field2Transform = GameObject.Find("Field2").transform;
+        //resultFieldTransform = GameObject.Find("ResultField").transform;
+
+        for (int i = 0; i < 3; i++)
+        {
+            mixFieldTransform[i] = GameObject.Find("MixField_" + i.ToString()).transform;
+        }
 
         reverseObject = GameObject.Find("ReverseObject");
 
-        frequencyController = GameObject.Find("FrequencyController").GetComponent<FrequencyController>();
+
 
         specialController = GameObject.Find("SpecialController").GetComponent<SpecialController>();
 
@@ -130,75 +176,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         //battleObjects = GameObject.Find("BattleObjects");
 
-        mixController = GameObject.Find("MixController").GetComponent<MixController>();
+        //mixController = GameObject.Find("MixController").GetComponent<MixController>();
 
         playerID = PhotonNetwork.LocalPlayer.ActorNumber;
 
         defaultMaxHand = maxHand;
-
-        //if (playerID == 2)
-        //{
-        //    //reverseObject.transform.localScale = new Vector3(-1, -1, 1);
-        //    Vector3 tmp = playerFieldTransform.position;
-        //    playerFieldTransform.position = enemyFieldTransform.position;
-        //    enemyFieldTransform.transform.position = tmp;
-
-        //    tmp = playerHandTransform.position;
-        //    playerHandTransform.position = enemyHandTransform.position;
-        //    enemyHandTransform.transform.position = tmp;
-
-        //    tmp = player.transform.position;
-        //    player.transform.position = enemy.transform.position;
-        //    enemy.transform.position = tmp;
-
-        //}
-
-
-        //デッキ生成
-        if (playerID == 1)
-        {
-            //player.deck = new List<int>();
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    //int num = UnityEngine.Random.Range(0, frequencyController.sum);
-
-            //    (int kind, int cardID) = frequencyController.DecideCard();
-
-            //    //player.deck.Add(frequencyController.DecideCard(num));
-            //    player.deck_cardKind.Add(kind);
-            //    player.deck_cardID.Add(cardID);
-            //}
-
-            //相手のDropPlaceを消す
-            //GameObject.Find("EnemyHand").GetComponent<DropPlace>().enabled = false;
-            //GameObject.Find("EnemyField").GetComponent<DropPlace>().enabled = false;
-        }
-        else
-        {
-            //enemy.deck = new List<int>();
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    //int num = UnityEngine.Random.Range(0, frequencyController.sum);
-
-            //    //(int kind, int cardID) = frequencyController.DecideCard(num);
-            //    //enemy.deck[i].Add(kind);
-            //    //enemy.deck[i].Add(cardID);
-
-            //    //enemy.deck.Add(frequencyController.DecideCard(num));
-
-            //    (int kind, int cardID) = frequencyController.DecideCard();
-
-            //    //player.deck.Add(frequencyController.DecideCard(num));
-            //    enemy.deck_cardKind.Add(kind);
-            //    enemy.deck_cardID.Add(cardID);
-
-            //}
-
-
-            //相手のDropPlaceを消す
-            //GameObject.Find("PlayerHand").GetComponent<DropPlace>().enabled = false;
-            //GameObject.Find("PlayerField").GetComponent<DropPlace>().enabled = false;
-        }
 
 
 
@@ -250,8 +232,38 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         //uiManager.ShowMixCost(player.mixCost, enemy.mixCost);
 
-        ShuffleCard();
-        SettingInitHand();
+        //ShuffleCard();
+
+        
+        if (playerID == 1)
+        {
+            //SettingInitHand();
+
+            for (int i = 0; i < maxHand + 1; i++)
+            {
+                //Debug.Log("index" + cardIndex);
+                //Debug.Log(deck_0[cardIndex]);
+                int cardID_0 = UnityEngine.Random.Range(0, 9);
+                int cardID_1 = UnityEngine.Random.Range(0, 9);
+                //photonView.RPC(nameof(GiveCardToHand), RpcTarget.AllViaServer, deck_0[cardIndex], deck_1[cardIndex]);
+                photonView.RPC(nameof(GiveCardToHand), RpcTarget.AllViaServer, cardID_0, cardID_1);
+
+                if (i == maxHand)
+                {
+                    break;
+                }
+
+                photonView.RPC(nameof(MoveConveyor), RpcTarget.AllViaServer);
+
+            }
+
+
+        }
+
+        //for (int i = 0; i < maxHand; i++)
+        //{
+        //    MoveConveyor();
+        //}
 
         //SetCardToHand();
 
@@ -259,13 +271,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //カード並び替え
-        LineUpCard();
-        //LineUpCard(enemyHandTransform);
+        //LineUpCard();
 
-        //TurnCalc();
 
         //StartTurn();
-        uiManager.ShowHealth(player.ishealth, enemy.ishealth);
+        uiManager.ShowHealth(player.isHealth, enemy.isHealth);
         uiManager.ShowPoison(player.isPoison, player.poisonCount, enemy.isPoison, enemy.poisonCount);
         uiManager.ShowDark(player.isDark, enemy.isDark);
         uiManager.ShowAttackUp(player.attackUp, enemy.attackUp);
@@ -277,108 +287,102 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-
-    public void ReducemixCost(int cost, bool isPlayerCard)
+    [PunRPC]
+    void DestroyIngredient(int[] selectCardPosition_0, int[] selectCardPosition_1)
     {
-        if (isPlayerCard)
+        if (selectCardPosition_0[0] != -1)
         {
-            player.mixCost -= cost;
+            Destroy(conveyorTransform[selectCardPosition_0[0], selectCardPosition_0[1]].GetChild(0).gameObject);
+
         }
-        else
+
+        if (selectCardPosition_1[0] != -1)
         {
-            enemy.mixCost -= cost;
+            Destroy(conveyorTransform[selectCardPosition_1[0], selectCardPosition_1[1]].GetChild(0).gameObject);
+
         }
-        uiManager.ShowMixCost(player.mixCost, enemy.mixCost);
+
+        //Destroy(conveyorTransform[selectCardPosition[0], selectCardPosition[1]].gameObject);
     }
 
-    //public void Restart()
+
+
+
+    //public void SettingInitHand()
     //{
-    //    //handとFieldのカードを削除
-    //    foreach (Transform card in playerHandTransform)
+    //    for (int i = 0; i < maxHand; i++)
     //    {
-    //        Destroy(card.gameObject);
-    //    }
-    //    foreach (Transform card in playerFieldTransform)
-    //    {
-    //        Destroy(card.gameObject);
-    //    }
-    //    foreach (Transform card in enemyHandTransform)
-    //    {
-    //        Destroy(card.gameObject);
-    //    }
-    //    foreach (Transform card in enemyFieldTransform)
-    //    {
-    //        Destroy(card.gameObject);
+
+    //        int[] cardID = new int[2];
+    //        for (int j = 0; j < 2; j++)
+    //        {
+    //            cardID[j] = UnityEngine.Random.Range(0, 9);
+    //        }
+    //        photonView.RPC(nameof(GiveCardToHand), RpcTarget.AllViaServer, cardID);
+    //        //GiveCardToHand();
+
+
+    //        MoveConveyor();
     //    }
 
-    //    //デッキ生成
-    //    //player.deck = new List<int>();
-    //    //for (int i = 0; i < 20; i++)
-    //    //{
-    //    //    int cardID = UnityEngine.Random.Range(1, 7);
-    //    //    player.deck.Add(cardID);
-    //    //}
-    //    //enemy.deck = new List<int>();
-    //    //for (int i = 0; i < 20; i++)
-    //    //{
-    //    //    int cardID = UnityEngine.Random.Range(1, 7);
-    //    //    enemy.deck.Add(cardID);
-    //    //}
 
-    //    StartGame();
     //}
 
-    public void SettingInitHand()
-    {
-        for (int i = 0; i < maxHand; i++)
-        {
-
-            //if (playerID == 1)
-            //    GiveCardToHand(player.deck_cardKind, player.deck_cardID, playerHandTransform);
-            //else
-            //    GiveCardToHand(enemy.deck_cardKind, enemy.deck_cardID, enemyHandTransform);
-
-            //GiveCardToHand(playerID);
-
-            //if (playerID == 1)
-            //{
-            //    CreateCard(KIND.INGREDIENT, playerHandTransform);
-            //}
-            //else
-            //{
-            //    CreateCard(KIND.INGREDIENT, enemyHandTransform);
-            //}
-
-            GiveCardToHand();
-            
-
-
-        }
-
-
-    }
-
     //public void GiveCardToHand(List<int> deck_cardKind ,List<int> deck_cardID, Transform hand)
-    public void GiveCardToHand()
+    //[PunRPC]
+    //public void GiveCardToHand(int[] cardID)
+    [PunRPC]
+    public void GiveCardToHand(int cardID_0, int cardID_1)
     {
 
-        int cardID = deck[cardIndex];
-        CreateCard(KIND.INGREDIENT, cardID, playerHandTransform);
-        if (cardIndex == 8)
-        {
-            ShuffleCard();
-            cardIndex = 0;
-        }
-        else
-        {
-            cardIndex++;
-        }
+        //int cardID = deck[cardIndex];
+
+
+        CreateCard(KIND.INGREDIENT, cardID_0, conveyorTransform[0, 0]);
+        CreateCard(KIND.INGREDIENT, cardID_1, conveyorTransform[1, 0]);
+
+
+        //if (cardIndex == 8)
+        //{
+        //    ShuffleCard();
+        //    cardIndex = 0;
+        //}
+        //else
+        //{
+        //    cardIndex++;
+        //}
+
+        //Debug.Log(cardIndex);
+
+
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    CreateCard(KIND.INGREDIENT, deck[i, cardIndex], conveyorTransform[i]);
+
+
+        //}
+
+
 
 
     }
 
     //void CreateCard(int kind, int cardID, Transform hand)
-    void CreateCard(KIND kind, int cardID, Transform target)
+
+    //[PunRPC]
+    //void CreateCard(int cardID, GameObject target)
+    //{
+    //    //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
+    //    GameObject card = Instantiate(cardPrefab, target.transform, false);
+
+
+    //    card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID);
+
+    //    //return card.GetComponent<CardController>();
+
+    //}
+
+    CardController CreateCard(KIND kind, int cardID, Transform target)
     {
         //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
         GameObject card = Instantiate(cardPrefab, target, false);
@@ -387,7 +391,21 @@ public class GameManager : MonoBehaviourPunCallbacks
         card.GetComponent<CardController>().Init(kind, cardID);
         //Card.GetComponent<CardController>().Init(cardID, playerID);
 
+        return card.GetComponent<CardController>();
 
+    }
+
+
+    CardController CreateDishCard(KIND kind, int cardID, Transform target)
+    {
+        //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject card = Instantiate(dishCardPrefab, target, false);
+
+
+        card.GetComponent<CardController>().Init(kind, cardID);
+        //Card.GetComponent<CardController>().Init(cardID, playerID);
+
+        return card.GetComponent<CardController>();
 
     }
 
@@ -400,30 +418,141 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             uiManager.decideButtonObj.SetActive(false);
 
-            int[] cardID = new int[2] { -1, -1 };
+           
 
-            for (int i = 0; i < 2; i++)
+            photonView.RPC(nameof(GenerateFieldCard), RpcTarget.AllViaServer, selectCardPosition_0, selectCardPosition_1);
+
+            //使ったカードの削除
+            photonView.RPC(nameof(DestroyIngredient), RpcTarget.AllViaServer, selectCardPosition_0, selectCardPosition_1);
+
+            //int[] cardID = new int[2] { -1, -1 };
+
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    //int[] cardPosition = new int[2] { selectCardPosition[i, 0], selectCardPosition[i, 1] };
+
+            //    //cardID[i] = conveyorTransform[cardPosition[0], cardPosition[1]].GetChild(0).GetComponent<CardController>().model.cardID;
+
+            //    //使ったカードの削除
+            //    photonView.RPC(nameof(DestroyIngredient), RpcTarget.AllViaServer, cardPosition);
+
+            //    photonView.RPC(nameof(DestroyIngredient), RpcTarget.AllViaServer, cardPosition);
+
+            //    //    if (selectCard[i] != null)
+            //    //    {
+            //    //        cardID[i] = selectCard[i].model.cardID;
+            //    //        //Destroy(selectCard[i].gameObject);
+            //    //        selectCard[i].gameObject.SetActive(false);
+            //    //    }
+            //}
+
+           
+            if (selectCardPosition_0[0] != -1)
             {
-                if (selectCard[i] != null)
-                {
-                    cardID[i] = selectCard[i].model.cardID;
-                    Destroy(selectCard[i].gameObject);
-                }
+                conveyorTransform[selectCardPosition_0[0], selectCardPosition_0[1]].GetComponent<FieldController>().CancelCard();
+                selectCardPosition_0[0] = -1;
+                selectCardPosition_0[1] = -1;
             }
 
-            
+            if (selectCardPosition_1[0] != -1)
+            {
+                conveyorTransform[selectCardPosition_1[0], selectCardPosition_1[1]].GetComponent<FieldController>().CancelCard();
+                selectCardPosition_1[0] = -1;
+                selectCardPosition_1[1] = -1;
+            }
 
 
-            photonView.RPC(nameof(Attack_RPC), RpcTarget.AllViaServer, cardID[0], cardID[1]);
 
         }
         else
         {
-            photonView.RPC(nameof(ChangeTurn), RpcTarget.AllViaServer);
+
+            DamageCalculation();
 
         }
 
+
     }
+
+    //合成予測を出す
+    public void SelectCard(bool isSelected, int[] position)
+    {
+        //一旦消去
+        //CleanField();
+
+        //選択した時
+        if (isSelected)
+        {
+            //何も選択されていない
+            if (selectCardPosition_0[0] == -1)
+            {
+                selectCardPosition_0[0] = position[0];
+                selectCardPosition_0[1] = position[1];
+
+            }
+            //２つ目に選択
+            else if (selectCardPosition_1[0] == -1)
+            {
+                selectCardPosition_1[0] = position[0];
+                selectCardPosition_1[1] = position[1];
+                //selectCardPosition[1, 0] = position[0];
+                //selectCardPosition[1, 1] = position[1];
+            }
+            //２つ目と入れ替え
+            else
+            {
+                conveyorTransform[selectCardPosition_1[0], selectCardPosition_1[1]].GetComponent<FieldController>().CancelCard();
+                selectCardPosition_1[0] = position[0];
+                selectCardPosition_1[1] = position[1];
+
+                //conveyorTransform[selectCardPosition[1, 0], selectCardPosition[1, 1]].GetComponent<FieldController>().CancelCard();
+                //selectCardPosition[1, 0] = position[0];
+                //selectCardPosition[1, 1] = position[1];
+            }
+
+        }
+        //キャンセルした時
+        else
+        {
+            //１枚目に選択してた時
+            if (selectCardPosition_0[0] == position[0] && selectCardPosition_0[1] == position[1])
+            {
+                //２枚目に選択してたカードなし
+                if (selectCardPosition_1[0] == -1)
+                {
+                    selectCardPosition_0[0] = -1;
+                    selectCardPosition_0[1] = -1;
+                }
+                //２枚目に選択したカードを１枚目にする
+                else
+                {
+                    selectCardPosition_0[0] = selectCardPosition_1[0];
+                    selectCardPosition_0[1] = selectCardPosition_1[1];
+                    selectCardPosition_1[0] = -1;
+                    selectCardPosition_1[1] = -1;
+                }
+            }
+            //２枚目に選択してた時
+            else
+            {
+                selectCardPosition_1[0] = -1;
+                selectCardPosition_1[1] = -1;
+            }
+
+        }
+
+        //生成
+        GenerateFieldCard(selectCardPosition_0, selectCardPosition_1);
+    }
+
+
+    //public void OnSwapButton()
+    //{
+    //    var card = selectCard[0];
+    //    selectCard[0] = selectCard[1];
+    //    selectCard[1] = card;
+    //    GenerateFieldCard();
+    //}
 
     //[PunRPC]
     //void ChangeConfirm(bool isConfirm)
@@ -440,83 +569,167 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    void Attack_RPC(int cardID_1, int cardID_2)
+    void Attack_RPC(int[] cardID)
     {
-        StartCoroutine(Attack(cardID_1, cardID_2));
+        StartCoroutine(Attack(cardID));
     }
 
-    IEnumerator Attack(int cardID_1, int cardID_2)
+    IEnumerator Attack(int[] cardID)
     {
-        uiManager.attackFields.SetActive(true);
+        //uiManager.attackFields.SetActive(true);
 
         CleanField();
 
-        CreateCard(KIND.INGREDIENT, cardID_1, field1Transform);
-        yield return new WaitForSeconds(0.7f);
-
-
-        if (cardID_2 >= 0)
+        for (int i = 0; i < 3; i++)
         {
-            CreateCard(KIND.INGREDIENT, cardID_2, field2Transform);
-            yield return new WaitForSeconds(0.7f);
+            cardController[i] = null;
+        }
 
-            //合成
-            CardController card1 = field1Transform.GetChild(0).GetComponent<CardController>();
-            CardController card2 = field2Transform.GetChild(0).GetComponent<CardController>();
-            int mixCardID = SpecialMix(card1, card2);
-            CreateCard(KIND.DISH, mixCardID, resultFieldTransform);
+        for (int i = 0; i < 2; i++)
+        {
+            if (cardID[i] == -1)
+            {
+                continue;
+            }
+            cardController[i] = CreateCard(KIND.INGREDIENT, cardID[i], mixFieldTransform[i]);
+        }
 
+
+        //合成
+        if (cardID[1] != -1)
+        {
+            int mixCardID = SpecialMix(cardController[0], cardController[1]);
+            cardController[2] = CreateDishCard(KIND.DISH, mixCardID, mixFieldTransform[2]);
         }
         else
         {
-            CreateCard(KIND.INGREDIENT, cardID_1, resultFieldTransform);
-            yield return new WaitForSeconds(0.7f);
-
-        }
-
-        BuffEffect();
-
-
-
-        CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
-
-
-        //回避計算
-        //0~99
-        if (isMyTurn)
-        {
-            int a = UnityEngine.Random.Range(0, 100);
-            if (a >= attackCard.model.hit + player.hitUp)
-            {
-                //外れる
-                //Debug.Log("外れた");
-                //damageCal = 0;
-                photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, false);
-            }
-            else
-            {
-                photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
-
-            }
-
+            cardController[2] = CreateCard(KIND.INGREDIENT, cardID[0], mixFieldTransform[2]);
         }
 
 
+
+
+
+        //card1 = CreateCard(KIND.INGREDIENT, cardID_1, mixFieldTransform[0]);
+        yield return new WaitForSeconds(0.7f);
+
+
+
+        //if (cardID_2 >= 0)
+        //{
+        //    card2 = CreateCard(KIND.INGREDIENT, cardID_2, field2Transform);
+        //    //yield return new WaitForSeconds(0.7f);
+
+        //    //合成
+        //    int mixCardID = SpecialMix(card1, card2);
+        //    resultCard = CreateDishCard(KIND.DISH, mixCardID, resultFieldTransform);
+        //    resultCard.model.special = card1.model.cardID;
+        //    resultCard.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+
+        //}
+        //else
+        //{
+        //    resultCard = CreateCard(KIND.INGREDIENT, cardID_1, resultFieldTransform);
+        //    resultCard.gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+        //    //yield return new WaitForSeconds(0.7f);
+
+        //}
+
+        //BuffEffect();
+
+        //if (isMyTurn)
+        //{
+        //    resultCard.view.Refresh(resultCard.model, player.attackUp, player.hitUp);
+        //}
+        //else
+        //{
+        //    resultCard.view.Refresh(resultCard.model, enemy.attackUp, enemy.hitUp);
+        //}
+
+
+        //if (!isMyTurn)
+        //{
+        //    uiManager.decideButtonObj.SetActive(true);
+        //}
 
 
         //yield return new WaitForSeconds(1.0f);
 
 
-        //フィールド掃除
-        //CleanField();
-        //ChangeTurn();
+    }
+
+    //[PunRPC]
+    //受ける側で計算
+    void DamageCalculation()
+    {
+        //ダメージ計算
+        //CardController attackCard = mixFieldTransform[2].GetChild(0).GetComponent<CardController>();
+        //GamePlayerManager attacker;
+        //GamePlayerManager defender;
+
+        //if (isMyTurn)
+        //{
+        //    attacker = player;
+        //    defender = enemy;
+        //}
+        //else
+        //{
+        //    attacker = enemy;
+        //    defender = player;
+        //}
+
+
+
+        bool isHit = true;
+
+        int a = UnityEngine.Random.Range(0, 100);
+        if (a >= cardController[2].model.hit + player.hitUp)
+        {
+            //外れる
+            //Debug.Log("外れた");
+            damageCal = 0;
+            isHit = false;
+        }
+        else
+        {
+            //photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
+            damageCal = cardController[2].model.cal;
+            isHit = true;
+        }
+
+        //テスト用
+        isHit = true;
+
+        photonView.RPC(nameof(Battle), RpcTarget.AllViaServer, isHit, damageCal);
+
+        //回避計算
+        //0~99
+        //if (isMyTurn)
+        //{
+        //int a = UnityEngine.Random.Range(0, 100);
+        //if (a >= attackCard.model.hit + player.hitUp)
+        //{
+        //    //外れる
+        //    //Debug.Log("外れた");
+        //    damageCal = 0;
+        //    isHit = false;
+        //}
+        //else
+        //{
+        //    //photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
+        //    damageCal = attackCard.model.cal;
+        //    isHit = true;
+        //}
+
+
+
+
     }
 
     [PunRPC]
-    void DamageCal(bool isHit)
+    void Battle(bool isHit, int damageCal)
     {
-        //ダメージ計算
-        CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
+        //CardController attackCard = mixFieldTransform[2].GetChild(0).GetComponent<CardController>();
         GamePlayerManager attacker;
         GamePlayerManager defender;
 
@@ -531,37 +744,32 @@ public class GameManager : MonoBehaviourPunCallbacks
             defender = player;
         }
 
+        //テスト用
+        //if (attacker.isHealth)
+        //{
+        //    specialController.SpecialEffect(attackCard.model.special, isMyTurn, damageCal);
+        //}
+        
+
         if (isHit)
         {
-            //damageCal = attackCard.model.cal + attacker.attackUp * 20;
-            damageCal = attackCard.model.cal;
+            defender.hp -= damageCal;
+            Debug.Log(damageCal + "kcalのダメージ");
         }
         else
         {
             Debug.Log("外れた");
-            damageCal = 0;
         }
 
-        specialController.SpecialEffect(attackCard.model.special, isMyTurn, damageCal);
+        //栄養素
+        //attacker.red += attackCard.model.red;
+        //attacker.yellow += attackCard.model.yellow;
+        //attacker.green += attackCard.model.green;
 
 
+        uiManager.ShowHP();
 
-        defender.hp -= damageCal;
-        Debug.Log(damageCal + "kcalのダメージ");
-
-        attacker.red += attackCard.model.red;
-        attacker.yellow += attackCard.model.yellow;
-        attacker.green += attackCard.model.green;
-
-        //フィールド掃除
-        //CleanField();
-        //StartCoroutine(CleanField());
-        //ChangeTurn();
-
-        if (!isMyTurn)
-        {
-            uiManager.decideButtonObj.SetActive(true);
-        }
+        ChangeTurn();
     }
 
 
@@ -575,32 +783,46 @@ public class GameManager : MonoBehaviourPunCallbacks
         CheckHealth();
         PoisonDamage();
 
-        uiManager.ShowHealth(player.ishealth, enemy.ishealth);
+        uiManager.ShowHealth(player.isHealth, enemy.isHealth);
         uiManager.ShowPoison(player.isPoison, player.poisonCount, enemy.isPoison, enemy.poisonCount);
         uiManager.ShowDark(player.isDark, enemy.isDark);
         uiManager.ShowAttackUp(player.attackUp, enemy.attackUp);
         uiManager.ShowHitUp(player.hitUp, enemy.hitUp);
 
-        if (isMyTurn)
-        {
+        uiManager.ShowTriangle();
 
 
-            int drawNum = maxHand - playerHandTransform.childCount;
-
-
-            for (int i = 0; i < drawNum; i++)
-            {
-
-                GiveCardToHand();
-
-            }
-            LineUpCard();
-
-        }
 
 
         isMyTurn = !isMyTurn;
-        uiManager.ShowHP();
+
+        MoveConveyor();
+
+        if (isMyTurn)
+        {
+
+            //uiManager.attackFields.SetActive(true);
+
+
+            int cardID_0 = UnityEngine.Random.Range(0, 9);
+            int cardID_1 = UnityEngine.Random.Range(0, 9);
+            photonView.RPC(nameof(GiveCardToHand), RpcTarget.AllViaServer, cardID_0, cardID_1);
+
+
+            //player.red--;
+            //player.yellow--;
+            //player.green--;
+        }
+        else
+        {
+            //uiManager.attackFields.SetActive(false);
+
+            //enemy.red--;
+            //enemy.yellow--;
+            //enemy.green--;
+        }
+
+        //uiManager.ShowHP();
         uiManager.ShowNutrients();
         uiManager.decideButtonObj.SetActive(false);
 
@@ -612,117 +834,130 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    //[PunRPC]
-    public void GenerateFieldCard()
+    [PunRPC]
+    public void GenerateFieldCard(int[] selectCardPosition_0, int[] selectCardPosition_1)
     {
-        //Debug.Log("aa");
+        uiManager.attackFields.SetActive(true);
+
+
         CleanField();
 
-        if (selectCard[0] == null)
+        int[] cardID = new int[2] { -1, -1};
+
+        for (int i = 0; i < 3; i++)
+        {
+            cardController[i] = null;
+        }
+
+        if (selectCardPosition_0[0] == -1)
+        {
+            return;
+        }
+        else
+        {
+            cardID[0] = conveyorTransform[selectCardPosition_0[0], selectCardPosition_0[1]].GetChild(0).gameObject.GetComponent<CardController>().model.cardID;
+        }
+
+        if (selectCardPosition_1[0] == -1)
+        {
+        }
+        else
+        {
+            cardID[1] = conveyorTransform[selectCardPosition_1[0], selectCardPosition_1[1]].GetChild(0).gameObject.GetComponent<CardController>().model.cardID;
+        }
+
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (cardID[i] != -1)
+            {
+                cardController[i] = CreateCard(KIND.INGREDIENT, cardID[i], mixFieldTransform[i]);
+            }
+        }
+
+
+
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    int[] cardPosition = new int[2] { selectCardPosition[i, 0], selectCardPosition[i, 1] };
+        //    if (cardPosition[0] == -1)
+        //    {
+        //        continue;
+        //    }
+        //    cardID[i] = conveyorTransform[cardPosition[0], cardPosition[1]].GetChild(0).gameObject.GetComponent<CardController>().model.cardID;
+
+        //    cardController[i] = CreateCard(KIND.INGREDIENT, cardID[i], mixFieldTransform[i]);
+        //}
+
+
+        if (cardController[0] == null)
         {
             uiManager.decideButtonObj.SetActive(false);
+
             return;
         }
 
-        if (selectCard[0] != null)
+
+        //合成チェック
+        if (cardController[1] != null)
         {
-            CreateCard(KIND.INGREDIENT, selectCard[0].model.cardID, field1Transform);
-            //yield return new WaitForSeconds(0.7f);
-        }
-
-        if (selectCard[1] != null)
-        {
-            CreateCard(KIND.INGREDIENT, selectCard[1].model.cardID, field2Transform);
-            //yield return new WaitForSeconds(0.7f);
-
-        }
-
-
-        if (selectCard[1] != null)
-        {
-            //if (selectCard[0].model.red > 0 && selectCard[1].model.red > 0)
-            //{
-            //    uiManager.decideButtonObj.SetActive(false);
-            //    return;
-            //}
-            //if (selectCard[0].model.yellow > 0 && selectCard[1].model.yellow > 0)
-            //{
-            //    uiManager.decideButtonObj.SetActive(false);
-            //    return;
-            //}
-            //if (selectCard[0].model.green > 0 && selectCard[1].model.green > 0)
-            //{
-            //    uiManager.decideButtonObj.SetActive(false);
-            //    return;
-            //}
-
-            if (selectCard[0].model.nutrient == selectCard[1].model.nutrient)
+            if (cardController[0].model.nutrient == cardController[1].model.nutrient)
             {
+                //合成不可
                 uiManager.decideButtonObj.SetActive(false);
                 return;
             }
-
-
-            //合成
-            int mixCardID = SpecialMix(selectCard[0], selectCard[1]);
-            CreateCard(KIND.DISH, mixCardID, resultFieldTransform);
-            BuffEffect();
-
-            if (player.ishealth)
-            {
-                uiManager.decideButtonObj.SetActive(true);
-            }
             else
             {
-                uiManager.decideButtonObj.SetActive(false);
-            }
-            //yield return new WaitForSeconds(1.0f);
-
-        }
-        else if (selectCard[0] != null)
-        {
-            //単体
-            CreateCard(KIND.INGREDIENT, selectCard[0].model.cardID, resultFieldTransform);
-            uiManager.decideButtonObj.SetActive(true);
-            //yield return new WaitForSeconds(1.0f);
-        }
-
-
-
-
-    }
-
-
-    void BuffEffect()
-    {
-        //バフ効果を反映
-
-        if (isMyTurn)
-        {
-            //Debug.Log("aaa");
-
-            if (player.attackUp != 0 || player.hitUp != 0)
-            {
-                //Debug.Log("bbb");
-
-                CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
-                attackCard.model.cal += player.attackUp * 20;
-                attackCard.model.hit += player.hitUp * 20;
-                attackCard.view.Refresh(attackCard.model, player.attackUp, player.hitUp);
+                //合成
+                //Debug.Log(cardController[0].model.cardID);
+                int mixCardID = SpecialMix(cardController[0], cardController[1]);
+                cardController[2] = CreateDishCard(KIND.DISH, mixCardID, mixFieldTransform[2]);
+                uiManager.decideButtonObj.SetActive(true);
             }
         }
         else
         {
-            if (enemy.attackUp != 0 || enemy.hitUp != 0)
-            {
-                CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
-                attackCard.model.cal += enemy.attackUp * 20;
-                attackCard.model.hit += enemy.hitUp * 20;
-                attackCard.view.Refresh(attackCard.model, enemy.attackUp, enemy.hitUp);
-            }
+            cardController[2] = CreateCard(KIND.INGREDIENT, cardID[0], mixFieldTransform[2]);
+            uiManager.decideButtonObj.SetActive(true);
+            //GameObject card_2 = GameObject.Instantiate(cardController[0].gameObject, mixFieldTransform[2], false);
+            //cardController[2] = card_2.GetComponent<CardController>();
         }
 
+
+
     }
+
+
+    //void BuffEffect()
+    //{
+    //    //バフ効果を反映
+
+    //    if (isMyTurn)
+    //    {
+
+    //        if (player.attackUp != 0 || player.hitUp != 0)
+    //        {
+    //            //CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
+    //            //Debug.Log(attackCard.model.cal);
+    //            resultCard.model.cal += player.attackUp * 20;
+    //            resultCard.model.hit += player.hitUp * 20;
+    //            resultCard.view.Refresh(resultCard.model, player.attackUp, player.hitUp);
+    //            //Debug.Log(attackCard.model.cal);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        if (enemy.attackUp != 0 || enemy.hitUp != 0)
+    //        {
+    //            //CardController attackCard = resultFieldTransform.GetChild(0).GetComponent<CardController>();
+    //            resultCard.model.cal += enemy.attackUp * 20;
+    //            resultCard.model.hit += enemy.hitUp * 20;
+    //            resultCard.view.Refresh(resultCard.model, enemy.attackUp, enemy.hitUp);
+    //        }
+    //    }
+
+    //}
 
     int SpecialMix(CardController card_1, CardController card_2)
     {
@@ -750,18 +985,42 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         //yield return new WaitForSeconds(2);
 
-        if (field1Transform.childCount != 0)
+        //if (mixFieldTransform[0].childCount != 0)
+        //{
+        //    Destroy(mixFieldTransform[0].GetChild(0).gameObject);
+        //}
+        //if (field2Transform.childCount != 0)
+        //{
+        //    Destroy(field2Transform.GetChild(0).gameObject);
+        //}
+        //if (resultFieldTransform.childCount != 0)
+        //{
+        //    Destroy(resultFieldTransform.GetChild(0).gameObject);
+        //}
+
+
+        for (int i = 0; i < 3; i++)
         {
-            Destroy(field1Transform.GetChild(0).gameObject);
+            if (cardController[i] != null)
+            {
+                Destroy(cardController[i].gameObject);
+
+            }
         }
-        if (field2Transform.childCount != 0)
-        {
-            Destroy(field2Transform.GetChild(0).gameObject);
-        }
-        if (resultFieldTransform.childCount != 0)
-        {
-            Destroy(resultFieldTransform.GetChild(0).gameObject);
-        }
+
+        //if (card1 != null)
+        //{
+        //    Destroy(card1.gameObject);
+        //}
+        //if (card2 != null)
+        //{
+        //    Destroy(card2.gameObject);
+        //}
+        //if (resultCard != null)
+        //{
+        //    Destroy(resultCard.gameObject);
+        //}
+
     }
 
 
@@ -803,30 +1062,30 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     //カードを番号順に並べる
-    public void LineUpCard()
-    {
+    //public void LineUpCard()
+    //{
 
-        List<GameObject> objList = new List<GameObject>();
+    //    List<GameObject> objList = new List<GameObject>();
 
-        // 子階層のGameObject取得
-        var childCount = playerHandTransform.childCount;
-        for (int i = 0; i < childCount; i++)
-        {
-            objList.Add(playerHandTransform.GetChild(i).gameObject);
-        }
+    //    // 子階層のGameObject取得
+    //    var childCount = playerHandTransform.childCount;
+    //    for (int i = 0; i < childCount; i++)
+    //    {
+    //        objList.Add(playerHandTransform.GetChild(i).gameObject);
+    //    }
 
-        //objList.Sort((obj1, obj2) => int.Compare(obj1.model.cardID, obj2.model.cardID));
-        objList.Sort((a, b) => a.GetComponent<CardController>().model.cardID - b.GetComponent<CardController>().model.cardID);
+    //    //objList.Sort((obj1, obj2) => int.Compare(obj1.model.cardID, obj2.model.cardID));
+    //    objList.Sort((a, b) => a.GetComponent<CardController>().model.cardID - b.GetComponent<CardController>().model.cardID);
 
-        foreach (var obj in objList)
-        {
-            //obj.SetSiblingIndex(childCount - 1);
-            obj.transform.SetSiblingIndex(childCount - 1);
+    //    foreach (var obj in objList)
+    //    {
+    //        //obj.SetSiblingIndex(childCount - 1);
+    //        obj.transform.SetSiblingIndex(childCount - 1);
 
-        }
+    //    }
 
 
-    }
+    //}
 
     
 
@@ -844,44 +1103,122 @@ public class GameManager : MonoBehaviourPunCallbacks
    
     void ShuffleCard()
     {
-
-        for (int i = deck.Length - 1; i > 0; i--)
+        for (int i = deck_0.Length - 1; i > 0; i--)
         {
             int j = UnityEngine.Random.Range(0, i + 1);
-            var tmp = deck[i];
-            deck[i] = deck[j];
-            deck[j] = tmp;
+            var tmp = deck_0[i];
+            deck_0[i] = deck_0[j];
+            deck_0[j] = tmp;
         }
+
+        for (int i = deck_1.Length - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            var tmp = deck_1[i];
+            deck_1[i] = deck_1[j];
+            deck_1[j] = tmp;
+        }
+
+
+
+
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    for (int j = deck.Length - 1; j < 0; j--)
+        //    {
+        //        int k = UnityEngine.Random.Range(0, i + 1);
+        //        var tmp = deck[i, j];
+        //        deck[i, j] = deck[i, j];
+        //        deck[i, j] = tmp;
+        //    }
+        //}
+
 
     }
 
 
+    //[PunRPC]
+    //void SyncDeck(int[,] deck)
+    //{
+    //    //for (int i = 0; i < Deck_1)
+    //    //Deck_1[0]
+    //    this.deck = deck;
+    //}
+
+    [PunRPC]
+    void MoveConveyor()
+    {
+        //Debug.Log("aa");
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = maxHand; j >= 0; j--)
+            {
+                if (conveyorTransform[i, j].childCount == 0)
+                {
+                    continue;
+                }
+
+                if (j == maxHand)
+                {
+                    Destroy(conveyorTransform[i, j].GetChild(0).gameObject);
+                    continue;
+                }
+
+                //Debug.Log(i);
+                //Debug.Log(j);
+
+                conveyorTransform[i, j].GetChild(0).transform.SetParent(conveyorTransform[i, j + 1], false);
+                
+            }
+        }
+    }
+
+
+
     void CheckHealth()
     {
-        //健康
-        if (Mathf.Abs(player.red - player.yellow) >= 3 ||
-            Mathf.Abs(player.yellow - player.green) >= 3 ||
-            Mathf.Abs(player.green - player.red) >= 3)
+        if (player.red > 0 || player.yellow > 0 || player.green > 0)
         {
-            player.ishealth = false;
+            player.isHealth = true;
         }
         else
         {
-            player.ishealth = true;
+            player.isHealth = false;
         }
 
-
-        //健康
-        if (Mathf.Abs(enemy.red - enemy.yellow) >= 3 ||
-            Mathf.Abs(enemy.yellow - enemy.green) >= 3 ||
-            Mathf.Abs(enemy.green - enemy.red) >= 3)
+        if (enemy.red > 0 || enemy.yellow > 0 || enemy.green > 0)
         {
-            enemy.ishealth = false;
+            enemy.isHealth = true;
         }
         else
         {
-            enemy.ishealth = true;
+            enemy.isHealth = false;
         }
+
+        ////健康
+        //if (Mathf.Abs(player.red - player.yellow) >= 3 ||
+        //    Mathf.Abs(player.yellow - player.green) >= 3 ||
+        //    Mathf.Abs(player.green - player.red) >= 3)
+        //{
+        //    player.ishealth = false;
+        //}
+        //else
+        //{
+        //    player.ishealth = true;
+        //}
+
+
+        ////健康
+        //if (Mathf.Abs(enemy.red - enemy.yellow) >= 3 ||
+        //    Mathf.Abs(enemy.yellow - enemy.green) >= 3 ||
+        //    Mathf.Abs(enemy.green - enemy.red) >= 3)
+        //{
+        //    enemy.ishealth = false;
+        //}
+        //else
+        //{
+        //    enemy.ishealth = true;
+        //}
 
 
 

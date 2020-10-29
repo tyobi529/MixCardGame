@@ -48,6 +48,10 @@ MonoBehaviour:
   - StartGame
   - Attack_RPC
   - DamageCal
+  - GiveCardToHand
+  - MoveConveyor
+  - DestroyIngredient
+  - GenerateFieldCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

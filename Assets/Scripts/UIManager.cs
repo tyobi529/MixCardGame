@@ -9,8 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text resultText;
 
 
-    [SerializeField] Text playerHeroHpText;
-    [SerializeField] Text enemyHeroHpText;
+    //[SerializeField] Text playerHeroHpText;
+    //[SerializeField] Text enemyHeroHpText;
+
+    [SerializeField] Slider playerHpBar;
+    [SerializeField] Slider enemyHpBar;
 
     [SerializeField] Text playerHeroRedText;
     [SerializeField] Text playerHeroYellowText;
@@ -34,12 +37,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text enemyHealthText;
 
 
-    [SerializeField] Text expectDamageText;
+    //[SerializeField] Text expectDamageText;
 
 
 
-    [SerializeField] Text playerManaCostText;
-    [SerializeField] Text enemyManaCostText;
+    //[SerializeField] Text playerManaCostText;
+    //[SerializeField] Text enemyManaCostText;
 
     [SerializeField] Text timeCountText;
 
@@ -77,6 +80,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] GamePlayerManager player;
     [SerializeField] GamePlayerManager enemy;
 
+    [SerializeField] TriangleDrawer playerTriangle;
+    [SerializeField] TriangleDrawer enemyTriangle;
 
     //シングルトン化（どこからでもアクセスできるようにする）
     public static UIManager instance;
@@ -94,11 +99,11 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void ShowMixCost(int playerMixCost, int enemyMixCost)
-    {
-        playerManaCostText.text = playerMixCost.ToString();
-        enemyManaCostText.text = enemyMixCost.ToString();
-    }
+    //public void ShowMixCost(int playerMixCost, int enemyMixCost)
+    //{
+    //    playerManaCostText.text = playerMixCost.ToString();
+    //    enemyManaCostText.text = enemyMixCost.ToString();
+    //}
 
     public void UpdateTime(int timeCount)
     {
@@ -107,8 +112,11 @@ public class UIManager : MonoBehaviour
 
     public void ShowHP()
     {
-        playerHeroHpText.text = player.hp.ToString();
-        enemyHeroHpText.text = enemy.hp.ToString();
+        //Debug.Log("aa");
+        playerHpBar.value = player.hp;
+        enemyHpBar.value = enemy.hp;
+        //playerHeroHpText.text = player.hp.ToString();
+        //enemyHeroHpText.text = enemy.hp.ToString();
     }
 
     public void ShowNutrients()
@@ -173,6 +181,13 @@ public class UIManager : MonoBehaviour
     }
 
 
+    public void ShowTriangle()
+    {
+        playerTriangle.SetVerticesDirty();
+        enemyTriangle.SetVerticesDirty();
+
+    }
+
 
 
 
@@ -187,7 +202,14 @@ public class UIManager : MonoBehaviour
 
     }
 
-   
+    //交換ボタン
+    //public void OnSwapButton()
+    //{
+    //    GameManager.instance.OnSwapButton();
+
+    //}
+
+
 
     //true:攻撃、合成ボタン出す
     //false:決定、キャンセルボタン出す
@@ -245,7 +267,7 @@ public class UIManager : MonoBehaviour
     {
         if (playerPoison)
         {
-            playerPoisonText.text = "毒-" + playerPoisonCount * 10;
+            playerPoisonText.text = "毒" + playerPoisonCount;
         }
         else
         {
@@ -255,7 +277,7 @@ public class UIManager : MonoBehaviour
 
         if (enemyPoison)
         {
-            enemyPoisonText.text = "毒-" + enemyPoisonCount * 10;
+            enemyPoisonText.text = "毒" + enemyPoisonCount;
         }
         else
         {
@@ -269,7 +291,7 @@ public class UIManager : MonoBehaviour
     {
         if (playerDark)
         {
-            playerDarkText.text = "暗闇";
+            playerDarkText.text = "闇";
         }
         else
         {
@@ -279,7 +301,7 @@ public class UIManager : MonoBehaviour
 
         if (enemyDark)
         {
-            enemyDarkText.text = "暗闇";
+            enemyDarkText.text = "闇";
         }
         else
         {
@@ -297,7 +319,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerAttackUpText.text = "攻撃+" + playerAttackUp * 20;
+            playerAttackUpText.text = "攻" + playerAttackUp;
         }
         
 
@@ -307,7 +329,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            enemyAttackUpText.text = "攻撃+" + enemyAttackUp * 20;
+            enemyAttackUpText.text = "攻" + enemyAttackUp;
         }
         
 
@@ -322,7 +344,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            playerHitUpText.text = "命中+" + playerHitUp * 20;
+            playerHitUpText.text = "命" + playerHitUp;
         }
 
         if (enemyHitUp == 0)
@@ -331,7 +353,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            enemyHitUpText.text = "命中+" + enemyHitUp * 20;
+            enemyHitUpText.text = "命" + enemyHitUp;
         }
         
         

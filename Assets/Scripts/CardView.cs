@@ -5,14 +5,27 @@ using UnityEngine.UI;
 
 public class CardView : MonoBehaviour
 {
-    [SerializeField] Text nameText;
+    //[SerializeField] Text nameText;
     //[SerializeField] Text hpText;
     [SerializeField] Text effectText;
 
+
+    //料理
+    [SerializeField] Text nameText;
+    [SerializeField] Text calText;
     [SerializeField] Text hitText;
 
+    //[SerializeField] Text hitText;
+
     //[SerializeField] Text deText;
-    [SerializeField] Image iconImage;
+    [SerializeField] Image nutrientColor;
+
+    [SerializeField] public Image iconImage;
+
+    [SerializeField] Text nutrientsText;
+
+    //[SerializeField] Image selectIconImage;
+
     //[SerializeField] GameObject selectablePanel;
     //[SerializeField] GameObject maskPanel;
 
@@ -23,10 +36,10 @@ public class CardView : MonoBehaviour
 
 
 
-    [SerializeField] GameObject ingredientPanel;
+    //[SerializeField] GameObject ingredientPanel;
     //[SerializeField] GameObject nutrientsPanel;
     //[SerializeField] GameObject defencePanel;
-    [SerializeField] GameObject mixPanel;
+    //[SerializeField] GameObject mixPanel;
 
     //[SerializeField] GameObject spellPanel;
 
@@ -36,7 +49,7 @@ public class CardView : MonoBehaviour
 
     //[SerializeField] Image panelImage;
 
-    [SerializeField] public GameObject selectPanel;
+    //[SerializeField] public GameObject selectPanel;
 
 
 
@@ -45,79 +58,69 @@ public class CardView : MonoBehaviour
     public void SetCard(CardModel cardModel)
     {
 
-        //合成カード
-        //if (cardModel.isSpecialMix)
-        //{
-        //    Debug.Log("aa");
-        //    nameText.text = cardModel.name;
-        //    specialMixPanel.SetActive(true);
 
-        //}
-        //else if (cardModel.isMix)
-        //{
+        //nameText.text = cardModel.name;
 
-        //    nameText.text = cardModel.name + "+";
-        //    mixPanel.SetActive(true);
-        //}
-        //else
-        //{
-        nameText.text = cardModel.name;
-
-        //}
-
-        //hpText.text = cardModel.hp.ToString();
 
         if (cardModel.kind == KIND.INGREDIENT)
         {
 
             effectText.text = DecideEffectText(cardModel.cardID);
-            ingredientPanel.SetActive(true);
+            //ingredientPanel.SetActive(true);
 
-            //if (cardModel.red != 0)
-            //{
-            //    //nutrientsPanel.GetComponent<Image>().color = Color.red;
-            //    ingredientPanel.GetComponent<Image>().color = Color.red;
-            //}
-            //else if (cardModel.yellow != 0)
-            //{
-            //    //nutrientsPanel.GetComponent<Image>().color = Color.yellow;
-            //    ingredientPanel.GetComponent<Image>().color = Color.yellow;
-            //}
-            //else
-            //{
-            //    //nutrientsPanel.GetComponent<Image>().color = Color.green;
-            //    ingredientPanel.GetComponent<Image>().color = Color.green;
-            //}
+            if (cardModel.nutrient == NUTRIENT.RED)
+            {
+                //ingredientPanel.GetComponent<Image>().color = Color.red;
+                nutrientColor.color = Color.red;
+
+
+            }
+            else if (cardModel.nutrient == NUTRIENT.YELLOW)
+            {
+                //ingredientPanel.GetComponent<Image>().color = Color.yellow;
+                nutrientColor.color = Color.yellow;
+
+            }
+            else if (cardModel.nutrient == NUTRIENT.GREEN)
+            {
+                //ingredientPanel.GetComponent<Image>().color = Color.green;
+                nutrientColor.color = Color.green;
+
+            }
+
+            iconImage.sprite = cardModel.icon;
 
 
         }
-        else if (cardModel.kind == KIND.DISH)
+
+        else
         {
-            effectText.text = cardModel.cal + "Cal";
+            effectText.text = DecideEffectText(cardModel.special);
+            nameText.text = cardModel.name;
+            calText.text = cardModel.cal + "Kcal";
             hitText.text = cardModel.hit + "%";
 
-            //mixPanel.SetActive(true);
-            ingredientPanel.SetActive(true);
+            iconImage.sprite = cardModel.icon;
+
+            //nutrientColor.color = Color.blue;
+
+            nutrientsText.text = "赤" + cardModel.red + "黄" + cardModel.yellow + "緑" + cardModel.green;
+
 
         }
+        //else if (cardModel.kind == KIND.DISH)
+        //{
+        //    effectText.text = cardModel.cal + "Cal";
+        //    hitText.text = cardModel.hit + "%";
 
-        if (cardModel.nutrient == NUTRIENT.RED)
-        {
-            ingredientPanel.GetComponent<Image>().color = Color.red;
+        //    //mixPanel.SetActive(true);
+        //    ingredientPanel.SetActive(true);
 
-        }
-        else if (cardModel.nutrient == NUTRIENT.YELLOW)
-        {
-            ingredientPanel.GetComponent<Image>().color = Color.yellow;
+        //    mixPanel.SetActive(true);
 
-        }
-        else if (cardModel.nutrient == NUTRIENT.GREEN)
-        {
-            ingredientPanel.GetComponent<Image>().color = Color.green;
+        //}
 
-        }
 
-        iconImage.sprite = cardModel.icon;
 
 
     }
@@ -166,42 +169,28 @@ public class CardView : MonoBehaviour
 
     public void Refresh(CardModel cardModel, int attackUp, int hitUp)
     {
-        effectText.text = cardModel.cal + "Cal";
-        hitText.text = cardModel.hit + "%";
+        //effectText.text = cardModel.cal + "Cal";
+        //hitText.text = cardModel.hit + "%";
 
 
-        if (attackUp != 0)
+        //if (attackUp != 0)
+        //{
+        //    effectText.color = Color.red;
+        //}
+        //if (hitUp != 0)
+        //{
+        //    hitText.color = Color.red;
+        //}
+        if (cardModel.kind == KIND.DISH)
         {
-            effectText.color = Color.red;
+            effectText.text = DecideEffectText(cardModel.special);
+            nameText.text = cardModel.name;
+            calText.text = cardModel.cal + "Kcal";
+            hitText.text = cardModel.hit + "%";
+
+            iconImage.sprite = cardModel.icon;
         }
-        if (hitUp != 0)
-        {
-            hitText.color = Color.red;
-        }
 
-        //if (cardModel.kind == KIND.INGREDIENT)
-        //{
-        //    effectText.text = cardModel.cal + "Cal";
-        //}
-        //else if (cardModel.kind == KIND.DISH)
-        //{
-        //    effectText.text = cardModel.cal + "Cal";
-        //}
-        //hpText.text = cardModel.hp.ToString();
-        //atText.text = cardModel.at.ToString();
-        //deText.text = cardModel.de.ToString();
-
-        //合成カード
-        //if (cardModel.isMix)
-        //{
-        //    nameText.text = cardModel.name + "+";
-        //    mixPanel.SetActive(true);
-        //}
-        //else
-        //{
-        //    nameText.text = cardModel.name;
-
-        //}
 
 
     }

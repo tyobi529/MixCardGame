@@ -13,6 +13,8 @@ public class CardEntity : ScriptableObject
 
     //public int cost;
     public Sprite icon;
+    public Sprite selectIcon;
+
     //public ABILITY ability;
     //public SPELL spell;
     //public KIND kind;

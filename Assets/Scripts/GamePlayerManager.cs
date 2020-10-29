@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class GamePlayerManager : MonoBehaviour
 {
-    public List<int> deck_cardID = new List<int>();
-    public List<int> deck_cardKind = new List<int>();
-    //public List<List<int>> deck = new List<List<int>>();
+    //public List<int> deck_cardID = new List<int>();
+    //public List<int> deck_cardKind = new List<int>();
 
 
     //public list = new List<List<int>>();
@@ -18,10 +17,10 @@ public class GamePlayerManager : MonoBehaviour
     public int yellow;
     public int green;
 
-    public int mixCost;
-    public int necessaryCost;
+    //public int mixCost;
+    //public int necessaryCost;
 
-    public bool ishealth;
+    public bool isHealth;
 
     public bool isPoison;
     public int poisonCount;

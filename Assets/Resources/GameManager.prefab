@@ -47,7 +47,6 @@ MonoBehaviour:
   player: {fileID: 0}
   enemy: {fileID: 0}
   uiManager: {fileID: 0}
-  playerHandTransform: {fileID: 0}
   isMyTurn: 0
   playerHero: {fileID: 0}
   playerID: 0
@@ -55,11 +54,8 @@ MonoBehaviour:
   isMixButton: 0
   isThrowButton: 0
   isChange: 0
-  maxHand: 5
+  maxHand: 3
   damageCal: 0
-  selectCard:
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0

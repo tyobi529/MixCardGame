@@ -12,6 +12,8 @@ public class CardModel
     public int cal;
     //public int cost;
     public Sprite icon;
+    public Sprite selectIcon;
+
     //public ABILITY ability;
     //public SPELL spell;
     public NUTRIENT nutrient;
@@ -80,6 +82,7 @@ public class CardModel
             special = cardEntity.special;
         }
 
+        //Debug.Log(cardID);
         this.nutrient = cardEntity.nutrient;
 
 
@@ -93,6 +96,8 @@ public class CardModel
         //}
 
         icon = cardEntity.icon;
+        selectIcon = cardEntity.selectIcon;
+
         //ability = cardEntity.ability;
         //spell = cardEntity.spell;
         //this.kind = cardEntity.kind;

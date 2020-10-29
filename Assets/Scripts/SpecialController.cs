@@ -64,6 +64,9 @@ public class SpecialController : MonoBehaviour
         {
             enemy.attackUp++;
         }
+
+        Debug.Log("playerA" + player.attackUp);
+        Debug.Log("enemyA" + enemy.attackUp);
     }
 
     //命中アップ
@@ -79,6 +82,9 @@ public class SpecialController : MonoBehaviour
         {
             enemy.hitUp++;
         }
+
+        Debug.Log("playerH" + player.hitUp);
+        Debug.Log("enemyH" + enemy.hitUp);
 
     }
 
@@ -160,7 +166,7 @@ public class SpecialController : MonoBehaviour
     {
         if (isMyTurn)
         {
-            if (player.hp + 1000 < enemy.hp)
+            if (player.hp + 300 < enemy.hp)
             {
                 Debug.Log("HP特攻");
                 GameManager.instance.damageCal *= 2;
@@ -169,7 +175,7 @@ public class SpecialController : MonoBehaviour
         }
         else
         {
-            if (enemy.hp + 1000 < player.hp)
+            if (enemy.hp + 300 < player.hp)
             {
                 Debug.Log("HP特攻");
                 GameManager.instance.damageCal *= 2;

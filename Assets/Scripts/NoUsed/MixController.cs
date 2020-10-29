@@ -238,15 +238,15 @@ public class MixController : MonoBehaviour
 
 
         //コスト減らす
-        if (ID == 1)
-        {
-            GameManager.instance.player.mixCost -= 3;
-        }
-        else
-        {
-            GameManager.instance.enemy.mixCost -= 3;
+        //if (ID == 1)
+        //{
+        //    GameManager.instance.player.mixCost -= 3;
+        //}
+        //else
+        //{
+        //    GameManager.instance.enemy.mixCost -= 3;
 
-        }
+        //}
 
         //GameManager.instance.StartDefence();
     }
