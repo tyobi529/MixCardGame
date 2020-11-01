@@ -10,6 +10,7 @@ public class GamePlayerManager : MonoBehaviour
 
     //public list = new List<List<int>>();
 
+    public int cost;
 
     public int hp;
 
@@ -22,14 +23,17 @@ public class GamePlayerManager : MonoBehaviour
 
     public bool isHealth;
 
-    public bool isPoison;
+    //public bool isPoison;
     public int poisonCount;
 
-    public bool isDark;
-    //public bool isDeadlyPoison = false;
+    public int darkCount;
+
+    public int attackUpCount;
+    public int defenceUpCount;
 
     //追加攻撃
-    public int attackUp = 0;
+    //public int attackUp = 0;
+
     //追加守備
     //public int addDefence = 0;
     public int hitUp = 0;

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7bdd32685e740409e91b24200952ad, type: 3}
   m_Name: Card8
   m_EditorClassIdentifier: 
-  name: "\u307B\u3046\u308C\u3093\u305D\u3046"
-  cal: 0
+  name: "\u30AD\u30E3\u30D9\u30C4"
+  cal: 23
   icon: {fileID: 21300000, guid: 64bba0fcd38d3445b867e799c2935b64, type: 3}
   selectIcon: {fileID: 21300000, guid: 0594a36f5f78f4b829584f6fb6ccdb28, type: 3}
   nutrient: 2

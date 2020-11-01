@@ -7,49 +7,120 @@ public class SpecialController : MonoBehaviour
     public GamePlayerManager player;
     public GamePlayerManager enemy;
 
-    public void SpecialEffect(int special, bool isMyTurn, int damageCal)
+    public void SpecialEffect(int specialID, bool isMyTurn, int damageCal)
     {
 
-        switch (special)
+        switch (specialID)
         {
             case 0:
-                AttackUp(isMyTurn);
-                break;
-            case 1:
-                HitRateUp(isMyTurn);
-                break;
-            case 2:
-                BuffRelease(isMyTurn, damageCal);
-                break;
-            case 3:
-                PoisonSpecialAttack(isMyTurn);
-                break;
-            case 4:
-                DarkSpecialAttack(isMyTurn);
-                break;
-            case 5:
-                HpSpecialAttack(isMyTurn);
-                break;
-            case 6:
                 Poison(isMyTurn, damageCal);
                 break;
-            case 7:
+            case 1:
                 Dark(isMyTurn, damageCal);
                 break;
-            case 8:
+            case 2:
                 RecoverCondition(isMyTurn);
+                break;
+            case 3:
+                AttackUp(isMyTurn);
+                break;
+            case 4:
+                DefenceUp(isMyTurn);
                 break;
             default:
                 Debug.Log("範囲外");
                 break;
+
+                //case 0:
+                //    AttackUp(isMyTurn);
+                //    break;
+                //case 1:
+                //    HitRateUp(isMyTurn);
+                //    break;
+                //case 2:
+                //    BuffRelease(isMyTurn, damageCal);
+                //    break;
+                //case 3:
+                //    PoisonSpecialAttack(isMyTurn);
+                //    break;
+                //case 4:
+                //    DarkSpecialAttack(isMyTurn);
+                //    break;
+                //case 5:
+                //    HpSpecialAttack(isMyTurn);
+                //    break;
+                //case 6:
+                //    Poison(isMyTurn, damageCal);
+                //    break;
+                //case 7:
+                //    Dark(isMyTurn, damageCal);
+                //    break;
+                //case 8:
+                //    RecoverCondition(isMyTurn);
+                //    break;
+                //default:
+                //    Debug.Log("範囲外");
+                //    break;
         }
     }
 
 
+    //相手を毒に
+    void Poison(bool isMyTurn, int damageCal)
+    {
+        if (damageCal == 0)
+        {
+            return;
+        }
 
-    /// <summary>
-    /// 赤栄養素
-    /// </summary>
+        Debug.Log("毒付与");
+
+        if (isMyTurn)
+        {
+            enemy.poisonCount = 3;
+        }
+        else
+        {
+            player.poisonCount = 3;
+        }
+    }
+
+    //相手を暗闇に
+    void Dark(bool isMyTurn, int damageCal)
+    {
+        if (damageCal == 0)
+        {
+            return;
+        }
+
+        Debug.Log("暗闇付与");
+
+        if (isMyTurn)
+        {
+            enemy.darkCount = 3;
+        }
+        else
+        {
+            player.darkCount = 3;
+        }
+    }
+
+    //状態異常解除
+    void RecoverCondition(bool isMyTurn)
+    {
+        Debug.Log("状態異常解除");
+
+        if (isMyTurn)
+        {
+            player.poisonCount = 0;
+            player.darkCount = 0;
+        }
+        else
+        {
+            enemy.poisonCount = 0;
+            enemy.darkCount = 0;
+        }
+    }
 
 
     //攻撃アップ
@@ -58,16 +129,40 @@ public class SpecialController : MonoBehaviour
         Debug.Log("攻撃アップ");
         if (isMyTurn)
         {
-            player.attackUp++;
+            player.attackUpCount = 3;
         }
         else
         {
-            enemy.attackUp++;
+            enemy.attackUpCount = 3;
         }
 
-        Debug.Log("playerA" + player.attackUp);
-        Debug.Log("enemyA" + enemy.attackUp);
+        //Debug.Log("playerA" + player.attackUp);
+        //Debug.Log("enemyA" + enemy.attackUp);
     }
+
+    //防御アップ
+    void DefenceUp(bool isMyTurn)
+    {
+        Debug.Log("防御アップ");
+        if (isMyTurn)
+        {
+            player.defenceUpCount = 3;
+        }
+        else
+        {
+            enemy.defenceUpCount = 3;
+        }
+
+        //Debug.Log("playerA" + player.attackUp);
+        //Debug.Log("enemyA" + enemy.attackUp);
+    }
+
+    /// <summary>
+    /// 赤栄養素
+    /// </summary>
+
+
+
 
     //命中アップ
     void HitRateUp(bool isMyTurn)
@@ -88,100 +183,107 @@ public class SpecialController : MonoBehaviour
 
     }
 
-    //相手のバフ解除
-    void BuffRelease(bool isMyTurn, int damageCal)
+
+
+    public void DishSpecialEffect(int specialID, bool isMyTurn, int damageCal)
     {
-
-        if (damageCal == 0)
-        {
-            return;
-        }
-
-        Debug.Log("バフ解除");
-
-        if (isMyTurn)
-        {
-            enemy.attackUp = 0;
-            enemy.hitUp = 0;
-        }
-        else
-        {
-            player.attackUp = 0;
-            player.hitUp = 0;
-        }
+        Debug.Log("料理効果");
     }
+
+    //相手のバフ解除
+    //void BuffRelease(bool isMyTurn, int damageCal)
+    //{
+
+    //    if (damageCal == 0)
+    //    {
+    //        return;
+    //    }
+
+    //    Debug.Log("バフ解除");
+
+    //    if (isMyTurn)
+    //    {
+    //        enemy.attackUp = 0;
+    //        enemy.hitUp = 0;
+    //    }
+    //    else
+    //    {
+    //        player.attackUp = 0;
+    //        player.hitUp = 0;
+    //    }
+    //}
 
     /// <summary>
     /// 黄栄養素
     /// </summary>
 
     //毒特攻
-    void PoisonSpecialAttack(bool isMyTurn)
-    {
-        if (isMyTurn)
-        {
-            if (enemy.isPoison)
-            {
-                Debug.Log("毒特攻");
-                GameManager.instance.damageCal *= 2;
-            }
+    //void PoisonSpecialAttack(bool isMyTurn)
+    //{
+    //    if (isMyTurn)
+    //    {
+    //        if (enemy.isPoison)
+    //        {
+    //            Debug.Log("毒特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
 
-        }
-        else
-        {
-            if (player.isPoison)
-            {
-                Debug.Log("毒特攻");
-                GameManager.instance.damageCal *= 2;
-            }
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        if (player.isPoison)
+    //        {
+    //            Debug.Log("毒特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
+    //    }
+    //}
 
 
     //暗闇特攻
-    void DarkSpecialAttack(bool isMyTurn)
-    {
-        if (isMyTurn)
-        {
-            if (enemy.isDark)
-            {
-                Debug.Log("暗闇特攻");
-                GameManager.instance.damageCal *= 2;
-            }
+    //void DarkSpecialAttack(bool isMyTurn)
+    //{
+    //    if (isMyTurn)
+    //    {
+    //        if (enemy.isDark)
+    //        {
+    //            Debug.Log("暗闇特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
 
-        }
-        else
-        {
-            if (player.isDark)
-            {
-                Debug.Log("暗闇特攻");
-                GameManager.instance.damageCal *= 2;
-            }
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        if (player.isDark)
+    //        {
+    //            Debug.Log("暗闇特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
+    //    }
+    //}
 
 
     //HP差特攻
-    void HpSpecialAttack(bool isMyTurn)
-    {
-        if (isMyTurn)
-        {
-            if (player.hp + 300 < enemy.hp)
-            {
-                Debug.Log("HP特攻");
-                GameManager.instance.damageCal *= 2;
-            }
+    //void HpSpecialAttack(bool isMyTurn)
+    //{
+    //    if (isMyTurn)
+    //    {
+    //        if (player.hp + 300 < enemy.hp)
+    //        {
+    //            Debug.Log("HP特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
 
-        }
-        else
-        {
-            if (enemy.hp + 300 < player.hp)
-            {
-                Debug.Log("HP特攻");
-                GameManager.instance.damageCal *= 2;
-            }
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        if (enemy.hp + 300 < player.hp)
+    //        {
+    //            Debug.Log("HP特攻");
+    //            GameManager.instance.damageCal *= 2;
+    //        }
+    //    }
+    //}
 
 
 
@@ -189,62 +291,10 @@ public class SpecialController : MonoBehaviour
     /// 緑栄養素
     /// </summary>
 
-    //相手を毒に
-    void Poison(bool isMyTurn, int damageCal)
-    {
-        if (damageCal == 0)
-        {
-            return;
-        }
 
-        Debug.Log("毒付与");
-
-        if (isMyTurn)
-        {
-            enemy.isPoison = true;
-        }
-        else
-        {
-            player.isPoison = true;
-        }
-    }
-
-    //相手を暗闇に
-    void Dark(bool isMyTurn, int damageCal)
-    {
-        if (damageCal == 0)
-        {
-            return;
-        }
-
-        Debug.Log("暗闇付与");
-
-        if (isMyTurn)
-        {
-            enemy.isDark = true;
-        }
-        else
-        {
-            player.isDark = true;
-        }
-    }
 
     //毒解除
-    void RecoverCondition(bool isMyTurn)
-    {
-        Debug.Log("状態異常解除");
 
-        if (isMyTurn)
-        {
-            player.isPoison = false;
-            player.isDark = false;
-        }
-        else
-        {
-            enemy.isPoison = false;
-            enemy.isDark = false;
-        }
-    }
 
 
    

@@ -9,11 +9,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text resultText;
 
 
-    //[SerializeField] Text playerHeroHpText;
-    //[SerializeField] Text enemyHeroHpText;
+    [SerializeField] Text playerHpText;
+    [SerializeField] Text enemyHpText;
 
     [SerializeField] Slider playerHpBar;
     [SerializeField] Slider enemyHpBar;
+
+    [SerializeField] Text playerCostText;
+    [SerializeField] Text enemyCostText;
 
     [SerializeField] Text playerHeroRedText;
     [SerializeField] Text playerHeroYellowText;
@@ -30,6 +33,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Text playerAttackUpText;
     [SerializeField] Text enemyAttackUpText;
+
+    [SerializeField] Text playerDefenceUpText;
+    [SerializeField] Text enemyDefenceUpText;
+
+
     [SerializeField] Text playerHitUpText;
     [SerializeField] Text enemyHitUpText;
 
@@ -115,32 +123,32 @@ public class UIManager : MonoBehaviour
         //Debug.Log("aa");
         playerHpBar.value = player.hp;
         enemyHpBar.value = enemy.hp;
-        //playerHeroHpText.text = player.hp.ToString();
-        //enemyHeroHpText.text = enemy.hp.ToString();
+        playerHpText.text = player.hp.ToString();
+        enemyHpText.text = enemy.hp.ToString();
     }
 
     public void ShowNutrients()
     {
-        if (player.isDark)
-        {
-            playerHeroRedText.text = "?";
-            playerHeroYellowText.text = "?";
-            playerHeroGreenText.text = "?";
+        //if (player.isDark)
+        //{
+        //    playerHeroRedText.text = "?";
+        //    playerHeroYellowText.text = "?";
+        //    playerHeroGreenText.text = "?";
 
-            enemyHeroRedText.text = "?";
-            enemyHeroYellowText.text = "?";
-            enemyHeroGreenText.text = "?";
-        }
-        else
-        {
-            playerHeroRedText.text = player.red.ToString();
-            playerHeroYellowText.text = player.yellow.ToString();
-            playerHeroGreenText.text = player.green.ToString();
+        //    enemyHeroRedText.text = "?";
+        //    enemyHeroYellowText.text = "?";
+        //    enemyHeroGreenText.text = "?";
+        //}
+        //else
+        //{
+        //    playerHeroRedText.text = player.red.ToString();
+        //    playerHeroYellowText.text = player.yellow.ToString();
+        //    playerHeroGreenText.text = player.green.ToString();
 
-            enemyHeroRedText.text = enemy.red.ToString();
-            enemyHeroYellowText.text = enemy.yellow.ToString();
-            enemyHeroGreenText.text = enemy.green.ToString();
-        }
+        //    enemyHeroRedText.text = enemy.red.ToString();
+        //    enemyHeroYellowText.text = enemy.yellow.ToString();
+        //    enemyHeroGreenText.text = enemy.green.ToString();
+        //}
 
     }
 
@@ -263,51 +271,76 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void ShowPoison(bool playerPoison, int playerPoisonCount, bool enemyPoison, int enemyPoisonCount)
+    public void ShowStatus()
     {
-        if (playerPoison)
-        {
-            playerPoisonText.text = "毒" + playerPoisonCount;
-        }
-        else
-        {
-            playerPoisonText.text = "";
-        }
+        playerCostText.text = "コスト" + player.cost;
+        enemyCostText.text = "コスト" + enemy.cost;
 
+        playerPoisonText.text = "毒" + player.poisonCount;
+        enemyPoisonText.text = "毒" + enemy.poisonCount;
 
-        if (enemyPoison)
-        {
-            enemyPoisonText.text = "毒" + enemyPoisonCount;
-        }
-        else
-        {
-            enemyPoisonText.text = "";
+        playerDarkText.text = "闇" + player.darkCount;
+        enemyDarkText.text = "闇" + enemy.darkCount;
 
-        }
+        playerAttackUpText.text = "攻" + player.attackUpCount;
+        enemyAttackUpText.text = "攻" + enemy.attackUpCount;
+
+        playerDefenceUpText.text = "守" + player.defenceUpCount;
+        enemyDefenceUpText.text = "守" + enemy.defenceUpCount;
 
     }
 
-    public void ShowDark(bool playerDark, bool enemyDark)
+    public void ShowPoison()
     {
-        if (playerDark)
-        {
-            playerDarkText.text = "闇";
-        }
-        else
-        {
-            playerDarkText.text = "";
-        }
+        playerPoisonText.text = "毒" + player.poisonCount;
+        enemyPoisonText.text = "毒" + enemy.poisonCount;
 
 
-        if (enemyDark)
-        {
-            enemyDarkText.text = "闇";
-        }
-        else
-        {
-            enemyDarkText.text = "";
 
-        }
+
+        //if (playerPoison)
+        //{
+        //    playerPoisonText.text = "毒" + playerPoisonCount;
+        //}
+        //else
+        //{
+        //    playerPoisonText.text = "";
+        //}
+
+
+        //if (enemyPoison)
+        //{
+        //    enemyPoisonText.text = "毒" + enemyPoisonCount;
+        //}
+        //else
+        //{
+        //    enemyPoisonText.text = "";
+
+        //}
+
+    }
+
+    public void ShowDark()
+    {
+        //if (playerDark)
+        //{
+        //    playerDarkText.text = "闇";
+        //}
+        //else
+        //{
+        //    playerDarkText.text = "";
+        //}
+
+
+        //if (enemyDark)
+        //{
+        //    enemyDarkText.text = "闇";
+        //}
+        //else
+        //{
+        //    enemyDarkText.text = "";
+
+        //}
 
     }
 

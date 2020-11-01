@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class FieldController : MonoBehaviour
 {
-    [SerializeField] int[] position = new int[2];
+    [SerializeField] int position;
     bool isSelected = false;
 
     public void SelectCard()

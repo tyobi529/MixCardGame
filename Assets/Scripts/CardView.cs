@@ -24,6 +24,9 @@ public class CardView : MonoBehaviour
 
     [SerializeField] Text nutrientsText;
 
+    [SerializeField] public GameObject deadLineObject;
+    [SerializeField] Text deadLineText;
+
     //[SerializeField] Image selectIconImage;
 
     //[SerializeField] GameObject selectablePanel;
@@ -65,7 +68,7 @@ public class CardView : MonoBehaviour
         if (cardModel.kind == KIND.INGREDIENT)
         {
 
-            effectText.text = DecideEffectText(cardModel.cardID);
+            effectText.text = DecideEffectText(cardModel.specialID);
             //ingredientPanel.SetActive(true);
 
             if (cardModel.nutrient == NUTRIENT.RED)
@@ -95,19 +98,23 @@ public class CardView : MonoBehaviour
 
         else
         {
-            effectText.text = DecideEffectText(cardModel.special);
+
+            //effectText.text = DecideEffectText(cardModel.specialID);
+
             nameText.text = cardModel.name;
             calText.text = cardModel.cal + "Kcal";
             hitText.text = cardModel.hit + "%";
 
             iconImage.sprite = cardModel.icon;
 
-            //nutrientColor.color = Color.blue;
 
             nutrientsText.text = "赤" + cardModel.red + "黄" + cardModel.yellow + "緑" + cardModel.green;
 
 
         }
+
+
+
         //else if (cardModel.kind == KIND.DISH)
         //{
         //    effectText.text = cardModel.cal + "Cal";
@@ -126,52 +133,92 @@ public class CardView : MonoBehaviour
     }
 
 
-    string DecideEffectText(int cardID)
+    public void ShowDeadLine(int deadLine)
+    {
+        deadLineText.text = "残 " + deadLine;
+    }
+
+
+
+    string DecideEffectText(int specialID)
     {
         string effectText = null;
 
-        switch (cardID)
+        switch (specialID)
         {
             case 0:
-                effectText = "攻撃UP";
-                break;
-            case 1:
-                effectText = "命中UP";
-                break;
-            case 2:
-                effectText = "バフ解除";
-                break;
-            case 3:
-                effectText = "毒特攻";
-                break;
-            case 4:
-                effectText = "暗闇特攻";
-                break;
-            case 5:
-                effectText = "HP差特攻";
-                break;
-            case 6:
                 effectText = "毒";
                 break;
-            case 7:
+            case 1:
                 effectText = "暗闇";
                 break;
-            case 8:
-                effectText = "異常解除";
+            case 2:
+                effectText = "異常回復";
+                break;
+            case 3:
+                effectText = "攻撃UP";
+                break;
+            case 4:
+                effectText = "防御UP";
                 break;
             default:
                 Debug.Log("範囲外");
                 break;
+
+                //case 0:
+                //    effectText = "攻撃UP";
+                //    break;
+                //case 1:
+                //    effectText = "命中UP";
+                //    break;
+                //case 2:
+                //    effectText = "バフ解除";
+                //    break;
+                //case 3:
+                //    effectText = "毒特攻";
+                //    break;
+                //case 4:
+                //    effectText = "暗闇特攻";
+                //    break;
+                //case 5:
+                //    effectText = "HP差特攻";
+                //    break;
+                //case 6:
+                //    effectText = "毒";
+                //    break;
+                //case 7:
+                //    effectText = "暗闇";
+                //    break;
+                //case 8:
+                //    effectText = "異常解除";
+                //    break;
+                //default:
+                //    Debug.Log("範囲外");
+                //    break;
         }
 
         return effectText;
     }
+
+    //public void ChangeDeadLine(CardModel cardModel)
+    //{
+    //    costText.text = cardModel.cost.ToString();
+    //}
 
     public void Refresh(CardModel cardModel, int attackUp, int hitUp)
     {
         //effectText.text = cardModel.cal + "Cal";
         //hitText.text = cardModel.hit + "%";
 
+        if (cardModel.kind == KIND.INGREDIENT)
+        {
+            effectText.text = DecideEffectText(cardModel.specialID);
+            nameText.text = cardModel.name;
+            calText.text = cardModel.cal + "Kcal";
+            hitText.text = cardModel.hit + "%";
+
+            iconImage.sprite = cardModel.icon;
+        }
 
         //if (attackUp != 0)
         //{
@@ -181,15 +228,15 @@ public class CardView : MonoBehaviour
         //{
         //    hitText.color = Color.red;
         //}
-        if (cardModel.kind == KIND.DISH)
-        {
-            effectText.text = DecideEffectText(cardModel.special);
-            nameText.text = cardModel.name;
-            calText.text = cardModel.cal + "Kcal";
-            hitText.text = cardModel.hit + "%";
+        //if (cardModel.kind == KIND.DISH)
+        //{
+        //    effectText.text = DecideEffectText(cardModel.specialID);
+        //    nameText.text = cardModel.name;
+        //    calText.text = cardModel.cal + "Kcal";
+        //    hitText.text = cardModel.hit + "%";
 
-            iconImage.sprite = cardModel.icon;
-        }
+        //    iconImage.sprite = cardModel.icon;
+        //}
 
 
 

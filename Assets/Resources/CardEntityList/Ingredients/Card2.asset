@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Card2
   m_EditorClassIdentifier: 
   name: "\u3055\u304B\u306A"
-  cal: 0
+  cal: 133
   icon: {fileID: 21300000, guid: 150e948aa0b954fe68f98198aa30da2a, type: 3}
   selectIcon: {fileID: 21300000, guid: 5db285395cc61485b851ae25d9431831, type: 3}
   nutrient: 0

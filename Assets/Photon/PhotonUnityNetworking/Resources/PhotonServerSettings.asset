@@ -52,6 +52,9 @@ MonoBehaviour:
   - MoveConveyor
   - DestroyIngredient
   - GenerateFieldCard
+  - CreateHandCard
+  - CreateMixCard
+  - ProgressTurnCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

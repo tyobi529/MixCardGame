@@ -41,7 +41,7 @@ public class CardModel
     public int cardID;
 
     //public int playerID;
-    public int special;
+    public int specialID;
 
     //public bool isMix;
 
@@ -55,11 +55,12 @@ public class CardModel
     //public int selectNum;
 
 
-    
+    public int cost;
+    public int deadLine;
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(KIND kind, int cardID)
+    public CardModel(KIND kind, int cardID, int specialID)
     {
         CardEntity cardEntity = null;
 
@@ -73,13 +74,14 @@ public class CardModel
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
             hit = 100;
-            special = -1;
+            //special = -1;
+            this.specialID = specialID;
         }
         else if (kind == KIND.DISH)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
             hit = cardEntity.hit;
-            special = cardEntity.special;
+            this.specialID = cardEntity.special;
         }
 
         //Debug.Log(cardID);
@@ -128,10 +130,9 @@ public class CardModel
         isSelect = false;
         //selectNum = 0;
 
-
+        cost = 0;
+        deadLine = 5;
     }
-
-
 
 
 }
