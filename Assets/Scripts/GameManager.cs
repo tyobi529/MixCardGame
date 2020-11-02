@@ -12,11 +12,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     GameObject dishCardPrefab;
 
 
-    public GamePlayerManager player;
-    public GamePlayerManager enemy;
+    GamePlayerManager[] playerManager = new GamePlayerManager[2];
 
-    //List<int> deck = new List<int>();
-    //int[,] deck = new int[2, 9] { { 0, 1, 2, 3, 4, 5, 6, 7, 8 }, { 0, 1, 2, 3, 4, 5, 6, 7, 8 } };
+   
     int[] deck_0 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
     int[] deck_1 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
@@ -30,44 +28,27 @@ public class GameManager : MonoBehaviourPunCallbacks
     Transform[] nextFieldTransform = new Transform[4];
     Transform[] currentFieldTransform = new Transform[4];
 
-    //public object[] Conveyor = new object[2];
 
-    //public Transform playerHandTransform;
-
-    //[SerializeField] CardController cardPrefab;
-
-
-    //Transform basicFieldTransform, additionalFieldTransform;
-    //Transform mixFieldTransform[0], field2Transform, resultFieldTransform;
     Transform[] mixFieldTransform = new Transform[3];
 
 
-    GameObject reverseObject;
-
-
     //public int attackID;
-    public bool isMyTurn;
+    bool isMyTurn;
 
 
 
-    public Transform playerHero;
 
 
     //時間管理
     int timeCount;
 
-    public int playerID;
+    int playerID;
 
-    
+
 
 
     SpecialController specialController;
 
-
-
-    public bool isAttackButton = true;
-    public bool isMixButton = false;
-    public bool isThrowButton = false;
 
 
     GameObject attackButtons;
@@ -76,27 +57,26 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public bool isChange = false;
 
 
 
 
-    public int maxHand;
+    [SerializeField] int maxHand;
     int defaultMaxHand;
 
 
     int cardIndex = 0;
 
-    public int damageCal;
+    int damageCal;
 
    
 
     int[] selectCardPosition = new int[2] { -1, -1 };
 
 
-
+    //賞味期限
     [SerializeField] int deadLine;
-
+    //合成に必要なコスト
     [SerializeField] int mixCost;
 
 
@@ -112,8 +92,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         cardPrefab = (GameObject)Resources.Load("Card");
         dishCardPrefab = (GameObject)Resources.Load("DishCard");
 
-        player = GameObject.Find("Player").GetComponent<GamePlayerManager>();
-        enemy = GameObject.Find("Enemy").GetComponent<GamePlayerManager>();
+        playerManager[0] = GameObject.Find("Player").GetComponent<GamePlayerManager>();
+        playerManager[1] = GameObject.Find("Enemy").GetComponent<GamePlayerManager>();
 
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
@@ -141,8 +121,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             mixFieldTransform[i] = GameObject.Find("MixField_" + i.ToString()).transform;
         }
-
-        reverseObject = GameObject.Find("ReverseObject");
 
 
 
@@ -186,7 +164,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //プレイヤー１が先行
-        //attackID = 1;
         if (playerID == 1)
         {
             isMyTurn = true;
@@ -219,7 +196,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         }
 
-
+        uiManager.ShowStatus();
 
         //uiManager.ShowHealth(player.isHealth, enemy.isHealth);
         //uiManager.ShowPoison(player.isPoison, player.poisonCount, enemy.isPoison, enemy.poisonCount);
@@ -259,9 +236,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (nextFieldTransform[i].childCount == 0)
             {
                 int cardID = UnityEngine.Random.Range(0, 9);
+                int cal = UnityEngine.Random.Range(20, 60);
                 int specialID = UnityEngine.Random.Range(0, 5);
                 int position = i;
-                photonView.RPC(nameof(CreateHandCard), RpcTarget.AllViaServer, cardID, specialID, position);
+                photonView.RPC(nameof(CreateHandCard), RpcTarget.AllViaServer, cardID, cal, specialID, position);
 
             }
         }
@@ -293,7 +271,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    void CreateHandCard(int cardID, int specialID, int position)
+    void CreateHandCard(int cardID, int cal, int specialID, int position)
     {
         //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
         Transform field = nextFieldTransform[position];
@@ -301,18 +279,18 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameObject card = Instantiate(cardPrefab, field, false);
 
 
-        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, specialID);
+        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, cal, specialID);
         //Card.GetComponent<CardController>().Init(cardID, playerID);
 
         //return card.GetComponent<CardController>();
 
     }
 
-    void CreateMixCard(KIND kind, int cardID, int specialID)
+    void CreateMixCard(KIND kind, int cardID, int cal, int specialID)
     {
         GameObject card = Instantiate(dishCardPrefab, mixFieldTransform[2], false);
 
-        card.GetComponent<CardController>().Init(kind, cardID, specialID);
+        card.GetComponent<CardController>().MixInit(kind, cardID, cal, specialID);
 
     }
 
@@ -449,10 +427,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         //isHit = true;
 
 
-        //特殊効果
-        Debug.Log("獲得" + attackCardController.model.cost);
-
-
         photonView.RPC(nameof(Battle), RpcTarget.AllViaServer, damageCal);
 
         //回避計算
@@ -488,13 +462,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (isMyTurn)
         {
-            attacker = player;
-            defender = enemy;
+            attacker = playerManager[0];
+            defender = playerManager[1];
         }
         else
         {
-            attacker = enemy;
-            defender = player;
+            attacker = playerManager[1];
+            defender = playerManager[0];
         }
 
 
@@ -521,15 +495,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (attackCardController.model.kind == KIND.INGREDIENT)
         {
             attacker.cost += currentFieldTransform[selectCardPosition[0]].GetComponent<FieldController>().cost;
-            specialController.SpecialEffect(attackCardController.model.specialID, isMyTurn, damageCal);
+            specialController.IngredientEffect(attackCardController.model.specialID, isMyTurn, damageCal);
         }
         else
         {
             attacker.cost -= mixCost;
-            specialController.DishSpecialEffect(attackCardController.model.specialID, isMyTurn, damageCal);
+            specialController.DishEffect(attackCardController.model.specialID, isMyTurn, damageCal);
         }
 
-        
 
         uiManager.ShowHP();
 
@@ -607,11 +580,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (isMyTurn)
         {
-            attacker = player;
+            attacker = playerManager[0];
         }
         else
         {
-            attacker = enemy;
+            attacker = playerManager[1];
         }
 
         this.selectCardPosition = selectCardPosition;
@@ -622,6 +595,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         CleanField();
 
         int[] cardID = new int[2] { -1, -1 };
+        int[] cal = new int[2] { -1, -1 };
         int[] specialID = new int[2] { -1, -1 };
         CardController[] cardController = new CardController[2] { null, null };
 
@@ -632,11 +606,13 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 GameObject selectCard = currentFieldTransform[selectCardPosition[i]].GetChild(0).gameObject;
                 cardID[i] = selectCard.GetComponent<CardController>().model.cardID;
+                cal[i] = selectCard.GetComponent<CardController>().model.cal;
                 specialID[i] = selectCard.GetComponent<CardController>().model.specialID;
+                
 
                 GameObject card = GameObject.Instantiate(selectCard, mixFieldTransform[i], false);
                 cardController[i] = card.GetComponent<CardController>();
-                cardController[i].Init(KIND.INGREDIENT, cardID[i], specialID[i]);
+                cardController[i].Init(KIND.INGREDIENT, cardID[i], cal[i], specialID[i]);
                 //cardController[i].model.cost = selectCard.GetComponent<CardController>().model.cost;
 
                 //Debug.Log("カード" + i + cardController[i].model.cost);
@@ -668,7 +644,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 //合成
                 int mixCardID = SpecialMix(cardController[0], cardController[1]);
 
-                CreateMixCard(KIND.DISH, mixCardID, mixCardID);
+                CreateMixCard(KIND.DISH, mixCardID, 0, mixCardID);
 
                 if (attacker.cost >= mixCost)
                 {
@@ -680,7 +656,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             uiManager.decideButtonObj.SetActive(true);
-            CreateMixCard(KIND.INGREDIENT, cardID[0], specialID[0]);
+            CreateMixCard(KIND.INGREDIENT, cardID[0], cal[0], specialID[0]);
 
 
         }
@@ -866,36 +842,36 @@ public class GameManager : MonoBehaviourPunCallbacks
     void CheckPoison()
     {
         //自分
-        if (isMyTurn)
-        {
-            if (player.poisonCount > 0)
-            {
-                player.poisonCount--;
-            }
+        //if (isMyTurn)
+        //{
+        //    if (player.poisonCount > 0)
+        //    {
+        //        player.poisonCount--;
+        //    }
 
-            if (player.poisonCount > 0)
-            {
-                int poisonDamage = player.poisonCount * 5;
-                player.hp -= poisonDamage;
-                Debug.Log("毒で" + poisonDamage + "ダメージ");
-            }
+        //    if (player.poisonCount > 0)
+        //    {
+        //        int poisonDamage = player.poisonCount * 5;
+        //        player.hp -= poisonDamage;
+        //        Debug.Log("毒で" + poisonDamage + "ダメージ");
+        //    }
 
-        }
-        //相手
-        else
-        {
-            if (enemy.poisonCount > 0)
-            {
-                enemy.poisonCount--;
-            }
+        //}
+        ////相手
+        //else
+        //{
+        //    if (enemy.poisonCount > 0)
+        //    {
+        //        enemy.poisonCount--;
+        //    }
 
-            if (enemy.poisonCount > 0)
-            {
-                int poisonDamage = enemy.poisonCount * 5;
-                enemy.hp -= poisonDamage;
-                Debug.Log("毒で" + poisonDamage + "ダメージ");
-            }
-        }
+        //    if (enemy.poisonCount > 0)
+        //    {
+        //        int poisonDamage = enemy.poisonCount * 5;
+        //        enemy.hp -= poisonDamage;
+        //        Debug.Log("毒で" + poisonDamage + "ダメージ");
+        //    }
+        //}
 
 
 
@@ -905,32 +881,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     void CheckDark()
     {
         //自分
-        if (isMyTurn)
-        {
-            if (player.darkCount > 0)
-            {
-                player.darkCount--;
-            }
+        //if (isMyTurn)
+        //{
+        //    if (player.darkCount > 0)
+        //    {
+        //        player.darkCount--;
+        //    }
 
-            if (player.darkCount > 0)
-            {
-                Debug.Log("暗闇");
-            }
+        //    if (player.darkCount > 0)
+        //    {
+        //        Debug.Log("暗闇");
+        //    }
 
-        }
-        //相手
-        else
-        {
-            if (enemy.darkCount > 0)
-            {
-                enemy.darkCount--;
-            }
+        //}
+        ////相手
+        //else
+        //{
+        //    if (enemy.darkCount > 0)
+        //    {
+        //        enemy.darkCount--;
+        //    }
 
-            if (enemy.darkCount > 0)
-            {
-                Debug.Log("暗闇");
-            }
-        }
+        //    if (enemy.darkCount > 0)
+        //    {
+        //        Debug.Log("暗闇");
+        //    }
+        //}
 
 
     }

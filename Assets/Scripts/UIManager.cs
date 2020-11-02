@@ -9,14 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text resultText;
 
 
-    [SerializeField] Text playerHpText;
-    [SerializeField] Text enemyHpText;
+    [SerializeField] Text[] playerHpText = new Text[2];
 
-    [SerializeField] Slider playerHpBar;
-    [SerializeField] Slider enemyHpBar;
+    [SerializeField] Slider[] playerHpBar = new Slider[2];
 
-    [SerializeField] Text playerCostText;
-    [SerializeField] Text enemyCostText;
+    [SerializeField] Text[] playerCostText;
 
     [SerializeField] Text playerHeroRedText;
     [SerializeField] Text playerHeroYellowText;
@@ -31,8 +28,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text playerDarkText;
     [SerializeField] Text enemyDarkText;
 
-    [SerializeField] Text playerAttackUpText;
-    [SerializeField] Text enemyAttackUpText;
+    [SerializeField] Text[] dishBonusText = new Text[2];
+    [SerializeField] Text[] redBonusText = new Text[2];
+    [SerializeField] Text[] yellowBonusText = new Text[2];
+    [SerializeField] Text[] greenBonusText = new Text[2];
+
 
     [SerializeField] Text playerDefenceUpText;
     [SerializeField] Text enemyDefenceUpText;
@@ -73,8 +73,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] public GameObject lackCostText;
 
-    [SerializeField] GamePlayerManager player;
-    [SerializeField] GamePlayerManager enemy;
+    [SerializeField] GamePlayerManager[] player = new GamePlayerManager[2];
 
     [SerializeField] TriangleDrawer playerTriangle;
     [SerializeField] TriangleDrawer enemyTriangle;
@@ -111,11 +110,12 @@ public class UIManager : MonoBehaviour
 
     public void ShowHP()
     {
-        //Debug.Log("aa");
-        playerHpBar.value = player.hp;
-        enemyHpBar.value = enemy.hp;
-        playerHpText.text = player.hp.ToString();
-        enemyHpText.text = enemy.hp.ToString();
+        for (int i = 0; i < 2; i++)
+        {
+            playerHpBar[i].value = player[i].hp;
+            playerHpText[i].text = player[i].hp.ToString();
+        }
+
     }
 
     public void ShowDeadLine()
@@ -224,27 +224,67 @@ public class UIManager : MonoBehaviour
 
     public void ShowStatus()
     {
-        playerCostText.text = "コスト" + player.cost;
-        enemyCostText.text = "コスト" + enemy.cost;
 
-        playerPoisonText.text = "毒" + player.poisonCount;
-        enemyPoisonText.text = "毒" + enemy.poisonCount;
+        for (int i = 0; i < 2; i++)
+        {
+            playerCostText[i].text = "コスト" + player[i].cost;
 
-        playerDarkText.text = "闇" + player.darkCount;
-        enemyDarkText.text = "闇" + enemy.darkCount;
+            if (player[i].dishBonus)
+            {
+                dishBonusText[i].text = "全＋";
+            }
+            else
+            {
+                dishBonusText[i].text = "";
+            }
 
-        playerAttackUpText.text = "攻" + player.attackUpCount;
-        enemyAttackUpText.text = "攻" + enemy.attackUpCount;
+            if (player[i].redBonus)
+            {
+                redBonusText[i].text = "赤＋";
+            }
+            else
+            {
+                redBonusText[i].text = "";
+            }
 
-        playerDefenceUpText.text = "守" + player.defenceUpCount;
-        enemyDefenceUpText.text = "守" + enemy.defenceUpCount;
+            if (player[i].yellowBonus)
+            {
+                yellowBonusText[i].text = "黄＋";
+            }
+            else
+            {
+                yellowBonusText[i].text = "";
+            }
+
+            if (player[i].greenBonus)
+            {
+                greenBonusText[i].text = "緑＋";
+            }
+            else
+            {
+                greenBonusText[i].text = "";
+            }
+
+        }
+
+        //playerPoisonText.text = "毒" + player.poisonCount;
+        //enemyPoisonText.text = "毒" + enemy.poisonCount;
+
+        //playerDarkText.text = "闇" + player.darkCount;
+        //enemyDarkText.text = "闇" + enemy.darkCount;
+
+        //playerAttackUpText.text = "攻" + player.attackUpCount;
+        //enemyAttackUpText.text = "攻" + enemy.attackUpCount;
+
+        //playerDefenceUpText.text = "守" + player.defenceUpCount;
+        //enemyDefenceUpText.text = "守" + enemy.defenceUpCount;
 
     }
 
     public void ShowPoison()
     {
-        playerPoisonText.text = "毒" + player.poisonCount;
-        enemyPoisonText.text = "毒" + enemy.poisonCount;
+        //playerPoisonText.text = "毒" + player.poisonCount;
+        //enemyPoisonText.text = "毒" + enemy.poisonCount;
 
 
 
@@ -258,24 +298,24 @@ public class UIManager : MonoBehaviour
 
     public void ShowAttackUp(int playerAttackUp, int enemyAttackUp)
     {
-        if (playerAttackUp == 0)
-        {
-            playerAttackUpText.text = "";
-        }
-        else
-        {
-            playerAttackUpText.text = "攻" + playerAttackUp;
-        }
+        //if (playerAttackUp == 0)
+        //{
+        //    playerAttackUpText.text = "";
+        //}
+        //else
+        //{
+        //    playerAttackUpText.text = "攻" + playerAttackUp;
+        //}
         
 
-        if (enemyAttackUp == 0)
-        {
-            enemyAttackUpText.text = "";
-        }
-        else
-        {
-            enemyAttackUpText.text = "攻" + enemyAttackUp;
-        }
+        //if (enemyAttackUp == 0)
+        //{
+        //    enemyAttackUpText.text = "";
+        //}
+        //else
+        //{
+        //    enemyAttackUpText.text = "攻" + enemyAttackUp;
+        //}
         
 
     }

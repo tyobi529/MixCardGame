@@ -15,9 +15,7 @@ public class CardView : MonoBehaviour
     [SerializeField] Text calText;
     [SerializeField] Text hitText;
 
-    //[SerializeField] Text hitText;
 
-    //[SerializeField] Text deText;
     [SerializeField] Image nutrientColor;
 
     [SerializeField] public Image iconImage;
@@ -36,8 +34,39 @@ public class CardView : MonoBehaviour
     {
 
 
-        //nameText.text = cardModel.name;
+        effectText.text = DecideEffectText(cardModel.specialID);
+        //ingredientPanel.SetActive(true);
 
+        if (cardModel.nutrient == NUTRIENT.RED)
+        {
+            //ingredientPanel.GetComponent<Image>().color = Color.red;
+            nutrientColor.color = Color.red;
+
+
+        }
+        else if (cardModel.nutrient == NUTRIENT.YELLOW)
+        {
+            //ingredientPanel.GetComponent<Image>().color = Color.yellow;
+            nutrientColor.color = Color.yellow;
+
+        }
+        else if (cardModel.nutrient == NUTRIENT.GREEN)
+        {
+            //ingredientPanel.GetComponent<Image>().color = Color.green;
+            nutrientColor.color = Color.green;
+
+        }
+
+        iconImage.sprite = cardModel.icon;
+
+
+
+    }
+
+
+    public void SetMixCard(CardModel cardModel)
+    {
+        calText.text = cardModel.cal + "Kcal";
 
         if (cardModel.kind == KIND.INGREDIENT)
         {
@@ -89,23 +118,7 @@ public class CardView : MonoBehaviour
 
 
 
-        //else if (cardModel.kind == KIND.DISH)
-        //{
-        //    effectText.text = cardModel.cal + "Cal";
-        //    hitText.text = cardModel.hit + "%";
-
-        //    //mixPanel.SetActive(true);
-        //    ingredientPanel.SetActive(true);
-
-        //    mixPanel.SetActive(true);
-
-        //}
-
-
-
-
     }
-
 
 
 
@@ -116,54 +129,25 @@ public class CardView : MonoBehaviour
         switch (specialID)
         {
             case 0:
-                effectText = "毒";
+                effectText = "全＋";
                 break;
             case 1:
-                effectText = "暗闇";
+                effectText = "赤料理＋";
                 break;
             case 2:
-                effectText = "異常回復";
+                effectText = "黄料理＋";
                 break;
             case 3:
-                effectText = "攻撃UP";
+                effectText = "緑料理＋";
                 break;
             case 4:
-                effectText = "防御UP";
+                effectText = "和食＋";
                 break;
             default:
                 Debug.Log("範囲外");
                 break;
 
-                //case 0:
-                //    effectText = "攻撃UP";
-                //    break;
-                //case 1:
-                //    effectText = "命中UP";
-                //    break;
-                //case 2:
-                //    effectText = "バフ解除";
-                //    break;
-                //case 3:
-                //    effectText = "毒特攻";
-                //    break;
-                //case 4:
-                //    effectText = "暗闇特攻";
-                //    break;
-                //case 5:
-                //    effectText = "HP差特攻";
-                //    break;
-                //case 6:
-                //    effectText = "毒";
-                //    break;
-                //case 7:
-                //    effectText = "暗闇";
-                //    break;
-                //case 8:
-                //    effectText = "異常解除";
-                //    break;
-                //default:
-                //    Debug.Log("範囲外");
-                //    break;
+
         }
 
         return effectText;

@@ -28,12 +28,6 @@ public class CardModel
     public int yellow;
     public int green;
 
-    //public int spellNum;
-
-
-
-    //public bool isAlive;
-    //public bool canAttack;
     public bool isFieldCard;
     //public bool isPlayerCard;
 
@@ -60,7 +54,7 @@ public class CardModel
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(KIND kind, int cardID, int specialID)
+    public CardModel(KIND kind, int cardID, int cal, int specialID)
     {
         CardEntity cardEntity = null;
 
@@ -73,15 +67,17 @@ public class CardModel
         if (kind == KIND.INGREDIENT)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
-            hit = 100;
+            //hit = 100;
             //special = -1;
             this.specialID = specialID;
+            this.cal = cal;
         }
         else if (kind == KIND.DISH)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
             hit = cardEntity.hit;
             this.specialID = cardEntity.special;
+            cal = cardEntity.cal;
         }
 
         //Debug.Log(cardID);
@@ -91,7 +87,7 @@ public class CardModel
 
         name = cardEntity.name;
 
-        cal = cardEntity.cal;
+        
 
         icon = cardEntity.icon;
         selectIcon = cardEntity.selectIcon;

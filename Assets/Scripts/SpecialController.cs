@@ -7,63 +7,61 @@ public class SpecialController : MonoBehaviour
     public GamePlayerManager player;
     public GamePlayerManager enemy;
 
-    public void SpecialEffect(int specialID, bool isMyTurn, int damageCal)
+    public void IngredientEffect(int specialID, bool isMyTurn, int damageCal)
     {
+        GamePlayerManager attacker;
+
+        if (isMyTurn)
+        {
+            attacker = player;
+        }
+        else
+        {
+            attacker = enemy;
+        }
 
         switch (specialID)
         {
             case 0:
-                Poison(isMyTurn, damageCal);
+                attacker.dishBonus = true;
                 break;
             case 1:
-                Dark(isMyTurn, damageCal);
+                attacker.redBonus = true;
                 break;
             case 2:
-                RecoverCondition(isMyTurn);
+                attacker.yellowBonus = true;
                 break;
             case 3:
-                AttackUp(isMyTurn);
+                attacker.greenBonus = true;
                 break;
             case 4:
-                DefenceUp(isMyTurn);
+                attacker.japaneseBonus = true;
                 break;
             default:
                 Debug.Log("範囲外");
                 break;
 
-                //case 0:
-                //    AttackUp(isMyTurn);
-                //    break;
-                //case 1:
-                //    HitRateUp(isMyTurn);
-                //    break;
-                //case 2:
-                //    BuffRelease(isMyTurn, damageCal);
-                //    break;
-                //case 3:
-                //    PoisonSpecialAttack(isMyTurn);
-                //    break;
-                //case 4:
-                //    DarkSpecialAttack(isMyTurn);
-                //    break;
-                //case 5:
-                //    HpSpecialAttack(isMyTurn);
-                //    break;
-                //case 6:
-                //    Poison(isMyTurn, damageCal);
-                //    break;
-                //case 7:
-                //    Dark(isMyTurn, damageCal);
-                //    break;
-                //case 8:
-                //    RecoverCondition(isMyTurn);
-                //    break;
-                //default:
-                //    Debug.Log("範囲外");
-                //    break;
         }
     }
 
+    //料理のカロリーをプラス
+    //void AddDishCal(GamePlayerManager attacker)
+    //{
+    //    Debug.Log("料理のカロリー+");
+    //    attacker.addDishCal += 100;
+    //}
+
+    ////料理の効果をプラス
+    //void AddDishEffect(GamePlayerManager attacker)
+    //{
+    //    attacker.addDishEffect++;
+    //}
+
+    //料理の効果
+    public void DishEffect(int specialID, bool isMyTurn, int damageCal)
+    {
+        Debug.Log("料理効果");
+    }
 
     //相手を毒に
     void Poison(bool isMyTurn, int damageCal)
@@ -185,10 +183,7 @@ public class SpecialController : MonoBehaviour
 
 
 
-    public void DishSpecialEffect(int specialID, bool isMyTurn, int damageCal)
-    {
-        Debug.Log("料理効果");
-    }
+
 
     //相手のバフ解除
     //void BuffRelease(bool isMyTurn, int damageCal)

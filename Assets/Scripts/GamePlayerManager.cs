@@ -14,6 +14,17 @@ public class GamePlayerManager : MonoBehaviour
     public int yellow;
     public int green;
 
+    //料理の強化
+    //全料理
+    public bool dishBonus;
+
+    //料理の色
+    public bool redBonus;
+    public bool yellowBonus;
+    public bool greenBonus;
+
+    //料理の種類
+    public bool japaneseBonus;
 
     public int poisonCount;
 
