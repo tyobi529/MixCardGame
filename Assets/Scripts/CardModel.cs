@@ -92,43 +92,23 @@ public class CardModel
         name = cardEntity.name;
 
         cal = cardEntity.cal;
-        //if (kind == 1)
-        //{
-        //    cal = DecideDefenceCal();
-        //}
 
         icon = cardEntity.icon;
         selectIcon = cardEntity.selectIcon;
 
-        //ability = cardEntity.ability;
-        //spell = cardEntity.spell;
-        //this.kind = cardEntity.kind;
-        //nutrition = cardEntity.nutrtion;
 
         red = cardEntity.red;
         yellow = cardEntity.yellow;
         green = cardEntity.green;
 
-        //spellNum = cardEntity.spellNum;
-
 
         isFieldCard = false;
-        //isAlive = true;
-        //isPlayerCard = isPlayer;
 
-        //this.cardKind = cardKind;
-
-        //playerID = ID;
-
-        //special = cardEntity.special;
 
         partnerID = cardEntity.partnerID;
         specialMixID = cardEntity.specialMixID;
 
-        //this.isMix = isMix;
-
         isSelect = false;
-        //selectNum = 0;
 
         cost = 0;
         deadLine = 5;

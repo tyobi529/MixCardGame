@@ -8,6 +8,9 @@ public class FieldController : MonoBehaviour
     [SerializeField] int position;
     bool isSelected = false;
 
+    public int cost = 0;
+    public int deadLine = 5;
+
     public void SelectCard()
     {
         if (transform.childCount == 0)

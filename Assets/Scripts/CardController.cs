@@ -9,7 +9,6 @@ public class CardController : MonoBehaviour
     public CardModel model; //データ（model）関することを操作
                             //public CardMovement movement; //移動（movement）関することを操作
 
-    //Transform field1Transform, field2Transform, resultFieldTransform;
 
     GameManager gameManager;
 

@@ -45,29 +45,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text enemyHealthText;
 
 
-    //[SerializeField] Text expectDamageText;
 
-
-
-    //[SerializeField] Text playerManaCostText;
-    //[SerializeField] Text enemyManaCostText;
 
     [SerializeField] Text timeCountText;
 
 
-    [SerializeField] GameObject turnPanel;
-    [SerializeField] Text phaseText;
-    [SerializeField] Text turnText;
-
-
-    //[SerializeField] public GameObject buttonsObj;
 
 
     [SerializeField] public GameObject decideButtonObj;
 
     [SerializeField] public GameObject ChangeButtonObj;
 
-    //[SerializeField] GameObject cancelButtonObj;
 
     [SerializeField] public Image playerFieldImage;
     [SerializeField] public Image enemyFieldImage;
@@ -90,6 +78,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] TriangleDrawer playerTriangle;
     [SerializeField] TriangleDrawer enemyTriangle;
+
+    [SerializeField] FieldController[] currentFieldController = new FieldController[4];
+    [SerializeField] Text[] deadLineText = new Text[4];
 
     //シングルトン化（どこからでもアクセスできるようにする）
     public static UIManager instance;
@@ -127,28 +118,16 @@ public class UIManager : MonoBehaviour
         enemyHpText.text = enemy.hp.ToString();
     }
 
+    public void ShowDeadLine()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            deadLineText[i].text = currentFieldController[i].deadLine + "ターン";
+        }
+    }
+
     public void ShowNutrients()
     {
-        //if (player.isDark)
-        //{
-        //    playerHeroRedText.text = "?";
-        //    playerHeroYellowText.text = "?";
-        //    playerHeroGreenText.text = "?";
-
-        //    enemyHeroRedText.text = "?";
-        //    enemyHeroYellowText.text = "?";
-        //    enemyHeroGreenText.text = "?";
-        //}
-        //else
-        //{
-        //    playerHeroRedText.text = player.red.ToString();
-        //    playerHeroYellowText.text = player.yellow.ToString();
-        //    playerHeroGreenText.text = player.green.ToString();
-
-        //    enemyHeroRedText.text = enemy.red.ToString();
-        //    enemyHeroYellowText.text = enemy.yellow.ToString();
-        //    enemyHeroGreenText.text = enemy.green.ToString();
-        //}
 
     }
 
@@ -166,27 +145,6 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void ShowTurn(int attackID)
-    {
-        if (GameManager.instance.playerID == attackID)
-            phaseText.text = "攻撃ターン";
-        else
-            phaseText.text = "防御ターン";
-
-        if (GameManager.instance.isMyTurn)
-        {
-            turnPanel.GetComponent<Image>().color = Color.yellow;
-            turnText.text = "あなたの番です";
-
-        }
-        else
-        {
-            turnPanel.GetComponent<Image>().color = Color.white;
-            turnText.text = "相手の番です";
-        }
-            
-
-    }
 
 
     public void ShowTriangle()
@@ -209,13 +167,6 @@ public class UIManager : MonoBehaviour
         GameManager.instance.OnDecideButton();
 
     }
-
-    //交換ボタン
-    //public void OnSwapButton()
-    //{
-    //    GameManager.instance.OnSwapButton();
-
-    //}
 
 
 
@@ -297,50 +248,11 @@ public class UIManager : MonoBehaviour
 
 
 
-
-        //if (playerPoison)
-        //{
-        //    playerPoisonText.text = "毒" + playerPoisonCount;
-        //}
-        //else
-        //{
-        //    playerPoisonText.text = "";
-        //}
-
-
-        //if (enemyPoison)
-        //{
-        //    enemyPoisonText.text = "毒" + enemyPoisonCount;
-        //}
-        //else
-        //{
-        //    enemyPoisonText.text = "";
-
-        //}
-
     }
 
     public void ShowDark()
     {
-        //if (playerDark)
-        //{
-        //    playerDarkText.text = "闇";
-        //}
-        //else
-        //{
-        //    playerDarkText.text = "";
-        //}
 
-
-        //if (enemyDark)
-        //{
-        //    enemyDarkText.text = "闇";
-        //}
-        //else
-        //{
-        //    enemyDarkText.text = "";
-
-        //}
 
     }
 

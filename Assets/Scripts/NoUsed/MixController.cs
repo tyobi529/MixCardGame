@@ -50,90 +50,6 @@ public class MixController : MonoBehaviour
 
 
 
-    //合成結果の予測
-    //public void ExpectMix()
-    //{
-
-    //    //if (GameManager.instance.attackID != GameManager)
-    //    if (resultFieldTransform.childCount != 0)
-    //    {
-    //        foreach (Transform card in resultFieldTransform)
-    //        {
-    //            Destroy(card.gameObject);
-    //        }
-    //        //Destroy(resultFieldTransform.GetChild(0).gameObject);
-
-    //    }
-
-    //    if (basicFieldTransform.childCount == 0)
-    //    {
-    //        //決定ボタンを消す
-    //        uiManager.decideButtonObj.SetActive(false);
-    //        return;
-
-    //    }
-
-    //    //決定ボタンを出す
-    //    uiManager.decideButtonObj.SetActive(true);
-    //    //警告を消す
-    //    uiManager.lackCostText.SetActive(false);
-
-    //    GameObject basicCard = basicFieldTransform.GetChild(0).gameObject;
-    //    CardController basicCardController = basicCard.GetComponent<CardController>();
-
-    //    GameObject additionalCard;
-    //    CardController additionalCardController;
-
-
-    //    //合成なし
-    //    if (additionalFieldTransform.childCount == 0)
-    //    {
-    //        GameObject cloneCard = Instantiate(basicCard, resultFieldTransform, false);
-    //        //cloneCard.GetComponent<CardController>().Init(basicCard.GetComponent<CardModel>().cardID, basicCard.GetComponent<CardModel>().playerID, true);
-    //        //return;
-    //    }
-
-    //    //合成
-    //    else
-    //    {
-
-    //        //Debug.Log("通常合成");
-    //        additionalCard = additionalFieldTransform.GetChild(0).gameObject;
-    //        additionalCardController = additionalCard.GetComponent<CardController>();
-
-
-    //        //合成
-    //        int specialMixID = SpecialMix(basicCardController, additionalCardController);
-    //        if (specialMixID >= 0)
-    //        {
-    //            GameObject specialCard = Instantiate(cardPrefab, resultFieldTransform, false);
-    //            specialCard.GetComponent<CardController>().Init(3, specialMixID, true);
-
-    //        }
-    //        else
-    //        {
-    //            GameObject cloneCard = Instantiate(basicCard, resultFieldTransform, false);
-    //            CardController cloneCardController = cloneCard.GetComponent<CardController>();
-
-    //            cloneCardController.Init(basicCardController.model.kind, basicCardController.model.cardID, true);
-
-    //            //Debug.Log(cloneCard.GetComponent<CardController>().model);
-    //            cloneCardController.model.cal += additionalCardController.model.cal;
-    //            cloneCardController.view.Refresh(cloneCardController.model);
-    //        }
-
-
-    //    }
-
-
-
-
-
-
-
-    //}
-
-
     public void CleanField()
     {
         CardController[] basicFieldCardList = basicFieldTransform.GetComponentsInChildren<CardController>();
@@ -237,18 +153,7 @@ public class MixController : MonoBehaviour
         Destroy(additionalCard);
 
 
-        //コスト減らす
-        //if (ID == 1)
-        //{
-        //    GameManager.instance.player.mixCost -= 3;
-        //}
-        //else
-        //{
-        //    GameManager.instance.enemy.mixCost -= 3;
 
-        //}
-
-        //GameManager.instance.StartDefence();
     }
 
 

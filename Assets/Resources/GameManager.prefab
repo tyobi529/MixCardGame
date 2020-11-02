@@ -57,6 +57,7 @@ MonoBehaviour:
   maxHand: 4
   damageCal: 0
   deadLine: 5
+  mixCost: 5
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0

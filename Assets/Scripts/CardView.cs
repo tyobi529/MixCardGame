@@ -27,32 +27,6 @@ public class CardView : MonoBehaviour
     [SerializeField] public GameObject deadLineObject;
     [SerializeField] Text deadLineText;
 
-    //[SerializeField] Image selectIconImage;
-
-    //[SerializeField] GameObject selectablePanel;
-    //[SerializeField] GameObject maskPanel;
-
-
-    //[SerializeField] GameObject RedPanel;
-    //[SerializeField] GameObject YellowPanel;
-    //[SerializeField] GameObject GreenPanel;
-
-
-
-    //[SerializeField] GameObject ingredientPanel;
-    //[SerializeField] GameObject nutrientsPanel;
-    //[SerializeField] GameObject defencePanel;
-    //[SerializeField] GameObject mixPanel;
-
-    //[SerializeField] GameObject spellPanel;
-
-
-    //[SerializeField] GameObject mixPanel;
-    //[SerializeField] GameObject specialMixPanel;
-
-    //[SerializeField] Image panelImage;
-
-    //[SerializeField] public GameObject selectPanel;
 
 
 
@@ -103,12 +77,12 @@ public class CardView : MonoBehaviour
 
             nameText.text = cardModel.name;
             calText.text = cardModel.cal + "Kcal";
-            hitText.text = cardModel.hit + "%";
+            //hitText.text = cardModel.hit + "%";
 
             iconImage.sprite = cardModel.icon;
 
 
-            nutrientsText.text = "赤" + cardModel.red + "黄" + cardModel.yellow + "緑" + cardModel.green;
+            //nutrientsText.text = "赤" + cardModel.red + "黄" + cardModel.yellow + "緑" + cardModel.green;
 
 
         }
@@ -132,11 +106,6 @@ public class CardView : MonoBehaviour
 
     }
 
-
-    public void ShowDeadLine(int deadLine)
-    {
-        deadLineText.text = "残 " + deadLine;
-    }
 
 
 
@@ -200,10 +169,6 @@ public class CardView : MonoBehaviour
         return effectText;
     }
 
-    //public void ChangeDeadLine(CardModel cardModel)
-    //{
-    //    costText.text = cardModel.cost.ToString();
-    //}
 
     public void Refresh(CardModel cardModel, int attackUp, int hitUp)
     {
@@ -220,30 +185,9 @@ public class CardView : MonoBehaviour
             iconImage.sprite = cardModel.icon;
         }
 
-        //if (attackUp != 0)
-        //{
-        //    effectText.color = Color.red;
-        //}
-        //if (hitUp != 0)
-        //{
-        //    hitText.color = Color.red;
-        //}
-        //if (cardModel.kind == KIND.DISH)
-        //{
-        //    effectText.text = DecideEffectText(cardModel.specialID);
-        //    nameText.text = cardModel.name;
-        //    calText.text = cardModel.cal + "Kcal";
-        //    hitText.text = cardModel.hit + "%";
-
-        //    iconImage.sprite = cardModel.icon;
-        //}
 
 
 
     }
 
-    //public void SetActiveSelectablePanel(bool flag)
-    //{
-    //    selectablePanel.SetActive(flag);
-    //}
 }
