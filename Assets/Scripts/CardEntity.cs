@@ -13,7 +13,7 @@ public class CardEntity : ScriptableObject
     public Sprite selectIcon;
 
 
-    public NUTRIENT nutrient;
+    public NUTRIENT[] nutrient;
     public KIND kind;
 
     public int hit;
@@ -34,6 +34,7 @@ public class CardEntity : ScriptableObject
 
 public enum NUTRIENT
 {
+    NONE,
     RED,
     YELLOW,
     GREEN,
@@ -44,12 +45,17 @@ public enum NUTRIENT
 public enum KIND
 {
     INGREDIENT,
-    DISH,
-    
-
+    DISH   
 }
 
 
+public enum DISH
+{
+    NONE,
+    JAPANESE,
+    WESTERN,
+    CHINESE,
+}
 
 
 

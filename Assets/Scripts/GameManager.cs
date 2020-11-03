@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 int cardID = UnityEngine.Random.Range(0, 9);
                 int cal = UnityEngine.Random.Range(20, 60);
-                int specialID = UnityEngine.Random.Range(0, 5);
+                int specialID = UnityEngine.Random.Range(0, 6);
                 int position = i;
                 photonView.RPC(nameof(CreateHandCard), RpcTarget.AllViaServer, cardID, cal, specialID, position);
 
@@ -474,18 +474,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         CardController attackCardController = mixFieldTransform[2].GetChild(0).GetComponent<CardController>();
 
-        //バフ効果
-        if (attacker.attackUpCount > 0)
-        {
-            damageCal *= attacker.attackUpCount;
-        }
 
-        if (defender.defenceUpCount > 0)
-        {
-            damageCal /= defender.defenceUpCount;
-        }
-
-  
 
         defender.hp -= damageCal;
 
@@ -531,7 +520,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         //uiManager.ShowAttackUp(player.attackUp, enemy.attackUp);
         //uiManager.ShowHitUp(player.hitUp, enemy.hitUp);
 
-        uiManager.ShowTriangle();
 
 
 

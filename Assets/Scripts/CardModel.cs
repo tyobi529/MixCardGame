@@ -16,7 +16,7 @@ public class CardModel
 
     //public ABILITY ability;
     //public SPELL spell;
-    public NUTRIENT nutrient;
+    public NUTRIENT[] nutrient = new NUTRIENT[2];
     public KIND kind;
 
     public int hit;
@@ -71,6 +71,7 @@ public class CardModel
             //special = -1;
             this.specialID = specialID;
             this.cal = cal;
+            
         }
         else if (kind == KIND.DISH)
         {
@@ -81,9 +82,9 @@ public class CardModel
         }
 
         //Debug.Log(cardID);
+
+
         this.nutrient = cardEntity.nutrient;
-
-
 
         name = cardEntity.name;
 

@@ -10,32 +10,21 @@ public class GamePlayerManager : MonoBehaviour
 
     public int hp;
 
-    public int red;
-    public int yellow;
-    public int green;
+    //public int red;
+    //public int yellow;
+    //public int green;
 
     //料理の強化
-    //全料理
-    public bool dishBonus;
+    public NUTRIENT nutrient = NUTRIENT.NONE;
+    public DISH dish = DISH.NONE;
 
-    //料理の色
-    public bool redBonus;
-    public bool yellowBonus;
-    public bool greenBonus;
-
-    //料理の種類
-    public bool japaneseBonus;
 
     public int poisonCount;
-
     public int darkCount;
-
-    public int attackUpCount;
-    public int defenceUpCount;
+    public int paralysisCount;
 
 
     public int hitUp = 0;
-
 
 
 }

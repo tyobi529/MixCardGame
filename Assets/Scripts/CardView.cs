@@ -37,20 +37,20 @@ public class CardView : MonoBehaviour
         effectText.text = DecideEffectText(cardModel.specialID);
         //ingredientPanel.SetActive(true);
 
-        if (cardModel.nutrient == NUTRIENT.RED)
+        if (cardModel.nutrient[0] == NUTRIENT.RED)
         {
             //ingredientPanel.GetComponent<Image>().color = Color.red;
             nutrientColor.color = Color.red;
 
 
         }
-        else if (cardModel.nutrient == NUTRIENT.YELLOW)
+        else if (cardModel.nutrient[0] == NUTRIENT.YELLOW)
         {
             //ingredientPanel.GetComponent<Image>().color = Color.yellow;
             nutrientColor.color = Color.yellow;
 
         }
-        else if (cardModel.nutrient == NUTRIENT.GREEN)
+        else if (cardModel.nutrient[0] == NUTRIENT.GREEN)
         {
             //ingredientPanel.GetComponent<Image>().color = Color.green;
             nutrientColor.color = Color.green;
@@ -74,20 +74,20 @@ public class CardView : MonoBehaviour
             effectText.text = DecideEffectText(cardModel.specialID);
             //ingredientPanel.SetActive(true);
 
-            if (cardModel.nutrient == NUTRIENT.RED)
+            if (cardModel.nutrient[0] == NUTRIENT.RED)
             {
                 //ingredientPanel.GetComponent<Image>().color = Color.red;
                 nutrientColor.color = Color.red;
 
 
             }
-            else if (cardModel.nutrient == NUTRIENT.YELLOW)
+            else if (cardModel.nutrient[0] == NUTRIENT.YELLOW)
             {
                 //ingredientPanel.GetComponent<Image>().color = Color.yellow;
                 nutrientColor.color = Color.yellow;
 
             }
-            else if (cardModel.nutrient == NUTRIENT.GREEN)
+            else if (cardModel.nutrient[0] == NUTRIENT.GREEN)
             {
                 //ingredientPanel.GetComponent<Image>().color = Color.green;
                 nutrientColor.color = Color.green;
@@ -129,19 +129,22 @@ public class CardView : MonoBehaviour
         switch (specialID)
         {
             case 0:
-                effectText = "全＋";
-                break;
-            case 1:
                 effectText = "赤料理＋";
                 break;
-            case 2:
+            case 1:
                 effectText = "黄料理＋";
                 break;
-            case 3:
+            case 2:
                 effectText = "緑料理＋";
                 break;
-            case 4:
+            case 3:
                 effectText = "和食＋";
+                break;
+            case 4:
+                effectText = "洋食＋";
+                break;
+            case 5:
+                effectText = "中華＋";
                 break;
             default:
                 Debug.Log("範囲外");

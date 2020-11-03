@@ -16,7 +16,7 @@ MonoBehaviour:
   cal: 133
   icon: {fileID: 21300000, guid: 150e948aa0b954fe68f98198aa30da2a, type: 3}
   selectIcon: {fileID: 21300000, guid: 5db285395cc61485b851ae25d9431831, type: 3}
-  nutrient: 0
+  nutrient: 01000000
   kind: 0
   hit: 0
   red: 1

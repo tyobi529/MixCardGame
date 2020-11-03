@@ -15,34 +15,17 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Text[] playerCostText;
 
-    [SerializeField] Text playerHeroRedText;
-    [SerializeField] Text playerHeroYellowText;
-    [SerializeField] Text playerHeroGreenText;
 
-    [SerializeField] Text enemyHeroRedText;
-    [SerializeField] Text enemyHeroYellowText;
-    [SerializeField] Text enemyHeroGreenText;
 
     [SerializeField] Text playerPoisonText;
     [SerializeField] Text enemyPoisonText;
     [SerializeField] Text playerDarkText;
     [SerializeField] Text enemyDarkText;
 
+    [SerializeField] Text[] nutrientBonusText = new Text[2];
     [SerializeField] Text[] dishBonusText = new Text[2];
-    [SerializeField] Text[] redBonusText = new Text[2];
-    [SerializeField] Text[] yellowBonusText = new Text[2];
-    [SerializeField] Text[] greenBonusText = new Text[2];
 
 
-    [SerializeField] Text playerDefenceUpText;
-    [SerializeField] Text enemyDefenceUpText;
-
-
-    [SerializeField] Text playerHitUpText;
-    [SerializeField] Text enemyHitUpText;
-
-    [SerializeField] Text playerHealthText;
-    [SerializeField] Text enemyHealthText;
 
 
 
@@ -55,10 +38,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] public GameObject decideButtonObj;
 
     [SerializeField] public GameObject ChangeButtonObj;
-
-
-    [SerializeField] public Image playerFieldImage;
-    [SerializeField] public Image enemyFieldImage;
 
 
     [SerializeField] public Image basicFieldImage;
@@ -75,8 +54,6 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GamePlayerManager[] player = new GamePlayerManager[2];
 
-    [SerializeField] TriangleDrawer playerTriangle;
-    [SerializeField] TriangleDrawer enemyTriangle;
 
     [SerializeField] FieldController[] currentFieldController = new FieldController[4];
     [SerializeField] Text[] deadLineText = new Text[4];
@@ -147,15 +124,6 @@ public class UIManager : MonoBehaviour
 
 
 
-    public void ShowTriangle()
-    {
-        playerTriangle.SetVerticesDirty();
-        enemyTriangle.SetVerticesDirty();
-
-    }
-
-
-
 
 
 
@@ -181,45 +149,6 @@ public class UIManager : MonoBehaviour
 
     }
 
-    //falseにするとフィールドのimageを消す
-    public void ShowFieldImage(bool canView)
-    {
-
-        playerFieldImage.enabled = canView;
-        enemyFieldImage.enabled = canView;
-
-
-    }
-
-
-
-
-    public void ShowHealth(bool playerHealth, bool enemyHealth)
-    {
-        if (playerHealth)
-        {
-            playerHealthText.text = "健康";
-
-        }
-        else
-        {
-            playerHealthText.text = "不調";
-
-        }
-
-        if (enemyHealth)
-        {
-            enemyHealthText.text = "健康";
-
-        }
-        else
-        {
-            enemyHealthText.text = "不調";
-
-        }
-
-       
-    }
 
 
     public void ShowStatus()
@@ -229,41 +158,25 @@ public class UIManager : MonoBehaviour
         {
             playerCostText[i].text = "コスト" + player[i].cost;
 
-            if (player[i].dishBonus)
+            if (player[i].nutrient == NUTRIENT.NONE)
             {
-                dishBonusText[i].text = "全＋";
+                nutrientBonusText[i].text = "";
             }
             else
+            {
+                nutrientBonusText[i].text = player[i].nutrient.ToString();
+            }
+
+
+            if (player[i].dish == DISH.NONE)
             {
                 dishBonusText[i].text = "";
             }
-
-            if (player[i].redBonus)
-            {
-                redBonusText[i].text = "赤＋";
-            }
             else
             {
-                redBonusText[i].text = "";
+                dishBonusText[i].text = player[i].dish.ToString();
             }
 
-            if (player[i].yellowBonus)
-            {
-                yellowBonusText[i].text = "黄＋";
-            }
-            else
-            {
-                yellowBonusText[i].text = "";
-            }
-
-            if (player[i].greenBonus)
-            {
-                greenBonusText[i].text = "緑＋";
-            }
-            else
-            {
-                greenBonusText[i].text = "";
-            }
 
         }
 
@@ -319,33 +232,6 @@ public class UIManager : MonoBehaviour
         
 
     }
-
-
-    public void ShowHitUp(int playerHitUp, int enemyHitUp)
-    {
-        if (playerHitUp == 0)
-        {
-            playerHitUpText.text = "";
-        }
-        else
-        {
-            playerHitUpText.text = "命" + playerHitUp;
-        }
-
-        if (enemyHitUp == 0)
-        {
-            enemyHitUpText.text = "";
-        }
-        else
-        {
-            enemyHitUpText.text = "命" + enemyHitUp;
-        }
-        
-        
-
-    }
-
-
 
 
 
