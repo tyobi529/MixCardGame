@@ -20,18 +20,18 @@ public class CardController : MonoBehaviour
     }
 
     //public void Init(int cardID, int ID, bool isMix)
-    public void Init(KIND kind, int cardID, int cal, int specialID)
+    public void Init(KIND kind, int cardID, int cost, int specialID)
     {
-        model = new CardModel(kind, cardID, cal, specialID);
+        model = new CardModel(kind, cardID, cost, specialID);
         view.SetCard(model);
 
-        //gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
     }
 
 
-    public void MixInit(KIND kind, int cardID, int cal, int specialID)
+    public void MixInit(KIND kind, int cardID, int cost, int specialID)
     {
-        model = new CardModel(kind, cardID, cal, specialID);
+        model = new CardModel(kind, cardID, cost, specialID);
         view.SetMixCard(model);
 
         //gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
@@ -55,6 +55,12 @@ public class CardController : MonoBehaviour
     }
 
 
+    public void OnCardObject()
+    {
+        model.isSelected = !model.isSelected;
+
+        gameManager.SelectCard(this.GetComponent<CardController>(), model.isSelected);
+    }
    
 
 

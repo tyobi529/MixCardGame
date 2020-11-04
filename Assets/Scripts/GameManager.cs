@@ -15,24 +15,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     GamePlayerManager[] playerManager = new GamePlayerManager[2];
 
    
-    int[] deck_0 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-    int[] deck_1 = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    int[] deck = new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    int cardCost = 0;
 
-
-    //[SerializeField] AI enemyAI;
     [SerializeField] UIManager uiManager;
 
 
-    //public Transform playerHandTransform, playerFieldTransform, enemyHandTransform, enemyFieldTransform;
-    //public Transform[,] conveyorTransform = new Transform[2, 4];
-    Transform[] nextFieldTransform = new Transform[4];
-    Transform[] currentFieldTransform = new Transform[4];
+
+
+    Transform handTransform;
 
 
     Transform[] mixFieldTransform = new Transform[3];
 
 
-    //public int attackID;
     bool isMyTurn;
 
 
@@ -69,9 +65,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     int damageCal;
 
-   
+    CardController[] selectCardController = new CardController[2] { null, null };
 
-    int[] selectCardPosition = new int[2] { -1, -1 };
+
+    CardController[] mixCardController = new CardController[3] { null, null, null };
 
 
     //賞味期限
@@ -104,17 +101,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         fields[0] = GameObject.Find("NextFields");
         fields[1] = GameObject.Find("CurrentFields");
 
-        for (int i = 0; i < maxHand; i++)
-        {
-            nextFieldTransform[i] = fields[0].transform.GetChild(i).transform;
-        }
-
-        for (int i = 0; i < maxHand; i++)
-        {
-            currentFieldTransform[i] = fields[1].transform.GetChild(i).transform;
-        }
-
-
+        handTransform = GameObject.Find("Hand").transform;
 
 
         for (int i = 0; i < 3; i++)
@@ -127,10 +114,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         specialController = GameObject.Find("SpecialController").GetComponent<SpecialController>();
 
         attackButtons = GameObject.Find("AttackButtons");
-
-        //battleObjects = GameObject.Find("BattleObjects");
-
-        //mixController = GameObject.Find("MixController").GetComponent<MixController>();
 
         playerID = PhotonNetwork.LocalPlayer.ActorNumber;
 
@@ -178,23 +161,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         uiManager.ShowHP();
-        uiManager.ShowNutrients();
 
 
+        ShuffleCard();
+        GiveCardToHand();
 
-        
-        if (playerID == 1)
-        {
-
-            GiveCardToHand();
-
-            photonView.RPC(nameof(MoveConveyor), RpcTarget.AllViaServer);
-
-            GiveCardToHand();
-
-
-
-        }
 
         uiManager.ShowStatus();
 
@@ -210,88 +181,61 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    [PunRPC]
-    void DestroyIngredient(int[] selectCardPosition)
+    void GiveCardToHand()
     {
-        for (int i = 0; i < 2; i++)
+        int drawNum = maxHand - handTransform.childCount;
+
+        for (int i = 0; i < drawNum; i++)
         {
-            if (selectCardPosition[i] != -1)
+            int cardID = deck[cardIndex];
+            //int cal = UnityEngine.Random.Range(20, 60);
+            int specialID = UnityEngine.Random.Range(0, 6);
+            int cost = cardCost;
+
+            cardCost++;
+            if (cardCost > 3)
             {
-                currentFieldTransform[selectCardPosition[i]].GetComponent<FieldController>().CancelCard();
-                Destroy(currentFieldTransform[selectCardPosition[i]].GetChild(0).gameObject);
+                cardCost = 0;
+            }
+
+            CreateCard(cardID, cost, specialID, handTransform);
+           
+
+            if (cardIndex == 8)
+            {
+                ShuffleCard();
+                cardIndex = 0;
+            }
+            else
+            {
+                cardIndex++;
             }
         }
 
+
+
     }
 
 
-
-
-    public void GiveCardToHand()
+    CardController CreateCard(int cardID, int cost, int specialID, Transform position)
     {
 
-
-        for (int i = 0; i < maxHand; i++)
-        {
-            if (nextFieldTransform[i].childCount == 0)
-            {
-                int cardID = UnityEngine.Random.Range(0, 9);
-                int cal = UnityEngine.Random.Range(20, 60);
-                int specialID = UnityEngine.Random.Range(0, 6);
-                int position = i;
-                photonView.RPC(nameof(CreateHandCard), RpcTarget.AllViaServer, cardID, cal, specialID, position);
-
-            }
-        }
-
-        //if (cardIndex == 8)
-        //{
-        //    ShuffleCard();
-        //    cardIndex = 0;
-        //}
-        //else
-        //{
-        //    cardIndex++;
-        //}
-
-        //Debug.Log(cardIndex);
+        GameObject card = Instantiate(cardPrefab, position, false);
 
 
-        //for (int i = 0; i < 2; i++)
-        //{
-        //    CreateCard(KIND.INGREDIENT, deck[i, cardIndex], conveyorTransform[i]);
+        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, cost, specialID);
 
-
-        //}
-
-
-
+        return card.GetComponent<CardController>();
 
     }
 
-
-    [PunRPC]
-    void CreateHandCard(int cardID, int cal, int specialID, int position)
-    {
-        //GameObject Card = PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
-        Transform field = nextFieldTransform[position];
-
-        GameObject card = Instantiate(cardPrefab, field, false);
-
-
-        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, cal, specialID);
-        //Card.GetComponent<CardController>().Init(cardID, playerID);
-
-        //return card.GetComponent<CardController>();
-
-    }
-
-    void CreateMixCard(KIND kind, int cardID, int cal, int specialID)
+    CardController CreateMixCard(KIND kind, int cardID, int cost, int specialID)
     {
         GameObject card = Instantiate(dishCardPrefab, mixFieldTransform[2], false);
 
-        card.GetComponent<CardController>().MixInit(kind, cardID, cal, specialID);
+        card.GetComponent<CardController>().MixInit(kind, cardID, cost, specialID);
 
+        return card.GetComponent<CardController>();
     }
 
 
@@ -303,15 +247,40 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (isMyTurn)
         {
-            uiManager.decideButtonObj.SetActive(false);
 
 
+            //生成
+            int[] cardID = new int[2] { -1, -1 };
+            int[] cost = new int[2] { -1, -1 };
+            int[] specialID = new int[2] { -1, -1 };
+            
 
-            photonView.RPC(nameof(GenerateFieldCard), RpcTarget.AllViaServer, selectCardPosition);
+            for (int i = 0; i < 2; i++)
+            {
+                if (selectCardController[i] != null)
+                {
+                    cardID[i] = selectCardController[i].model.cardID;
+                    cost[i] = selectCardController[i].model.cost;
+                    specialID[i] = selectCardController[i].model.specialID;
+                    
+                }
+
+            }
+
+
+            photonView.RPC(nameof(GenerateFieldCard), RpcTarget.AllViaServer, cardID, cost, specialID);
 
             ////使ったカードの削除
-            photonView.RPC(nameof(DestroyIngredient), RpcTarget.AllViaServer, selectCardPosition);
+            for (int i = 0; i < 2; i++)
+            {
+                if (selectCardController[i] != null)
+                {
+                    Destroy(selectCardController[i].gameObject);
+                }
+                
+            }
 
+            
 
 
         }
@@ -326,27 +295,27 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     //合成予測を出す
-    public void SelectCard(bool isSelected, int position)
+    public void SelectCard(CardController cardController, bool isSelected)
     {
         //選択した時
         if (isSelected)
         {
             //何も選択されていない
-            if (selectCardPosition[0] == -1)
+            if (selectCardController[0] == null)
             {
-                selectCardPosition[0] = position;
+                selectCardController[0] = cardController;
             }
             //２つ目に選択
-            else if (selectCardPosition[1] == -1)
+            else if (selectCardController[1] == null)
             {
-                selectCardPosition[1] = position;
+                selectCardController[1] = cardController;
 
             }
             //２つ目と入れ替え
             else
             {
-                currentFieldTransform[selectCardPosition[1]].GetComponent<FieldController>().CancelCard();
-                selectCardPosition[1] = position;           
+                selectCardController[1].model.isSelected = false;
+                selectCardController[1] = cardController;
             }
 
         }
@@ -354,49 +323,49 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             //１枚目に選択してた時
-            if (selectCardPosition[0] == position)
+            if (selectCardController[0] == cardController)
             {
                 //２枚目に選択してたカードなし
-                if (selectCardPosition[1] == -1)
+                if (selectCardController[1] == null)
                 {
-                    selectCardPosition[0] = -1;                    
+                    selectCardController[0] = null;
                 }
                 //２枚目に選択したカードを１枚目にする
                 else
                 {
-                    selectCardPosition[0] = selectCardPosition[1];                    
-                    selectCardPosition[1] = -1;
+                    selectCardController[0] = selectCardController[1];
+                    selectCardController[1] = null;
                 }
             }
             //２枚目に選択してた時
             else
             {
-                selectCardPosition[1] = -1;                
+                selectCardController[1] = null;
             }
 
         }
 
         //生成
-        GenerateFieldCard(selectCardPosition);
+        int[] cardID = new int[2] { -1, -1 };
+        int[] specialID = new int[2] { -1, -1 };
+        int[] cost = new int[2] { -1, -1 };
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (selectCardController[i] != null)
+            {
+                cardID[i] = selectCardController[i].model.cardID;
+                cost[i] = selectCardController[i].model.cost;
+                specialID[i] = selectCardController[i].model.specialID;
+            }
+
+        }
+
+        GenerateFieldCard(cardID, cost, specialID);
     }
 
 
 
-    [PunRPC]
-    void Attack_RPC(int[] cardID)
-    {
-        StartCoroutine(Attack(cardID));
-    }
-
-    IEnumerator Attack(int[] cardID)
-    {
-
-        yield return new WaitForSeconds(0.7f);
-
-
-    }
-
-    //[PunRPC]
     //受ける側で計算
     void DamageCalculation()
     {
@@ -405,48 +374,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-        //bool isHit = true;
-
         int a = UnityEngine.Random.Range(0, 100);
-        //if (a >= cardController[2].model.hit + player.hitUp)
-        //{
-        //    //外れる
-        //    //Debug.Log("外れた");
-        //    damageCal = 0;
-        //    isHit = false;
-        //}
-        //else
-        //{
-        //    //photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
-        //    damageCal = cardController[2].model.cal;
-        //    isHit = true;
-        //}
 
-        //photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
         damageCal = attackCardController.model.cal;
-        //isHit = true;
 
 
         photonView.RPC(nameof(Battle), RpcTarget.AllViaServer, damageCal);
-
-        //回避計算
-        //0~99
-        //if (isMyTurn)
-        //{
-        //int a = UnityEngine.Random.Range(0, 100);
-        //if (a >= attackCard.model.hit + player.hitUp)
-        //{
-        //    //外れる
-        //    //Debug.Log("外れた");
-        //    damageCal = 0;
-        //    isHit = false;
-        //}
-        //else
-        //{
-        //    //photonView.RPC(nameof(DamageCal), RpcTarget.AllViaServer, true);
-        //    damageCal = attackCard.model.cal;
-        //    isHit = true;
-        //}
 
 
 
@@ -456,7 +389,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void Battle(int damageCal)
     {
-        //CardController attackCard = mixFieldTransform[2].GetChild(0).GetComponent<CardController>();
         GamePlayerManager attacker;
         GamePlayerManager defender;
 
@@ -483,13 +415,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (attackCardController.model.kind == KIND.INGREDIENT)
         {
-            attacker.cost += currentFieldTransform[selectCardPosition[0]].GetComponent<FieldController>().cost;
-            specialController.IngredientEffect(attackCardController.model.specialID, isMyTurn, damageCal);
+            //attacker.cost += currentFieldTransform[selectCardPosition[0]].GetComponent<FieldController>().cost;
+            specialController.IngredientEffect(attackCardController.model.specialID, isMyTurn);
         }
         else
         {
             attacker.cost -= mixCost;
-            specialController.DishEffect(attackCardController.model.specialID, isMyTurn, damageCal);
+            int strength = 0;
+            if (attacker.nutrient == mixCardController[2].model.nutrient[0] || attacker.nutrient == mixCardController[2].model.nutrient[1])
+            {
+                strength++;
+            }
+            if (attacker.dish == mixCardController[2].model.dish)
+            {
+                strength++;
+            }
+                specialController.DishEffect(attackCardController.model.specialID, strength, isMyTurn);
         }
 
 
@@ -528,27 +469,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-        MoveConveyor();
 
         uiManager.ShowStatus();
 
-        selectCardPosition[0] = -1;
-        selectCardPosition[1] = -1;
+        GiveCardToHand();
 
-        if (isMyTurn)
-        {
-
-            GiveCardToHand();
-
-
-        }
-        else
-        {
-
-        }
 
         //uiManager.ShowHP();
-        uiManager.ShowNutrients();
         uiManager.decideButtonObj.SetActive(false);
 
 
@@ -560,7 +487,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void GenerateFieldCard(int[] selectCardPosition)
+    public void GenerateFieldCard(int[] cardID, int[] cost, int[] specialID)
     {
         uiManager.decideButtonObj.SetActive(false);
 
@@ -575,42 +502,31 @@ public class GameManager : MonoBehaviourPunCallbacks
             attacker = playerManager[1];
         }
 
-        this.selectCardPosition = selectCardPosition;
-
         uiManager.attackFields.SetActive(true);
 
 
         CleanField();
 
-        int[] cardID = new int[2] { -1, -1 };
-        int[] cal = new int[2] { -1, -1 };
-        int[] specialID = new int[2] { -1, -1 };
-        CardController[] cardController = new CardController[2] { null, null };
 
+        for (int i = 0; i < 3; i++)
+        {
+            mixCardController[i] = null;
+        }
 
         for (int i = 0; i < 2; i++)
         {
-            if (selectCardPosition[i] != -1)
+            if (cardID[i] != -1)
             {
-                GameObject selectCard = currentFieldTransform[selectCardPosition[i]].GetChild(0).gameObject;
-                cardID[i] = selectCard.GetComponent<CardController>().model.cardID;
-                cal[i] = selectCard.GetComponent<CardController>().model.cal;
-                specialID[i] = selectCard.GetComponent<CardController>().model.specialID;
                 
+                mixCardController[i] = CreateCard(cardID[i], cost[i], specialID[i], mixFieldTransform[i]);
 
-                GameObject card = GameObject.Instantiate(selectCard, mixFieldTransform[i], false);
-                cardController[i] = card.GetComponent<CardController>();
-                cardController[i].Init(KIND.INGREDIENT, cardID[i], cal[i], specialID[i]);
-                //cardController[i].model.cost = selectCard.GetComponent<CardController>().model.cost;
-
-                //Debug.Log("カード" + i + cardController[i].model.cost);
             }
         }
 
      
 
 
-        if (cardController[0] == null)
+        if (cardID[0] == -1)
         {
             uiManager.decideButtonObj.SetActive(false);
 
@@ -619,9 +535,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
         //合成チェック
-        if (cardController[1] != null)
+        if (cardID[1] != -1)
         {
-            if (cardController[0].model.nutrient == cardController[1].model.nutrient)
+            if (mixCardController[0].model.nutrient == mixCardController[1].model.nutrient)
             {
                 //合成不可
                 uiManager.decideButtonObj.SetActive(false);
@@ -629,22 +545,24 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
+                
                 //合成
-                int mixCardID = SpecialMix(cardController[0], cardController[1]);
+                int mixCardID = SpecialMix(mixCardController[0], mixCardController[1]);
 
-                CreateMixCard(KIND.DISH, mixCardID, 0, mixCardID);
+                mixCardController[2] = CreateMixCard(KIND.DISH, mixCardID, 0, mixCardID);
+
 
                 if (attacker.cost >= mixCost)
                 {
                     uiManager.decideButtonObj.SetActive(true);
                 }
-                
+
             }
         }
         else
         {
             uiManager.decideButtonObj.SetActive(true);
-            CreateMixCard(KIND.INGREDIENT, cardID[0], cal[0], specialID[0]);
+            mixCardController[2] = CreateMixCard(KIND.INGREDIENT, cardID[0], cost[0], specialID[0]);
 
 
         }
@@ -656,16 +574,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
    
 
-    int SpecialMix(CardController card_1, CardController card_2)
+    int SpecialMix(CardController card_0, CardController card_1)
     {
-        //GameObject card = null;
         int specialMixID = -1;
 
-        for (int i = 0; i < card_1.model.partnerID.Length; i++)
+        for (int i = 0; i < card_0.model.partnerID.Length; i++)
         {
-            if (card_1.model.partnerID[i] == card_2.model.cardID)
+            if (card_0.model.partnerID[i] == card_1.model.cardID)
             {
-                specialMixID = card_1.model.specialMixID[i];
+                specialMixID = card_0.model.specialMixID[i];
                 break;
 
             }
@@ -747,82 +664,19 @@ public class GameManager : MonoBehaviourPunCallbacks
    
     void ShuffleCard()
     {
-        for (int i = deck_0.Length - 1; i > 0; i--)
+        for (int i = deck.Length - 1; i > 0; i--)
         {
             int j = UnityEngine.Random.Range(0, i + 1);
-            var tmp = deck_0[i];
-            deck_0[i] = deck_0[j];
-            deck_0[j] = tmp;
+            var tmp = deck[i];
+            deck[i] = deck[j];
+            deck[j] = tmp;
         }
 
-        for (int i = deck_1.Length - 1; i > 0; i--)
-        {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            var tmp = deck_1[i];
-            deck_1[i] = deck_1[j];
-            deck_1[j] = tmp;
-        }
 
     }
 
 
 
-    [PunRPC]
-    void MoveConveyor()
-    {
-
-
-        for (int i = 0; i < maxHand; i++)
-        {
-            FieldController fieldController = currentFieldTransform[i].GetComponent<FieldController>();
-
-            //コスト減少
-            if (currentFieldTransform[i].childCount != 0)
-            {
-                fieldController.deadLine--;
-
-                if (fieldController.deadLine == 0)
-                {
-                    Destroy(fieldController.gameObject.transform.GetChild(0).gameObject);
-
-
-                    CardController cardController = nextFieldTransform[i].GetChild(0).GetComponent<CardController>();
-                    cardController.transform.SetParent(currentFieldTransform[i], false);
-
-                    fieldController.deadLine = deadLine;
-                    fieldController.cost = 0;
-                 
-                }
-                else
-                {
-
-                    fieldController.cost = (deadLine - currentFieldTransform[i].GetComponent<FieldController>().deadLine) / 2;
-
-                }
-            }
-
-
-
-            //新しい食材
-            else if (currentFieldTransform[i].childCount == 0)
-            {
-                CardController cardController = nextFieldTransform[i].GetChild(0).GetComponent<CardController>();
-                cardController.transform.SetParent(currentFieldTransform[i], false);
-
-
-                fieldController.deadLine = deadLine;
-                fieldController.cost = 0;
-
-            }
-
-
-        }
-
-        uiManager.ShowDeadLine();
-
-
-
-    }
 
 
 

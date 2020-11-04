@@ -10,6 +10,9 @@ public class CardModel
     //public int at;
     //public int de;
     public int cal;
+
+    public int cost;
+
     //public int cost;
     public Sprite icon;
     public Sprite selectIcon;
@@ -17,16 +20,8 @@ public class CardModel
     //public ABILITY ability;
     //public SPELL spell;
     public NUTRIENT[] nutrient = new NUTRIENT[2];
+    public DISH dish;
     public KIND kind;
-
-    public int hit;
-
-    //0:攻撃　１：防御　３：スペル
-    //public int kind;
-    //public NUTRITION nutrition;
-    public int red;
-    public int yellow;
-    public int green;
 
     public bool isFieldCard;
     //public bool isPlayerCard;
@@ -45,16 +40,14 @@ public class CardModel
     public int[] specialMixID;
 
 
-    public bool isSelect;
+    public bool isSelected;
     //public int selectNum;
 
-
-    public int cost;
     public int deadLine;
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(KIND kind, int cardID, int cal, int specialID)
+    public CardModel(KIND kind, int cardID, int cost, int specialID)
     {
         CardEntity cardEntity = null;
 
@@ -63,6 +56,8 @@ public class CardModel
         this.kind = kind;
         this.cardID = cardID;
 
+        this.cost = cost;
+
 
         if (kind == KIND.INGREDIENT)
         {
@@ -70,15 +65,15 @@ public class CardModel
             //hit = 100;
             //special = -1;
             this.specialID = specialID;
-            this.cal = cal;
+            dish = DISH.NONE;
             
         }
         else if (kind == KIND.DISH)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
-            hit = cardEntity.hit;
             this.specialID = cardEntity.special;
             cal = cardEntity.cal;
+            dish = cardEntity.dish;
         }
 
         //Debug.Log(cardID);
@@ -94,18 +89,13 @@ public class CardModel
         selectIcon = cardEntity.selectIcon;
 
 
-        red = cardEntity.red;
-        yellow = cardEntity.yellow;
-        green = cardEntity.green;
-
-
         isFieldCard = false;
 
 
         partnerID = cardEntity.partnerID;
         specialMixID = cardEntity.specialMixID;
 
-        isSelect = false;
+        isSelected = false;
 
         cost = 0;
         deadLine = 5;

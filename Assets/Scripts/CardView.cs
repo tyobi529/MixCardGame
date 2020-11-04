@@ -167,7 +167,6 @@ public class CardView : MonoBehaviour
             effectText.text = DecideEffectText(cardModel.specialID);
             nameText.text = cardModel.name;
             calText.text = cardModel.cal + "Kcal";
-            hitText.text = cardModel.hit + "%";
 
             iconImage.sprite = cardModel.icon;
         }

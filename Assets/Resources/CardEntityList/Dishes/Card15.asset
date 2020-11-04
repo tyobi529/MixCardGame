@@ -16,12 +16,9 @@ MonoBehaviour:
   cal: 126
   icon: {fileID: 21300000, guid: 3eccb546f2827453ebb0f185787ec153, type: 3}
   selectIcon: {fileID: 0}
-  nutrient: 0
+  nutrient: 0000000000000000
+  dish: 0
   kind: 1
-  hit: 95
-  red: 2
-  yellow: 0
-  green: 1
   special: 2
   partnerID: 
   specialMixID: 

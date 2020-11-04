@@ -55,7 +55,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] GamePlayerManager[] player = new GamePlayerManager[2];
 
 
-    [SerializeField] FieldController[] currentFieldController = new FieldController[4];
     [SerializeField] Text[] deadLineText = new Text[4];
 
     //シングルトン化（どこからでもアクセスできるようにする）
@@ -95,18 +94,6 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void ShowDeadLine()
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            deadLineText[i].text = currentFieldController[i].deadLine + "ターン";
-        }
-    }
-
-    public void ShowNutrients()
-    {
-
-    }
 
     public void ShowResultPanel(int heroHp)
     {

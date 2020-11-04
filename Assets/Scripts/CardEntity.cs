@@ -14,13 +14,10 @@ public class CardEntity : ScriptableObject
 
 
     public NUTRIENT[] nutrient;
+    public DISH dish;
+
     public KIND kind;
 
-    public int hit;
-
-    public int red;
-    public int yellow;
-    public int green;
 
 
     public int special;
