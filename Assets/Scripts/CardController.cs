@@ -57,6 +57,11 @@ public class CardController : MonoBehaviour
 
     public void OnCardObject()
     {
+        if (!gameManager.isMyTurn)
+        {
+            return;
+        }
+
         model.isSelected = !model.isSelected;
 
         gameManager.SelectCard(this.GetComponent<CardController>(), model.isSelected);

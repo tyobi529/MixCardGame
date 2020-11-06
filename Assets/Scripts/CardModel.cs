@@ -43,7 +43,6 @@ public class CardModel
     public bool isSelected;
     //public int selectNum;
 
-    public int deadLine;
 
 
     //public CardModel(int cardID, int ID, bool isMix)
@@ -66,6 +65,7 @@ public class CardModel
             //special = -1;
             this.specialID = specialID;
             dish = DISH.NONE;
+            cal = cardEntity.cal;
             
         }
         else if (kind == KIND.DISH)
@@ -98,7 +98,6 @@ public class CardModel
         isSelected = false;
 
         cost = 0;
-        deadLine = 5;
     }
 
 

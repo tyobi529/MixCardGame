@@ -13,15 +13,12 @@ MonoBehaviour:
   m_Name: Card7
   m_EditorClassIdentifier: 
   name: "\u30BF\u30DE\u30CD\u30AE"
-  cal: 37
+  cal: 50
   icon: {fileID: 21300000, guid: 64bba0fcd38d3445b867e799c2935b64, type: 3}
   selectIcon: {fileID: 21300000, guid: 0594a36f5f78f4b829584f6fb6ccdb28, type: 3}
   nutrient: 03000000
+  dish: 0
   kind: 0
-  hit: 0
-  red: 0
-  yellow: 0
-  green: 1
   special: 0
   partnerID: 000000000100000002000000030000000400000005000000
   specialMixID: 040000000a00000010000000130000001600000019000000

@@ -17,10 +17,10 @@ public class UIManager : MonoBehaviour
 
 
 
-    [SerializeField] Text playerPoisonText;
-    [SerializeField] Text enemyPoisonText;
-    [SerializeField] Text playerDarkText;
-    [SerializeField] Text enemyDarkText;
+    [SerializeField] Text[] poisonText = new Text[2];
+    [SerializeField] Text[] darkText = new Text[2];
+    [SerializeField] Text[] paralysisText = new Text[2];
+
 
     [SerializeField] Text[] nutrientBonusText = new Text[2];
     [SerializeField] Text[] dishBonusText = new Text[2];
@@ -37,25 +37,15 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] public GameObject decideButtonObj;
 
-    [SerializeField] public GameObject ChangeButtonObj;
-
-
-    [SerializeField] public Image basicFieldImage;
-    [SerializeField] public Image additionalFieldImage;
-    [SerializeField] public Image resultFieldImage;
 
 
     [SerializeField] public GameObject attackFields;
-    [SerializeField] public GameObject defenceFields;
-
 
 
     [SerializeField] public GameObject lackCostText;
 
     [SerializeField] GamePlayerManager[] player = new GamePlayerManager[2];
 
-
-    [SerializeField] Text[] deadLineText = new Text[4];
 
     //シングルトン化（どこからでもアクセスできるようにする）
     public static UIManager instance;
@@ -149,9 +139,17 @@ public class UIManager : MonoBehaviour
             {
                 nutrientBonusText[i].text = "";
             }
-            else
+            else if (player[i].nutrient == NUTRIENT.RED)
             {
-                nutrientBonusText[i].text = player[i].nutrient.ToString();
+                nutrientBonusText[i].text = "赤料理";
+            }
+            else if (player[i].nutrient == NUTRIENT.YELLOW)
+            {
+                nutrientBonusText[i].text = "黄料理";
+            }
+            else if (player[i].nutrient == NUTRIENT.GREEN)
+            {
+                nutrientBonusText[i].text = "緑料理";
             }
 
 
@@ -159,66 +157,51 @@ public class UIManager : MonoBehaviour
             {
                 dishBonusText[i].text = "";
             }
-            else
+            else if (player[i].dish == DISH.JAPANESE)
             {
-                dishBonusText[i].text = player[i].dish.ToString();
+                dishBonusText[i].text = "和食";
+            }
+            else if (player[i].dish == DISH.WESTERN)
+            {
+                dishBonusText[i].text = "洋食";
+            }
+            else if (player[i].dish == DISH.CHINESE)
+            {
+                dishBonusText[i].text = "中華";
             }
 
 
+            if (player[i].poisonCount > 0)
+            {
+                poisonText[i].text = "毒" + player[i].poisonCount;
+            }
+            else
+            {
+                poisonText[i].text = "";
+            }
+            if (player[i].darkCount > 0)
+            {
+                darkText[i].text = "暗闇" + player[i].darkCount;
+            }
+            else
+            {
+                darkText[i].text = "";
+            }
+            if (player[i].paralysisCount > 0)
+            {
+                paralysisText[i].text = "麻痺" + player[i].paralysisCount;
+            }
+            else
+            {
+                paralysisText[i].text = "";
+            }
+            
+            
         }
 
-        //playerPoisonText.text = "毒" + player.poisonCount;
-        //enemyPoisonText.text = "毒" + enemy.poisonCount;
-
-        //playerDarkText.text = "闇" + player.darkCount;
-        //enemyDarkText.text = "闇" + enemy.darkCount;
-
-        //playerAttackUpText.text = "攻" + player.attackUpCount;
-        //enemyAttackUpText.text = "攻" + enemy.attackUpCount;
-
-        //playerDefenceUpText.text = "守" + player.defenceUpCount;
-        //enemyDefenceUpText.text = "守" + enemy.defenceUpCount;
 
     }
 
-    public void ShowPoison()
-    {
-        //playerPoisonText.text = "毒" + player.poisonCount;
-        //enemyPoisonText.text = "毒" + enemy.poisonCount;
-
-
-
-    }
-
-    public void ShowDark()
-    {
-
-
-    }
-
-    public void ShowAttackUp(int playerAttackUp, int enemyAttackUp)
-    {
-        //if (playerAttackUp == 0)
-        //{
-        //    playerAttackUpText.text = "";
-        //}
-        //else
-        //{
-        //    playerAttackUpText.text = "攻" + playerAttackUp;
-        //}
-        
-
-        //if (enemyAttackUp == 0)
-        //{
-        //    enemyAttackUpText.text = "";
-        //}
-        //else
-        //{
-        //    enemyAttackUpText.text = "攻" + enemyAttackUp;
-        //}
-        
-
-    }
 
 
 

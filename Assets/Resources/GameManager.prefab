@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiManager: {fileID: 0}
-  maxHand: 4
-  deadLine: 5
-  mixCost: 5
+  isMyTurn: 0
+  maxHand: 5
+  mixCost: 3
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0
