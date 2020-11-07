@@ -158,6 +158,7 @@ Transform:
   - {fileID: 601087261}
   - {fileID: 539408647}
   - {fileID: 64544017}
+  - {fileID: 572191458}
   m_Father: {fileID: 869128197}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,14 +174,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e44d6d95eca443adb36bc6fdb084e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 5
+  cost: 0
   hp: 2000
-  nutrient: 1
-  dish: 1
+  dish: 0000000000000000
   poisonCount: 0
   darkCount: 0
   paralysisCount: 0
-  hitUp: 0
+  healthCount: 0
+  isMixed: 1
+  usedCount: 0
 --- !u!1 &64544016
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,7 +848,7 @@ GameObject:
   - component: {fileID: 378536502}
   - component: {fileID: 378536501}
   m_Layer: 5
-  m_Name: NutrientBonusText
+  m_Name: DishBonusText_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -869,7 +871,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 119.6, y: 484.6}
-  m_SizeDelta: {x: 129, y: 59.2}
+  m_SizeDelta: {x: 140, y: 59.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &378536501
 MonoBehaviour:
@@ -894,7 +896,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 50
     m_Alignment: 4
@@ -1221,6 +1223,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539408646}
   m_CullTransparentMesh: 0
+--- !u!1 &572191457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 572191458}
+  - component: {fileID: 572191460}
+  - component: {fileID: 572191459}
+  m_Layer: 5
+  m_Name: HealthText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &572191458
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572191457}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 48853969}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -209.9, y: 137.5}
+  m_SizeDelta: {x: 126.6, y: 69.502884}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &572191459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572191457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 60
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u5065\u5EB7 1"
+--- !u!222 &572191460
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572191457}
+  m_CullTransparentMesh: 0
 --- !u!1 &601087260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1525,7 +1605,7 @@ GameObject:
   - component: {fileID: 713600300}
   - component: {fileID: 713600299}
   m_Layer: 5
-  m_Name: DishBonusText
+  m_Name: DishBonusText_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1548,7 +1628,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 263.9, y: 484.6}
-  m_SizeDelta: {x: 83.3, y: 59.2}
+  m_SizeDelta: {x: 140, y: 59.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &713600299
 MonoBehaviour:
@@ -1573,7 +1653,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 50
     m_Alignment: 4
@@ -1702,6 +1782,7 @@ Transform:
   - {fileID: 1341331097}
   - {fileID: 132130335}
   - {fileID: 1007887069}
+  - {fileID: 1795075065}
   m_Father: {fileID: 869128197}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1717,14 +1798,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e44d6d95eca443adb36bc6fdb084e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 5
+  cost: 0
   hp: 2000
-  nutrient: 1
-  dish: 1
+  dish: 0000000000000000
   poisonCount: 0
   darkCount: 0
   paralysisCount: 0
-  hitUp: 0
+  healthCount: 0
+  isMixed: 1
+  usedCount: 0
 --- !u!1 &827456765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2013,10 +2095,13 @@ MonoBehaviour:
   paralysisText:
   - {fileID: 64544018}
   - {fileID: 1007887067}
-  nutrientBonusText:
+  healthText:
+  - {fileID: 572191459}
+  - {fileID: 1795075066}
+  dishBonusText_0:
   - {fileID: 1395574732}
   - {fileID: 378536501}
-  dishBonusText:
+  dishBonusText_1:
   - {fileID: 2025837738}
   - {fileID: 713600299}
   timeCountText: {fileID: 0}
@@ -2706,7 +2791,7 @@ GameObject:
   - component: {fileID: 1395574733}
   - component: {fileID: 1395574732}
   m_Layer: 5
-  m_Name: NutrientBonusText
+  m_Name: DishBonusText_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2729,7 +2814,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -260.86, y: 484.6}
-  m_SizeDelta: {x: 129, y: 59.2}
+  m_SizeDelta: {x: 140, y: 59.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1395574732
 MonoBehaviour:
@@ -2754,7 +2839,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 50
     m_Alignment: 4
@@ -3234,6 +3319,84 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1795075064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1795075065}
+  - component: {fileID: 1795075067}
+  - component: {fileID: 1795075066}
+  m_Layer: 5
+  m_Name: HealthText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1795075065
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795075064}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 824471449}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 184.5, y: 137.5}
+  m_SizeDelta: {x: 126.6, y: 69.502884}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1795075066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795075064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 60
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u5065\u5EB71"
+--- !u!222 &1795075067
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795075064}
+  m_CullTransparentMesh: 0
 --- !u!1 &1797137785
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,7 +3565,7 @@ GameObject:
   - component: {fileID: 2025837739}
   - component: {fileID: 2025837738}
   m_Layer: 5
-  m_Name: DishBonusText
+  m_Name: DishBonusText_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3424,8 +3587,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -113.1, y: 484.6}
-  m_SizeDelta: {x: 105.2, y: 59.2}
+  m_AnchoredPosition: {x: -101.5, y: 484.6}
+  m_SizeDelta: {x: 140, y: 59.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2025837738
 MonoBehaviour:
@@ -3450,7 +3613,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 50
     m_Alignment: 4

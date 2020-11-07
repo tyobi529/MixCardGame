@@ -11,20 +11,16 @@ public class CardModel
     //public int de;
     public int cal;
 
-    public int cost;
-
     //public int cost;
     public Sprite icon;
     public Sprite selectIcon;
 
     //public ABILITY ability;
     //public SPELL spell;
-    public NUTRIENT[] nutrient = new NUTRIENT[2];
-    public DISH dish;
+    //public NUTRIENT[] nutrient = new NUTRIENT[2];
+    public DISH[] dish = new DISH[3];
     public KIND kind;
 
-    public bool isFieldCard;
-    //public bool isPlayerCard;
 
     //public int cardKind;
     public int cardID;
@@ -46,32 +42,28 @@ public class CardModel
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(KIND kind, int cardID, int cost, int specialID)
+    public CardModel(KIND kind, int cardID, int specialID)
     {
         CardEntity cardEntity = null;
 
-        //FrequencyController frequencyController = GameObject.Find("FrequencyController").GetComponent<FrequencyController>();
 
         this.kind = kind;
         this.cardID = cardID;
-
-        this.cost = cost;
 
 
         if (kind == KIND.INGREDIENT)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
-            //hit = 100;
-            //special = -1;
             this.specialID = specialID;
-            dish = DISH.NONE;
+            dish = cardEntity.dish;
+            //dish = DISH.NONE;
             cal = cardEntity.cal;
             
         }
         else if (kind == KIND.DISH)
         {
             cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
-            this.specialID = cardEntity.special;
+            this.specialID = specialID;
             cal = cardEntity.cal;
             dish = cardEntity.dish;
         }
@@ -79,7 +71,7 @@ public class CardModel
         //Debug.Log(cardID);
 
 
-        this.nutrient = cardEntity.nutrient;
+        //this.nutrient = cardEntity.nutrient;
 
         name = cardEntity.name;
 
@@ -89,15 +81,11 @@ public class CardModel
         selectIcon = cardEntity.selectIcon;
 
 
-        isFieldCard = false;
-
-
         partnerID = cardEntity.partnerID;
         specialMixID = cardEntity.specialMixID;
 
         isSelected = false;
 
-        cost = 0;
     }
 
 

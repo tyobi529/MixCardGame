@@ -49,13 +49,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     GameObject attackButtons;
 
-    MixController mixController;
-
-
-
-
-
-
 
     [SerializeField] int maxHand;
     int handCount;
@@ -78,6 +71,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] int mixCost;
 
     int turnCount = 0;
+
+
+    public int additionalTurn = 0;
 
 
     //シングルトン化（どこからでもアクセスできるようにする）
@@ -220,17 +216,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             int cardID = deck[cardIndex];
             //int cal = UnityEngine.Random.Range(20, 60);
-            int specialID = UnityEngine.Random.Range(0, 6);
-            int cost = cardCost;
+            int specialID = UnityEngine.Random.Range(0, 10);
+            //int cost = cardCost;
 
-            cardCost++;
-            if (cardCost > 3)
-            {
-                cardCost = 0;
-            }
+            //cardCost++;
+            //if (cardCost > 3)
+            //{
+            //    cardCost = 0;
+            //}
 
-            CreateCard(cardID, cost, specialID, handTransform);
-           
+            CardController cardController = CreateCard(cardID, specialID, handTransform);
+            cardController.view.SetCard(cardController.model);
 
             if (cardIndex == 8)
             {
@@ -248,23 +244,23 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
 
-    CardController CreateCard(int cardID, int cost, int specialID, Transform position)
+    CardController CreateCard(int cardID, int specialID, Transform position)
     {
 
         GameObject card = Instantiate(cardPrefab, position, false);
 
 
-        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, cost, specialID);
+        card.GetComponent<CardController>().Init(KIND.INGREDIENT, cardID, specialID);
 
         return card.GetComponent<CardController>();
 
     }
 
-    CardController CreateMixCard(KIND kind, int cardID, int cost, int specialID)
+    CardController CreateEatCard(KIND kind, int cardID, int specialID)
     {
         GameObject card = Instantiate(dishCardPrefab, mixFieldTransform[2], false);
 
-        card.GetComponent<CardController>().MixInit(kind, cardID, cost, specialID);
+        card.GetComponent<CardController>().EatInit(kind, cardID, specialID);
 
         return card.GetComponent<CardController>();
     }
@@ -282,24 +278,26 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             //生成
             int[] cardID = new int[2] { -1, -1 };
-            int[] cost = new int[2] { -1, -1 };
+            //int[] cost = new int[2] { -1, -1 };
             int[] specialID = new int[2] { -1, -1 };
-            
+            int[] cal = new int[2] { -1, -1 };
+
 
             for (int i = 0; i < 2; i++)
             {
                 if (selectCardController[i] != null)
                 {
                     cardID[i] = selectCardController[i].model.cardID;
-                    cost[i] = selectCardController[i].model.cost;
+                    //cost[i] = selectCardController[i].model.cost;
                     specialID[i] = selectCardController[i].model.specialID;
+                    cal[i] = selectCardController[i].model.cal;
                     
                 }
 
             }
 
 
-            photonView.RPC(nameof(GenerateFieldCard), RpcTarget.AllViaServer, cardID, cost, specialID);
+            photonView.RPC(nameof(GenerateFieldCard), RpcTarget.AllViaServer, cardID, specialID, cal);
 
             ////使ったカードの削除
             for (int i = 0; i < 2; i++)
@@ -348,6 +346,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             else
             {
                 selectCardController[1].model.isSelected = false;
+                selectCardController[1].view.SelectView(false);
                 selectCardController[1] = cardController;
             }
 
@@ -381,20 +380,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         //生成
         int[] cardID = new int[2] { -1, -1 };
         int[] specialID = new int[2] { -1, -1 };
-        int[] cost = new int[2] { -1, -1 };
+        //int[] cost = new int[2] { -1, -1 };
+        int[] cal = new int[2] { -1, -1 };
 
         for (int i = 0; i < 2; i++)
         {
             if (selectCardController[i] != null)
             {
                 cardID[i] = selectCardController[i].model.cardID;
-                cost[i] = selectCardController[i].model.cost;
+                //cost[i] = selectCardController[i].model.cost;
                 specialID[i] = selectCardController[i].model.specialID;
+                cal[i] = selectCardController[i].model.cal;
             }
 
         }
 
-        GenerateFieldCard(cardID, cost, specialID);
+        GenerateFieldCard(cardID, specialID, cal);
     }
 
 
@@ -463,19 +464,39 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             attacker.cost -= mixCost;
             int strength = 0;
-            if (attacker.nutrient == mixCardController[2].model.nutrient[0] || attacker.nutrient == mixCardController[2].model.nutrient[1])
+
+            for (int i = 0; i < 2; i++ )
             {
-                strength++;
+                if (attacker.dish[i] == DISH.NONE)
+                {
+                    break;
+                }
+                else
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (attacker.dish[i] == mixCardController[2].model.dish[j]) 
+                        {
+                            strength++;
+                            break;
+                        }
+                    }
+
+                }
             }
-            if (attacker.dish == mixCardController[2].model.dish)
+
+            Debug.Log(strength);
+
+            for (int i = 0; i < 2; i++)
             {
-                strength++;
+                attacker.dish[i] = DISH.NONE;
             }
 
             //テスト用
-            specialController.DishEffect(12, 2, isMyTurn, damageCal);
+            //specialController.DishEffect(23, 0, isMyTurn, damageCal);
+            //attacker.isMixed = true;
 
-            //specialController.DishEffect(mixCardController[2].model.specialID, strength, isMyTurn);
+            specialController.DishEffect(mixCardController[2].model.specialID, strength, isMyTurn, damageCal);
         }
 
 
@@ -509,6 +530,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         CheckPoison();
         CheckDark();
         CheckParalysis();
+        CheckHealth();
 
 
         //CheckHealth();
@@ -527,13 +549,27 @@ public class GameManager : MonoBehaviourPunCallbacks
         GiveCardToHand();
 
 
-        //ターンエンドでコスト貯まる
+
+
+        if (additionalTurn > 0)
+        {
+            additionalTurn--;
+        }
+        else
+        {
+            isMyTurn = !isMyTurn;
+        }
+
+
+        //ターン開始時コスト貯まる
         if (isMyTurn)
         {
             if (playerManager[0].cost < mixCost)
             {
                 playerManager[0].cost++;
             }
+
+            playerManager[0].isMixed = false;
 
         }
         else
@@ -542,11 +578,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 playerManager[1].cost++;
             }
+
+            playerManager[1].isMixed = false;
         }
-
-
-        isMyTurn = !isMyTurn;
-
 
 
         uiManager.ShowHP();
@@ -577,7 +611,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
-    public void GenerateFieldCard(int[] cardID, int[] cost, int[] specialID)
+    public void GenerateFieldCard(int[] cardID, int[] specialID, int[] cal)
     {
         uiManager.decideButtonObj.SetActive(false);
 
@@ -608,8 +642,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (cardID[i] != -1)
             {
                 
-                mixCardController[i] = CreateCard(cardID[i], cost[i], specialID[i], mixFieldTransform[i]);
-
+                mixCardController[i] = CreateCard(cardID[i], specialID[i], mixFieldTransform[i]);
+                mixCardController[i].model.cal = cal[i];
+                mixCardController[i].view.SetCard(mixCardController[i].model);
             }
         }
 
@@ -627,7 +662,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //合成チェック
         if (cardID[1] != -1)
         {
-            if (mixCardController[0].model.nutrient == mixCardController[1].model.nutrient)
+            if (mixCardController[0].model.dish[0] == mixCardController[1].model.dish[0])
             {
                 //合成不可
                 uiManager.decideButtonObj.SetActive(false);
@@ -639,7 +674,20 @@ public class GameManager : MonoBehaviourPunCallbacks
                 //合成
                 int mixCardID = SpecialMix(mixCardController[0], mixCardController[1]);
 
-                mixCardController[2] = CreateMixCard(KIND.DISH, mixCardID, 0, mixCardID);
+                mixCardController[2] = CreateEatCard(KIND.DISH, mixCardID, mixCardID);
+
+                //素材の栄養素を代入
+                mixCardController[2].model.dish[1] = mixCardController[0].model.dish[0];
+                mixCardController[2].model.dish[2] = mixCardController[1].model.dish[0];
+
+                mixCardController[2].view.SetEatCard(mixCardController[2].model);
+
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    Debug.Log(mixCardController[2].model.dish[i]);
+                //}
+                
+
 
                 //コストがあり、暗闇でない時
                 if (attacker.cost >= mixCost && attacker.darkCount == 0)
@@ -652,13 +700,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             uiManager.decideButtonObj.SetActive(true);
-            mixCardController[2] = CreateMixCard(KIND.INGREDIENT, cardID[0], cost[0], specialID[0]);
+            mixCardController[2] = CreateEatCard(KIND.INGREDIENT, cardID[0], specialID[0]);
 
+            mixCardController[2].model.cal = mixCardController[0].model.cal;
+            mixCardController[2].view.SetEatCard(mixCardController[2].model);
+
+            //mixCardController[2].view.Refresh();
 
             //テスト用
-            mixCardController[2].model.kind = KIND.DISH;
-            mixCardController[2].model.dish = DISH.JAPANESE;
-            mixCardController[2].model.specialID = 0;
+            //mixCardController[2].model.kind = KIND.DISH;
+            //mixCardController[2].model.dish = DISH.JAPANESE;
+            //mixCardController[2].model.specialID = 0;
         }
 
 
@@ -831,6 +883,26 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    void CheckHealth()
+    {
+        //自分
+        if (isMyTurn)
+        {
+            if (playerManager[0].healthCount > 0)
+            {
+                playerManager[0].healthCount--;
+            }
+        }
+        //相手
+        else
+        {
+            if (playerManager[1].healthCount > 0)
+            {
+                playerManager[1].healthCount--;
+            }
+        }
+    }
+
 
     public void ExchangeHandCard(int num)
     {
@@ -853,6 +925,20 @@ public class GameManager : MonoBehaviourPunCallbacks
             cardIndex.Remove(index);
         }
 
+    }
+
+    //ID=5
+    public int IngredientCal()
+    {
+        int additionalCal = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            if (mixCardController[i] != null)
+            {
+                additionalCal += mixCardController[i].model.cal;
+            }
+        }
+        return additionalCal;
     }
 
     //ID=12
@@ -917,5 +1003,35 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log("相手に追加ダメージ" + damage);
         }      
     }
+
+
+
+    //ID=22
+    public void ExchangeHp()
+    {
+        photonView.RPC(nameof(ExchangeHp_RPC), RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    public void ExchangeHp_RPC()
+    {
+        int tmp = playerManager[0].hp;
+        playerManager[0].hp = playerManager[1].hp;
+        playerManager[1].hp = tmp;
+    }
+
+
+    //ID=23
+    public void RandomEffect(int specialID, int strength, int damageCal)
+    {
+        photonView.RPC(nameof(RandomEffect_RPC), RpcTarget.AllViaServer, specialID, strength, damageCal);
+    }
+
+    [PunRPC]
+    public void RandomEffect_RPC(int specialID, int strength, int damageCal)
+    {
+        specialController.DishEffect(specialID, strength, isMyTurn, damageCal);
+    }
+
 
 }

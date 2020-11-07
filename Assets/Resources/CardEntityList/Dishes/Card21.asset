@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7bdd32685e740409e91b24200952ad, type: 3}
   m_Name: Card21
   m_EditorClassIdentifier: 
-  name: "\u5C71\u83DC\u305D\u3070"
-  cal: 76
+  name: "\u30D4\u30B6"
+  cal: 174
   icon: {fileID: 21300000, guid: 3eccb546f2827453ebb0f185787ec153, type: 3}
   selectIcon: {fileID: 0}
-  nutrient: 0000000000000000
-  dish: 0
+  dish: 050000000000000000000000
   kind: 1
   special: 6
   partnerID: 

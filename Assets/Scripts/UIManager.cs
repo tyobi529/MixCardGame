@@ -20,10 +20,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text[] poisonText = new Text[2];
     [SerializeField] Text[] darkText = new Text[2];
     [SerializeField] Text[] paralysisText = new Text[2];
+    [SerializeField] Text[] healthText = new Text[2];
 
 
-    [SerializeField] Text[] nutrientBonusText = new Text[2];
-    [SerializeField] Text[] dishBonusText = new Text[2];
+
+
+    [SerializeField] Text[] dishBonusText_0 = new Text[2];
+    [SerializeField] Text[] dishBonusText_1 = new Text[2];
 
 
 
@@ -135,40 +138,43 @@ public class UIManager : MonoBehaviour
         {
             playerCostText[i].text = "コスト" + player[i].cost;
 
-            if (player[i].nutrient == NUTRIENT.NONE)
-            {
-                nutrientBonusText[i].text = "";
-            }
-            else if (player[i].nutrient == NUTRIENT.RED)
-            {
-                nutrientBonusText[i].text = "赤料理";
-            }
-            else if (player[i].nutrient == NUTRIENT.YELLOW)
-            {
-                nutrientBonusText[i].text = "黄料理";
-            }
-            else if (player[i].nutrient == NUTRIENT.GREEN)
-            {
-                nutrientBonusText[i].text = "緑料理";
-            }
+            dishBonusText_0[i].text = player[i].dish[0].ToString();
+            dishBonusText_1[i].text = player[i].dish[1].ToString();
+
+            //if (player[i].dish == DISH.NONE)
+            //{
+            //    nutrientBonusText[i].text = "";
+            //}
+            //else if (player[i].dish == NUTRIENT.RED)
+            //{
+            //    nutrientBonusText[i].text = "赤料理";
+            //}
+            //else if (player[i].nutrient == NUTRIENT.YELLOW)
+            //{
+            //    nutrientBonusText[i].text = "黄料理";
+            //}
+            //else if (player[i].nutrient == NUTRIENT.GREEN)
+            //{
+            //    nutrientBonusText[i].text = "緑料理";
+            //}
 
 
-            if (player[i].dish == DISH.NONE)
-            {
-                dishBonusText[i].text = "";
-            }
-            else if (player[i].dish == DISH.JAPANESE)
-            {
-                dishBonusText[i].text = "和食";
-            }
-            else if (player[i].dish == DISH.WESTERN)
-            {
-                dishBonusText[i].text = "洋食";
-            }
-            else if (player[i].dish == DISH.CHINESE)
-            {
-                dishBonusText[i].text = "中華";
-            }
+            //if (player[i].dish == DISH.NONE)
+            //{
+            //    dishBonusText[i].text = "";
+            //}
+            //else if (player[i].dish == DISH.JAPANESE)
+            //{
+            //    dishBonusText[i].text = "和食";
+            //}
+            //else if (player[i].dish == DISH.WESTERN)
+            //{
+            //    dishBonusText[i].text = "洋食";
+            //}
+            //else if (player[i].dish == DISH.CHINESE)
+            //{
+            //    dishBonusText[i].text = "中華";
+            //}
 
 
             if (player[i].poisonCount > 0)
@@ -195,8 +201,17 @@ public class UIManager : MonoBehaviour
             {
                 paralysisText[i].text = "";
             }
-            
-            
+
+            if (player[i].healthCount > 0)
+            {
+                healthText[i].text = "健康" + player[i].healthCount;
+            }
+            else
+            {
+                healthText[i].text = "";
+            }
+
+
         }
 
 

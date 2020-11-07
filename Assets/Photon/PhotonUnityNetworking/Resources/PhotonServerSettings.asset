@@ -57,6 +57,9 @@ MonoBehaviour:
   - ProgressTurnCount
   - AdditionalDamage_RPC
   - HealHp_RPC
+  - EraseBuff_RPC
+  - ExchangeHp_RPC
+  - RandomEffect_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

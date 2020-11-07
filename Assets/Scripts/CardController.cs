@@ -20,19 +20,19 @@ public class CardController : MonoBehaviour
     }
 
     //public void Init(int cardID, int ID, bool isMix)
-    public void Init(KIND kind, int cardID, int cost, int specialID)
+    public void Init(KIND kind, int cardID, int specialID)
     {
-        model = new CardModel(kind, cardID, cost, specialID);
-        view.SetCard(model);
+        model = new CardModel(kind, cardID, specialID);
+        //view.SetCard(model);
 
         gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
     }
 
 
-    public void MixInit(KIND kind, int cardID, int cost, int specialID)
+    public void EatInit(KIND kind, int cardID, int specialID)
     {
-        model = new CardModel(kind, cardID, cost, specialID);
-        view.SetMixCard(model);
+        model = new CardModel(kind, cardID, specialID);
+        //view.SetEatCard(model);
 
         //gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
     }
@@ -43,18 +43,6 @@ public class CardController : MonoBehaviour
 
 
 
-
-    public void OnField(bool isPlayer)
-    {
-        //gameManager.ReduceManaCost(model.cost, isPlayer);
-        model.isFieldCard = true;
-        //if (model.ability == ABILITY.INIT_ATTACKABLE)
-        //{
-        //    SetCanAttack(true);
-        //}
-    }
-
-
     public void OnCardObject()
     {
         if (!gameManager.isMyTurn)
@@ -63,6 +51,8 @@ public class CardController : MonoBehaviour
         }
 
         model.isSelected = !model.isSelected;
+
+        view.SelectView(model.isSelected);
 
         gameManager.SelectCard(this.GetComponent<CardController>(), model.isSelected);
     }

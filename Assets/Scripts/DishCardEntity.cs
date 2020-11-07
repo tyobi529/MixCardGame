@@ -14,9 +14,9 @@ public class DishCardEntity : ScriptableObject
     public Sprite icon;
     public Sprite selectIcon;
 
-
-    public NUTRIENT[] nutrient;
-    public DISH dish;
+    //0には料理種
+    //1,2には色をいれる
+    public DISH[] dish = new DISH[3];
 
     public KIND kind;
 
