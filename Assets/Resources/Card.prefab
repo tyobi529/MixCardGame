@@ -138,7 +138,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 150e948aa0b954fe68f98198aa30da2a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8a3fcf4e319bb409d9d7b6070ead55f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -310,7 +310,6 @@ MonoBehaviour:
   hitText: {fileID: 0}
   nutrientColor: {fileID: 6575181563612874389}
   iconImage: {fileID: 3446963638508671629}
-  nutrientsText: {fileID: 0}
   selectObject: {fileID: 3105911123938384843}
 --- !u!225 &2732266477687845466
 CanvasGroup:

@@ -10,7 +10,6 @@ public class CardEntity : ScriptableObject
     public int cal;
 
     public Sprite icon;
-    public Sprite selectIcon;
 
 
     //public NUTRIENT[] nutrient;

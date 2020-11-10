@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7bdd32685e740409e91b24200952ad, type: 3}
   m_Name: Card5
   m_EditorClassIdentifier: 
-  name: "\u56DE\u934B\u8089"
-  cal: 166
+  name: "\u30DD\u30C6\u30C8\u30B5\u30E9\u30C0"
+  cal: 143
   icon: {fileID: 21300000, guid: 3eccb546f2827453ebb0f185787ec153, type: 3}
-  selectIcon: {fileID: 0}
-  dish: 060000000000000000000000
+  dish: 040000000000000000000000
   kind: 1
   special: 0
   partnerID: 

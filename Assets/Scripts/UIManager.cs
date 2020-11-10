@@ -31,8 +31,6 @@ public class UIManager : MonoBehaviour
 
 
 
-
-
     [SerializeField] Text timeCountText;
 
 
@@ -141,40 +139,68 @@ public class UIManager : MonoBehaviour
             dishBonusText_0[i].text = player[i].dish[0].ToString();
             dishBonusText_1[i].text = player[i].dish[1].ToString();
 
-            //if (player[i].dish == DISH.NONE)
-            //{
-            //    nutrientBonusText[i].text = "";
-            //}
-            //else if (player[i].dish == NUTRIENT.RED)
-            //{
-            //    nutrientBonusText[i].text = "赤料理";
-            //}
-            //else if (player[i].nutrient == NUTRIENT.YELLOW)
-            //{
-            //    nutrientBonusText[i].text = "黄料理";
-            //}
-            //else if (player[i].nutrient == NUTRIENT.GREEN)
-            //{
-            //    nutrientBonusText[i].text = "緑料理";
-            //}
+            if (player[i].dish[0] == DISH.NONE)
+            {
+                dishBonusText_0[i].text = "";
+            }
 
+            else if (player[i].dish[0] == DISH.RED)
+            {
+                dishBonusText_0[i].text = "赤料理";
+            }
+            else if (player[i].dish[0] == DISH.YELLOW)
+            {
+                dishBonusText_0[i].text = "黄料理";
+            }
+            else if (player[i].dish[0] == DISH.GREEN)
+            {
+                dishBonusText_0[i].text = "緑料理";
+            }
 
-            //if (player[i].dish == DISH.NONE)
-            //{
-            //    dishBonusText[i].text = "";
-            //}
-            //else if (player[i].dish == DISH.JAPANESE)
-            //{
-            //    dishBonusText[i].text = "和食";
-            //}
-            //else if (player[i].dish == DISH.WESTERN)
-            //{
-            //    dishBonusText[i].text = "洋食";
-            //}
-            //else if (player[i].dish == DISH.CHINESE)
-            //{
-            //    dishBonusText[i].text = "中華";
-            //}
+            else if (player[i].dish[0] == DISH.JAPANESE)
+            {
+                dishBonusText_0[i].text = "和食";
+            }
+            else if (player[i].dish[0] == DISH.WESTERN)
+            {
+                dishBonusText_0[i].text = "洋食";
+            }
+            else if (player[i].dish[0] == DISH.CHINESE)
+            {
+                dishBonusText_0[i].text = "中華";
+            }
+
+            if (player[i].dish[1] == DISH.NONE)
+            {
+                dishBonusText_1[i].text = "";
+            }
+
+            else if (player[i].dish[1] == DISH.RED)
+            {
+                dishBonusText_1[i].text = "赤料理";
+            }
+            else if (player[i].dish[1] == DISH.YELLOW)
+            {
+                dishBonusText_1[i].text = "黄料理";
+            }
+            else if (player[i].dish[1] == DISH.GREEN)
+            {
+                dishBonusText_1[i].text = "緑料理";
+            }
+
+            else if (player[i].dish[0] == DISH.JAPANESE)
+            {
+                dishBonusText_1[i].text = "和食";
+            }
+            else if (player[i].dish[0] == DISH.WESTERN)
+            {
+                dishBonusText_1[i].text = "洋食";
+            }
+            else if (player[i].dish[0] == DISH.CHINESE)
+            {
+                dishBonusText_1[i].text = "中華";
+            }
+
 
 
             if (player[i].poisonCount > 0)

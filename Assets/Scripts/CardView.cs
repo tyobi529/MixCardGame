@@ -20,8 +20,6 @@ public class CardView : MonoBehaviour
 
     [SerializeField] public Image iconImage;
 
-    [SerializeField] Text nutrientsText;
-
 
     [SerializeField] GameObject selectObject;
 
@@ -135,85 +133,85 @@ public class CardView : MonoBehaviour
         switch (specialID)
         {
             case 0:
-                effectText = "コスト下げる";
+                effectText = "コスト下げ";
                 break;
             case 1:
-                effectText = "自傷";
+                effectText = "素材効果付与";
                 break;
             case 2:
-                effectText = "コスト＋";
+                effectText = "カロリー＋";
                 break;
             case 3:
-                effectText = "状態異常特攻";
+                effectText = "相手コストー";
                 break;
             case 4:
-                effectText = "相手のコスト分ボーナス";
+                effectText = "バフ消し";
                 break;
             case 5:
-                effectText = "元素材分＋";
+                effectText = "コスト＋";
                 break;
             case 6:
-                effectText = "自分の手札-";
+                effectText = "相手のコスト分";
                 break;
             case 7:
-                effectText = "素材のCal-";
+                effectText = "状態異常分";
                 break;
             case 8:
-                effectText = "素材のCal+";
+                effectText = "素材のCal分";
                 break;
             case 9:
-                effectText = "効果付きに";
+                effectText = "手札捨て";
                 break;
             case 10:
                 effectText = "複数回行動";
                 break;
             case 11:
-                effectText = "相手の手札-";
+                effectText = "未実装";
                 break;
             case 12:
-                effectText = "ダメージ回復";
+                effectText = "合成特攻";
                 break;
             case 13:
-                effectText = "バフ解除";
+                effectText = "HP差特攻";
                 break;
             case 14:
-                effectText = "複数攻撃";
+                effectText = "異常特攻";
                 break;
             case 15:
                 effectText = "麻痺";
                 break;
             case 16:
-                effectText = "前ターン相手合成";
+                effectText = "毒";
                 break;
             case 17:
-                effectText = "HP差分";
+                effectText = "暗闇";
                 break;
             case 18:
-                effectText = "暗闇";
+                effectText = "ダメ回復";
                 break;
             case 19:
                 effectText = "状態回復";
                 break;
             case 20:
-                effectText = "HP入れ替え";
+                effectText = "HP回復";
                 break;
             case 21:
-                effectText = "使う度に＋";
+                effectText = "行動＋";
                 break;
             case 22:
-                effectText = "どっちかにダメ";
+                effectText = "次強化";
                 break;
             case 23:
-                effectText = "ランダム";
+                effectText = "使う度";
                 break;
             case 24:
-                effectText = "毒";
+                effectText = "複数攻撃";
                 break;
             case 25:
-                effectText = "回復";
+                effectText = "自か相ダメージ";
                 break;
             case 26:
-                effectText = "状態異常移す";
+                effectText = "ランダム";
                 break;
             default:
                 effectText = "";

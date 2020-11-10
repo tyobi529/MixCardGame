@@ -174,13 +174,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e44d6d95eca443adb36bc6fdb084e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
+  cost: 6
   hp: 2000
   dish: 0000000000000000
   poisonCount: 0
   darkCount: 0
   paralysisCount: 0
   healthCount: 0
+  nextAttack: 0
   isMixed: 1
   usedCount: 0
 --- !u!1 &64544016
@@ -1798,13 +1799,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e44d6d95eca443adb36bc6fdb084e60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
+  cost: 6
   hp: 2000
   dish: 0000000000000000
   poisonCount: 0
   darkCount: 0
   paralysisCount: 0
   healthCount: 0
+  nextAttack: 0
   isMixed: 1
   usedCount: 0
 --- !u!1 &827456765
@@ -3664,6 +3666,8 @@ MonoBehaviour:
   - {fileID: 48853970}
   - {fileID: 824471450}
   handTransform: {fileID: 625555917}
+  costBonus: 0
+  maxCost: 6
 --- !u!4 &2031893220
 Transform:
   m_ObjectHideFlags: 0

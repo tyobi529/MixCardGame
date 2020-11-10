@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] int maxHand;
     int handCount;
 
+
     int[] playerHp = new int[2];
 
     int defaultMaxHand;
@@ -69,11 +70,20 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     //合成に必要なコスト
     [SerializeField] int mixCost;
+    //貯まる最大コスト
+    [SerializeField] int maxCost;
+
 
     int turnCount = 0;
 
 
     public int additionalTurn = 0;
+
+
+    //0：効果なし
+    //1：色効果
+    //2：種類効果
+    int effectCount = 0;
 
 
     //シングルトン化（どこからでもアクセスできるようにする）
@@ -170,19 +180,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         uiManager.ShowHP();
 
 
-        //ShuffleCard();
-        //int drawNum = maxHand - handTransform.childCount;
-        //GiveCardToHand(drawNum);
+        ShuffleCard();
+
         GiveCardToHand();
 
 
         uiManager.ShowStatus();
 
-        //uiManager.ShowHealth(player.isHealth, enemy.isHealth);
-        //uiManager.ShowPoison(player.isPoison, player.poisonCount, enemy.isPoison, enemy.poisonCount);
-        //uiManager.ShowDark(player.isDark, enemy.isDark);
-        //uiManager.ShowAttackUp(player.attackUp, enemy.attackUp);
-        //uiManager.ShowHitUp(player.hitUp, enemy.hitUp);
 
         uiManager.decideButtonObj.SetActive(false);
 
@@ -216,7 +220,27 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             int cardID = deck[cardIndex];
             //int cal = UnityEngine.Random.Range(20, 60);
-            int specialID = UnityEngine.Random.Range(0, 10);
+            int specialID = -1;
+            switch (effectCount)
+            {
+                case 0:
+                    specialID = UnityEngine.Random.Range(0, 3);
+                    break;
+                case 1:
+                    specialID = 6;
+                    break;
+                case 2:
+                    specialID = UnityEngine.Random.Range(3, 6);
+                    break;
+                case 3:
+                    specialID = 6;
+                    break;
+            }
+            effectCount++;
+            if (effectCount > 3)
+            {
+                effectCount = 0;
+            }
             //int cost = cardCost;
 
             //cardCost++;
@@ -230,7 +254,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (cardIndex == 8)
             {
-                //ShuffleCard();
+                ShuffleCard();
                 cardIndex = 0;
             }
             else
@@ -239,6 +263,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
 
+        LineUpCard(handTransform);
 
 
     }
@@ -449,6 +474,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         //CardController attackCardController = mixCardController[2];
 
 
+        if (attacker.nextAttack > 0)
+        {
+            damageCal *= (attacker.nextAttack + 1);
+            attacker.nextAttack = 0;
+        }
 
         defender.hp -= damageCal;
 
@@ -494,7 +524,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             //テスト用
             //specialController.DishEffect(23, 0, isMyTurn, damageCal);
-            //attacker.isMixed = true;
+
+
+            attacker.isMixed = true;
 
             specialController.DishEffect(mixCardController[2].model.specialID, strength, isMyTurn, damageCal);
         }
@@ -564,7 +596,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //ターン開始時コスト貯まる
         if (isMyTurn)
         {
-            if (playerManager[0].cost < mixCost)
+            if (playerManager[0].cost < maxCost)
             {
                 playerManager[0].cost++;
             }
@@ -574,7 +606,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            if (playerManager[1].cost < mixCost)
+            if (playerManager[1].cost < maxCost)
             {
                 playerManager[1].cost++;
             }
@@ -901,6 +933,32 @@ public class GameManager : MonoBehaviourPunCallbacks
                 playerManager[1].healthCount--;
             }
         }
+    }
+
+
+    //カードを番号順に並べる
+    void LineUpCard(Transform field)
+    {
+        List<GameObject> objList = new List<GameObject>();
+
+        // 子階層のGameObject取得
+        var childCount = field.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            objList.Add(field.GetChild(i).gameObject);
+        }
+
+        //objList.Sort((obj1, obj2) => int.Compare(obj1.model.cardID, obj2.model.cardID));
+        objList.Sort((a, b) => a.GetComponent<CardController>().model.cardID - b.GetComponent<CardController>().model.cardID);
+
+        foreach (var obj in objList)
+        {
+            //obj.SetSiblingIndex(childCount - 1);
+            obj.transform.SetSiblingIndex(childCount - 1);
+
+        }
+
+
     }
 
 

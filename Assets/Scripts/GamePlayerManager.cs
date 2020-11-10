@@ -23,6 +23,8 @@ public class GamePlayerManager : MonoBehaviour
     public int healthCount;
 
 
+    public int nextAttack = 0;
+
     //前ターンに合成したかどうか
     public bool isMixed = false;
 
