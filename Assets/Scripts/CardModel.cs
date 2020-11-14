@@ -9,7 +9,9 @@ public class CardModel
 
     public int cal;
 
-    //public int cost;
+    public int cost;
+
+    public bool rare;
     public Sprite icon;
 
 
@@ -33,14 +35,23 @@ public class CardModel
 
 
     //public CardModel(int cardID, int ID, bool isMix)
-    public CardModel(KIND kind, int cardID, int specialID)
+    public CardModel(KIND kind, int cardID, int specialID, int cost)
     {
         CardEntity cardEntity = null;
 
 
         this.kind = kind;
         this.cardID = cardID;
+        this.cost = cost;
 
+        if (cost == 3)
+        {
+            rare = true;
+        }
+        else
+        {
+            rare = false;
+        }
 
         if (kind == KIND.INGREDIENT)
         {

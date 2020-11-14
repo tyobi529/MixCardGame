@@ -20,18 +20,18 @@ public class CardController : MonoBehaviour
     }
 
     //public void Init(int cardID, int ID, bool isMix)
-    public void Init(KIND kind, int cardID, int specialID)
+    public void Init(KIND kind, int cardID, int specialID, int cost)
     {
-        model = new CardModel(kind, cardID, specialID);
+        model = new CardModel(kind, cardID, specialID, cost);
         //view.SetCard(model);
 
         gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();
     }
 
 
-    public void EatInit(KIND kind, int cardID, int specialID)
+    public void EatInit(KIND kind, int cardID, int specialID, int cost)
     {
-        model = new CardModel(kind, cardID, specialID);
+        model = new CardModel(kind, cardID, specialID, cost);
         //view.SetEatCard(model);
 
         //gameManager = GameObject.Find("GameManager(Clone)").GetComponent<GameManager>();

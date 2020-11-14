@@ -13,10 +13,15 @@ public class CardView : MonoBehaviour
     //料理
     [SerializeField] Text nameText;
     [SerializeField] Text calText;
-    [SerializeField] Text hitText;
 
 
     [SerializeField] Image nutrientColor;
+
+
+    //レア素材案
+    [SerializeField] Image costBGImage;
+    [SerializeField] Text costText;
+    [SerializeField] GameObject rareBG;
 
     [SerializeField] public Image iconImage;
 
@@ -28,24 +33,31 @@ public class CardView : MonoBehaviour
     public void SetCard(CardModel cardModel)
     {
 
-        //テスト用
-        //effectText.text = cardModel.cardID.ToString();
-        effectText.text = DecideEffectText(cardModel.specialID);
+
+        //effectText.text = DecideEffectText(cardModel.specialID);
+        costText.text = cardModel.cost.ToString();
+
+        calText.text = cardModel.cal + "Kcal";
 
         if (cardModel.dish[0] == DISH.RED)
         {
+            //costBGImage.color = Color.red;
             nutrientColor.color = Color.red;
         }
         else if (cardModel.dish[0] == DISH.YELLOW)
         {
+            //costBGImage.color = Color.yellow;
             nutrientColor.color = Color.yellow;
 
         }
         else if (cardModel.dish[0] == DISH.GREEN)
         {
+            //costBGImage.color = Color.green;
             nutrientColor.color = Color.green;
 
         }
+
+        rareBG.SetActive(cardModel.rare);
 
         iconImage.sprite = cardModel.icon;
 
@@ -61,7 +73,8 @@ public class CardView : MonoBehaviour
         if (cardModel.kind == KIND.INGREDIENT)
         {
             nameText.text = cardModel.name;
-            effectText.text = DecideEffectText(cardModel.specialID);
+            //effectText.text = DecideEffectText(cardModel.specialID);
+            effectText.text = cardModel.cost + "コスト";
 
 
             iconImage.sprite = cardModel.icon;
@@ -133,43 +146,43 @@ public class CardView : MonoBehaviour
         switch (specialID)
         {
             case 0:
-                effectText = "コスト下げ";
+                effectText = "使うたび強化";
                 break;
             case 1:
-                effectText = "素材効果付与";
+                effectText = "自分-100kCal";
                 break;
             case 2:
-                effectText = "カロリー＋";
+                effectText = "連続行動";
                 break;
             case 3:
-                effectText = "相手コストー";
+                effectText = "素材コスト＋";
                 break;
             case 4:
-                effectText = "バフ消し";
+                effectText = "素材をレアに";
                 break;
             case 5:
-                effectText = "コスト＋";
+                effectText = "素材のCal＋";
                 break;
             case 6:
-                effectText = "相手のコスト分";
+                effectText = "素材分Cal＋";
                 break;
             case 7:
-                effectText = "状態異常分";
+                effectText = "状態異常分＋";
                 break;
             case 8:
-                effectText = "素材のCal分";
+                effectText = "敵コスト分＋";
                 break;
             case 9:
-                effectText = "手札捨て";
+                effectText = "次料理Cal+";
                 break;
             case 10:
-                effectText = "複数回行動";
+                effectText = "自コスト＋";
                 break;
             case 11:
-                effectText = "未実装";
+                effectText = "敵コスト-";
                 break;
             case 12:
-                effectText = "合成特攻";
+                effectText = "コスト差特攻";
                 break;
             case 13:
                 effectText = "HP差特攻";
@@ -196,16 +209,16 @@ public class CardView : MonoBehaviour
                 effectText = "HP回復";
                 break;
             case 21:
-                effectText = "行動＋";
+                effectText = "敵手札-";
                 break;
             case 22:
-                effectText = "次強化";
+                effectText = "レア奪う";
                 break;
             case 23:
-                effectText = "使う度";
+                effectText = "自手札-";
                 break;
             case 24:
-                effectText = "複数攻撃";
+                effectText = "複数回攻撃";
                 break;
             case 25:
                 effectText = "自か相ダメージ";
@@ -214,7 +227,7 @@ public class CardView : MonoBehaviour
                 effectText = "ランダム";
                 break;
             default:
-                effectText = "";
+                effectText = "エラー";
                 break;
 
 
@@ -226,10 +239,14 @@ public class CardView : MonoBehaviour
 
     public void Refresh(CardModel cardModel)
     {
-        effectText.text = DecideEffectText(cardModel.specialID);
+        //effectText.text = DecideEffectText(cardModel.specialID);
 
         //CardModel cardModel = transform.GetComponent<CardModel>();
-        //calText.text = model.cal + "Kcal";
+        calText.text = cardModel.cal + "Kcal";
+        costText.text = cardModel.cost.ToString();
+
+        rareBG.SetActive(cardModel.rare);
+
 
         //effectText.text = cardModel.cal + "Cal";
         //hitText.text = cardModel.hit + "%";

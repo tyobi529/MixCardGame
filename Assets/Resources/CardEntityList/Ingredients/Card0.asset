@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Card0
   m_EditorClassIdentifier: 
   name: "\u306B\u304F"
-  cal: 50
+  cal: 40
   icon: {fileID: 21300000, guid: 8a3fcf4e319bb409d9d7b6070ead55f5, type: 3}
   dish: 01000000
   kind: 0
