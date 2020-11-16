@@ -10,23 +10,15 @@ public class GamePlayerManager : MonoBehaviour
 
     public int hp;
 
-    //public int red;
-    //public int yellow;
-    //public int green;
 
-    //料理の強化
-    public DISH[] dish = new DISH[2];
 
     public int poisonCount;
     public int darkCount;
     public int paralysisCount;
-    public int healthCount;
 
 
     public int nextAttack = 0;
 
-    //前ターンに合成したかどうか
-    public bool isMixed = false;
 
     //使う度に強くなる料理
     public int usedCount = 0;

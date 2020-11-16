@@ -61,6 +61,10 @@ MonoBehaviour:
   - ExchangeHp_RPC
   - RandomEffect_RPC
   - StealRareIngredient_RPC
+  - Cooking
+  - Cooking_RPC
+  - Battle_RPC
+  - Single_RPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

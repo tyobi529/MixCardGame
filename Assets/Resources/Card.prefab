@@ -387,7 +387,6 @@ GameObject:
   - component: {fileID: 5284491294628628744}
   - component: {fileID: 5792319140011785672}
   - component: {fileID: 2732266477687845466}
-  - component: {fileID: -4669734806562058598}
   - component: {fileID: 3390462027823482803}
   m_Layer: 5
   m_Name: Card
@@ -456,7 +455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffcf819bef9f14968bb991d07ee96c24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectText: {fileID: 3446963638703407345}
   nameText: {fileID: 0}
   calText: {fileID: 6453235823734069123}
   nutrientColor: {fileID: 6575181563612874389}
@@ -477,20 +475,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &-4669734806562058598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3446963638911085884}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db6003a2a777d4cbc95a19810b1e286f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultParent: {fileID: 0}
-  isDraggable: 0
 --- !u!114 &3390462027823482803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 2
+  - eventID: 4
     callback:
       m_PersistentCalls:
         m_Calls:

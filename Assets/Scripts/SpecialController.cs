@@ -11,76 +11,6 @@ public class SpecialController : MonoBehaviour
     [SerializeField] bool costBonus;
     [SerializeField] int maxCost;
 
-    public void IngredientEffect(int specialID, bool isMyTurn)
-    {
-        GamePlayerManager attacker;
-        
-
-        if (isMyTurn)
-        {
-            attacker = player[0];
-        }
-        else
-        {
-            attacker = player[1];
-        }
-
-        DISH dish = DISH.NONE;
-
-        switch (specialID)
-        {
-            case 0:
-                dish = DISH.RED;
-                break;
-            case 1:
-                dish = DISH.YELLOW;
-                break;
-            case 2:
-                dish = DISH.GREEN;
-                break;
-            case 3:
-                dish = DISH.JAPANESE;
-                break;
-            case 4:
-                dish = DISH.WESTERN;
-                break;
-            case 5:
-                dish = DISH.CHINESE;
-                break;
-            default:
-                if (costBonus)
-                {
-                    if (attacker.cost < maxCost)
-                    {
-                        attacker.cost++;
-                    }
-                }
-                else
-                {
-                    Debug.Log("範囲外");
-                }
-                break;
-        }
-
-        if (dish == DISH.NONE)
-        {
-            return;
-        }
-
-        if (attacker.dish[0] == DISH.NONE)
-        {
-            attacker.dish[0] = dish;       
-        }
-        else if (attacker.dish[1] == DISH.NONE)
-        {
-            attacker.dish[1] = dish;
-        }
-        else
-        {
-            attacker.dish[0] = attacker.dish[1];
-            attacker.dish[1] = dish;
-        }
-    }
 
 
 
@@ -107,7 +37,7 @@ public class SpecialController : MonoBehaviour
         switch (specialID)
         {
             case 0:
-                StrongerAttack(attacker, defender, strength);
+                RandomDamage(isMyTurn, strength);
                 break;
             case 1:
                 DamageMyself(attacker, strength);
@@ -194,94 +124,7 @@ public class SpecialController : MonoBehaviour
     }
 
 
-    //相手の手札のカロリーを下げる
-    void ReduceEnemyHandCal(bool isMyTurn, int strength)
-    {
-        Debug.Log("手札のカロリーを下げる" + strength);
 
-        if (isMyTurn)
-        {
-            return;
-        }
-
-        int reduceCal = 0;
-
-        switch (strength)
-        {
-            case 0:
-                reduceCal = 10;
-                break;
-            case 1:
-                reduceCal = 20;
-                break;
-            case 2:
-                reduceCal = 50;
-                break;
-        }
-
-        int handCount = handTransform.childCount;
-
-        for (int i = 0; i < handCount; i++)
-        {
-            CardController cardController = handTransform.GetChild(i).GetComponent<CardController>();
-            cardController.model.cal -= reduceCal;
-            if (cardController.model.cal <= 0)
-            {
-                cardController.model.cal = 1;
-            }
-
-            //cardController.view.Refresh();
-
-        }
-
-    }
-
-
-    //素材を効果付きにする
-    void AddIngredientEffect(bool isMyTurn, int strength)
-    {
-        Debug.Log("素材を効果付きにする" + strength);
-
-        if (!isMyTurn)
-        {
-            return;
-        }
-
-        int num = 0;
-
-        switch (strength)
-        {
-            case 0:
-                num = 1;
-                break;
-            case 1:
-                num = 2;
-                break;
-            case 2:
-                num = 3;
-                break;
-        }
-
-
-        int handCount = handTransform.childCount;
-
-        for (int i = 0; i < handCount; i++)
-        {
-            if (num == 0)
-            {
-                return;
-            }
-
-            CardController cardController = handTransform.GetChild(i).GetComponent<CardController>();
-            if (cardController.model.specialID > 5)
-            {
-                cardController.model.specialID = Random.Range(0, 6);
-                cardController.view.Refresh(cardController.model);
-                num--;
-            }
-
-        }
-    }
 
     void IncreaseMyHandCost(bool isMyTurn, int strength)
     {
@@ -357,7 +200,7 @@ public class SpecialController : MonoBehaviour
         {
             CardController cardController = handTransform.GetChild(i).GetComponent<CardController>();
 
-            if (!cardController.model.rare)
+            if (!cardController.model.isRare)
             {
                 cardIndex.Add(i);
             }
@@ -380,7 +223,7 @@ public class SpecialController : MonoBehaviour
 
             CardController cardController = handTransform.GetChild(cardIndex[index]).GetComponent<CardController>();
 
-            cardController.model.rare = true;
+            cardController.model.isRare = true;
             cardController.view.Refresh(cardController.model);
 
             cardIndex.Remove(index);
@@ -432,17 +275,14 @@ public class SpecialController : MonoBehaviour
         }
 
         int increaseCal = 0;
-        //int rate = -1;
 
         switch (strength)
         {
             case 0:
                 increaseCal = 50;
-                //rate = 2;
                 break;
             case 1:
                 increaseCal = 100;
-                //rate = 3;
                 break;
             case 2:
                 increaseCal = 200;
@@ -486,42 +326,6 @@ public class SpecialController : MonoBehaviour
 
 
 
-    //相手の料理効果UPを消す
-    void EraseEnemyBuff(GamePlayerManager attacker, GamePlayerManager defender, int strength)
-    {
-        Debug.Log("相手のバフ解除" + strength);
-
-        if (defender.dish[0] == DISH.NONE)
-        {
-            return;
-        }
-
-        switch (strength)
-        {
-            case 0:
-                defender.dish[0] = DISH.NONE;
-                if (defender.dish[1] != DISH.NONE)
-                {
-                    defender.dish[0] = defender.dish[1];
-                    defender.dish[1] = DISH.NONE;
-                }
-                break;
-            case 1:
-                for (int i = 0; i < 2; i++)
-                {
-                    defender.dish[i] = DISH.NONE;
-                }
-                break;
-            case 2:
-                for (int i = 0; i < 2; i++)
-                {
-                    attacker.dish[i] = defender.dish[i];
-                    defender.dish[i] = DISH.NONE;
-                }
-                break;
-        }
-
-    }
 
 
 
@@ -692,35 +496,6 @@ public class SpecialController : MonoBehaviour
     }
 
 
-    //前ターン相手が合成していたら追加ダメージ
-    void MixAttack(GamePlayerManager defender, int strength, int damageCal)
-    {
-
-        Debug.Log("合成特攻" + strength);
-
-        int damage = damageCal;
-
-        if (defender.isMixed)
-        {
-            Debug.Log("特攻あり");
-
-            switch (strength)
-            {
-                case 0:
-                    break;
-                case 1:
-                    damage *= 2;
-                    break;
-                case 2:
-                    damage *= 3;
-                    break;
-            }
-
-            defender.hp -= damage;
-        }
-
-
-    }
 
     //HP差があればダメージ２倍
     void HpAttack(GamePlayerManager attacker, GamePlayerManager defender, int strength, int damageCal)
@@ -841,11 +616,6 @@ public class SpecialController : MonoBehaviour
     {
         Debug.Log("麻痺付与" + strength);
 
-        if (defender.healthCount > 0)
-        {
-            Debug.Log("無効");
-            return;
-        }
 
         switch (strength)
         {
@@ -867,11 +637,6 @@ public class SpecialController : MonoBehaviour
 
         Debug.Log("毒付与" + strength);
 
-        if (defender.healthCount > 0)
-        {
-            Debug.Log("無効");
-            return;
-        }
 
         switch (strength)
         {
@@ -893,11 +658,7 @@ public class SpecialController : MonoBehaviour
     {
         Debug.Log("暗闇付与" + strength);
 
-        if (defender.healthCount > 0)
-        {
-            Debug.Log("無効");
-            return;
-        }
+
 
         switch (strength)
         {
@@ -944,24 +705,6 @@ public class SpecialController : MonoBehaviour
         attacker.hp += heal;
 
 
-        //int a = 10;
-
-        //switch (strength)
-        //{
-        //    case 0:
-        //        a *= Random.Range(2, 9);
-        //        break;
-        //    case 1:
-        //        a *= Random.Range(6, 9);
-        //        break;
-        //    case 2:
-        //        a *= 20;
-        //        break;
-        //}
-
-        //int heal = damageCal * a / 100;
-
-        //GameManager.instance.HealHp(heal);
 
     }
 
@@ -1008,37 +751,6 @@ public class SpecialController : MonoBehaviour
         attacker.darkCount = 0;
         attacker.paralysisCount = 0;
 
-        //int healCount = 0;
-
-        //switch (strength)
-        //{
-        //    case 0:
-        //        healCount = 3;
-        //        break;
-        //    case 1:
-        //        healCount = 4;
-        //        break;
-        //    case 2:
-        //        healCount = 9;
-        //        break;
-        //}
-
-        //attacker.poisonCount -= healCount;
-        //attacker.darkCount -= healCount;
-        //attacker.paralysisCount -= healCount;
-
-        //if (attacker.poisonCount < 0)
-        //{
-        //    attacker.poisonCount = 0;
-        //}
-        //if (attacker.darkCount < 0)
-        //{
-        //    attacker.darkCount = 0;
-        //}
-        //if (attacker.paralysisCount < 0)
-        //{
-        //    attacker.paralysisCount = 0;
-        //}
 
     }
 
@@ -1256,6 +968,30 @@ public class SpecialController : MonoBehaviour
     }
 
 
+    //自分にダメージ
+    void DamageMyself(GamePlayerManager attacker, int strength)
+    {
+        Debug.Log("自分にダメージ" + strength);
+
+        int damage = 0;
+
+        switch (strength)
+        {
+            case 0:
+                damage = 100;
+                break;
+            case 1:
+                damage = 50;
+                break;
+            case 2:
+                damage = 0;
+                break;
+        }
+
+        attacker.hp -= damage;
+    }
+
+
 
     //ここまで
 
@@ -1316,20 +1052,12 @@ public class SpecialController : MonoBehaviour
 
 
 
-    
-
-
     //状態異常を移す
     void ShiftCondition(GamePlayerManager attacker, GamePlayerManager defender, int strength)
     {
         Debug.Log("状態異常を移す" + strength);
 
 
-        if (defender.healthCount > 0)
-        {
-            Debug.Log("無効");
-            return;
-        }
 
         int addition = 0;
 
@@ -1364,27 +1092,48 @@ public class SpecialController : MonoBehaviour
 
     }
 
-
-    //自分にダメージ
-    void DamageMyself(GamePlayerManager attacker, int strength)
+    //相手の手札のカロリーを下げる
+    void ReduceEnemyHandCal(bool isMyTurn, int strength)
     {
-        Debug.Log("自分にダメージ" + strength);
+        Debug.Log("手札のカロリーを下げる" + strength);
 
-        int damage = 0;
+        if (isMyTurn)
+        {
+            return;
+        }
+
+        int reduceCal = 0;
 
         switch (strength)
         {
             case 0:
-                damage = 100;
+                reduceCal = 10;
                 break;
             case 1:
-                damage = 50;
+                reduceCal = 20;
                 break;
             case 2:
-                damage = 0;
+                reduceCal = 50;
                 break;
         }
 
-        attacker.hp -= damage;
+        int handCount = handTransform.childCount;
+
+        for (int i = 0; i < handCount; i++)
+        {
+            CardController cardController = handTransform.GetChild(i).GetComponent<CardController>();
+            cardController.model.cal -= reduceCal;
+            if (cardController.model.cal <= 0)
+            {
+                cardController.model.cal = 1;
+            }
+
+            //cardController.view.Refresh();
+
+        }
+
     }
+
+
+
 }

@@ -11,23 +11,18 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Text[] playerHpText = new Text[2];
 
-    [SerializeField] Slider[] playerHpBar = new Slider[2];
+    [SerializeField] EnergyBar[] playerHpBar = new EnergyBar[2];
 
-    [SerializeField] Text[] playerCostText;
+    [SerializeField] EnergyBar[] playerCostBar1 = new EnergyBar[2];
+    [SerializeField] EnergyBar[] playerCostBar2 = new EnergyBar[2];
+    [SerializeField] Text[] playerCostText1 = new Text[2];
+    [SerializeField] Text[] playerCostText2 = new Text[2];
 
 
 
     [SerializeField] Text[] poisonText = new Text[2];
     [SerializeField] Text[] darkText = new Text[2];
     [SerializeField] Text[] paralysisText = new Text[2];
-    [SerializeField] Text[] healthText = new Text[2];
-
-
-
-
-    [SerializeField] Text[] dishBonusText_0 = new Text[2];
-    [SerializeField] Text[] dishBonusText_1 = new Text[2];
-
 
 
 
@@ -36,7 +31,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    [SerializeField] public GameObject decideButtonObj;
+    //[SerializeField] public GameObject decideButtonObj;
 
 
 
@@ -64,11 +59,6 @@ public class UIManager : MonoBehaviour
 
     }
 
-    //public void ShowMixCost(int playerMixCost, int enemyMixCost)
-    //{
-    //    playerManaCostText.text = playerMixCost.ToString();
-    //    enemyManaCostText.text = enemyMixCost.ToString();
-    //}
 
     public void UpdateTime(int timeCount)
     {
@@ -79,10 +69,32 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            playerHpBar[i].value = player[i].hp;
-            playerHpText[i].text = player[i].hp.ToString();
+            playerHpBar[i].valueCurrent = player[i].hp;
+            playerHpText[i].text = player[i].hp + " / " + 1500;
         }
 
+    }
+
+    public void ShowCost()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            if (player[i].cost > 3)
+            {
+                playerCostBar1[i].valueCurrent = 3;
+                playerCostText1[i].text = 3.ToString();
+                playerCostBar2[i].valueCurrent = player[i].cost - 3;
+                playerCostText2[i].text = (player[i].cost - 3).ToString();
+            }
+            else
+            {
+                playerCostBar1[i].valueCurrent = player[i].cost;
+                playerCostText1[i].text = player[i].cost.ToString();
+                playerCostBar2[i].valueCurrent = 0;
+                playerCostText2[i].text = 0.ToString();
+            }
+ 
+        }
     }
 
 
@@ -116,16 +128,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    //true:攻撃、合成ボタン出す
-    //false:決定、キャンセルボタン出す
-    public void ShowButtonObj(bool canView)
-    {
 
-
-        decideButtonObj.SetActive(!canView);
-        //cancelButtonObj.SetActive(!canView);
-
-    }
 
 
 
@@ -133,75 +136,7 @@ public class UIManager : MonoBehaviour
     {
 
         for (int i = 0; i < 2; i++)
-        {
-            playerCostText[i].text = "コスト" + player[i].cost;
-
-            dishBonusText_0[i].text = player[i].dish[0].ToString();
-            dishBonusText_1[i].text = player[i].dish[1].ToString();
-
-            if (player[i].dish[0] == DISH.NONE)
-            {
-                dishBonusText_0[i].text = "";
-            }
-
-            else if (player[i].dish[0] == DISH.RED)
-            {
-                dishBonusText_0[i].text = "赤料理";
-            }
-            else if (player[i].dish[0] == DISH.YELLOW)
-            {
-                dishBonusText_0[i].text = "黄料理";
-            }
-            else if (player[i].dish[0] == DISH.GREEN)
-            {
-                dishBonusText_0[i].text = "緑料理";
-            }
-
-            else if (player[i].dish[0] == DISH.JAPANESE)
-            {
-                dishBonusText_0[i].text = "和食";
-            }
-            else if (player[i].dish[0] == DISH.WESTERN)
-            {
-                dishBonusText_0[i].text = "洋食";
-            }
-            else if (player[i].dish[0] == DISH.CHINESE)
-            {
-                dishBonusText_0[i].text = "中華";
-            }
-
-            if (player[i].dish[1] == DISH.NONE)
-            {
-                dishBonusText_1[i].text = "";
-            }
-
-            else if (player[i].dish[1] == DISH.RED)
-            {
-                dishBonusText_1[i].text = "赤料理";
-            }
-            else if (player[i].dish[1] == DISH.YELLOW)
-            {
-                dishBonusText_1[i].text = "黄料理";
-            }
-            else if (player[i].dish[1] == DISH.GREEN)
-            {
-                dishBonusText_1[i].text = "緑料理";
-            }
-
-            else if (player[i].dish[0] == DISH.JAPANESE)
-            {
-                dishBonusText_1[i].text = "和食";
-            }
-            else if (player[i].dish[0] == DISH.WESTERN)
-            {
-                dishBonusText_1[i].text = "洋食";
-            }
-            else if (player[i].dish[0] == DISH.CHINESE)
-            {
-                dishBonusText_1[i].text = "中華";
-            }
-
-
+        { 
 
             if (player[i].poisonCount > 0)
             {
@@ -213,7 +148,7 @@ public class UIManager : MonoBehaviour
             }
             if (player[i].darkCount > 0)
             {
-                darkText[i].text = "暗闇" + player[i].darkCount;
+                darkText[i].text = "闇" + player[i].darkCount;
             }
             else
             {
@@ -221,20 +156,11 @@ public class UIManager : MonoBehaviour
             }
             if (player[i].paralysisCount > 0)
             {
-                paralysisText[i].text = "麻痺" + player[i].paralysisCount;
+                paralysisText[i].text = "麻" + player[i].paralysisCount;
             }
             else
             {
                 paralysisText[i].text = "";
-            }
-
-            if (player[i].healthCount > 0)
-            {
-                healthText[i].text = "健康" + player[i].healthCount;
-            }
-            else
-            {
-                healthText[i].text = "";
             }
 
 
