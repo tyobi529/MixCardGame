@@ -27,45 +27,36 @@ public class CardModel
 
     public bool isSelected;
 
+    public int strength;
 
 
-    public CardModel(int cardID, int cost, bool isRare)
+    public CardModel(bool isDish, int cardID, int cost, bool isRare)
     {
-        //CardEntity cardEntity = null;
-        CardEntity cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
+        CardEntity cardEntity = null;
+
+        if (isDish)
+        {
+            cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
+        }
+        else
+        {
+            cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
+            this.cost = cost;
+            this.isRare = isRare;
+            partnerID = cardEntity.partnerID;
+            specialMixID = cardEntity.specialMixID;
+        }
 
 
         this.cardID = cardID;
-        this.cost = cost;
-        this.isRare = isRare;
-
-
-
-
-        //if (kind == KIND.DISH)
-        //{
-        //    cardEntity = Resources.Load<CardEntity>("CardEntityList/Dishes/Card" + cardID);
-        //    cal = cardEntity.cal;
-        //}
-        //else
-        //{
-        //    cardEntity = Resources.Load<CardEntity>("CardEntityList/Ingredients/Card" + cardID);
-        //    cal = cardEntity.cal;
-
-        //}
-
 
         name = cardEntity.name;
 
         cal = cardEntity.cal;
 
-        kind = cardEntity.kind;
+        this.kind = cardEntity.kind;
 
         icon = cardEntity.icon;
-
-
-        partnerID = cardEntity.partnerID;
-        specialMixID = cardEntity.specialMixID;
 
         isSelected = false;
 

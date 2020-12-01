@@ -65,6 +65,8 @@ MonoBehaviour:
   - Cooking_RPC
   - Battle_RPC
   - Single_RPC
+  - GenerateMixCard_RPC
+  - MoveToGameScene
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

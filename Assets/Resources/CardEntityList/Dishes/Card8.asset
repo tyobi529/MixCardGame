@@ -15,8 +15,6 @@ MonoBehaviour:
   name: "\u30AF\u30E9\u30E0\u30C1\u30E3\u30A6\u30C0\u30FC"
   cal: 99
   icon: {fileID: 21300000, guid: 3eccb546f2827453ebb0f185787ec153, type: 3}
-  dish: 050000000000000000000000
-  kind: 1
-  special: 5
+  kind: 3
   partnerID: 
   specialMixID: 

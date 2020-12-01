@@ -46,10 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiManager: {fileID: 0}
   isMyTurn: 0
+  timeLimit: 15
   maxHand: 4
   mixCost: 3
   maxCost: 6
+  turnCount: 0
   additionalTurn: 0
+  rareDraw: 0
 --- !u!114 &2163267091624563219
 MonoBehaviour:
   m_ObjectHideFlags: 0

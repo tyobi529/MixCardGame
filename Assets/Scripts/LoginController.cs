@@ -1,10 +1,29 @@
-﻿using Photon.Pun;
+﻿using ExitGames.Client.Photon;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
 // MonoBehaviourではなくMonoBehaviourPunCallbacksを継承して、Photonのコールバックを受け取れるようにする
 public class LoginController : MonoBehaviourPunCallbacks
 {
+
+
+    //private void Start()
+    //{
+    //    PhotonNetwork.IsMessageQueueRunning = true;
+
+    //    if (PhotonNetwork.LocalPlayer.ActorNumber == 1)
+    //    {
+    //        var v = new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f));
+    //        PhotonNetwork.Instantiate("GameManager", v, Quaternion.identity);
+    //    }
+
+
+    //}
+
+
+    //以下テスト用
+
     private void Start()
     {
         // PhotonServerSettingsに設定した内容を使ってマスターサーバーへ接続する
@@ -39,4 +58,8 @@ public class LoginController : MonoBehaviourPunCallbacks
 
 
     }
+
+
+
+
 }

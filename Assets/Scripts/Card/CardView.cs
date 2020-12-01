@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class CardView : MonoBehaviour
 {
+    [SerializeField] GameObject statusObject;
 
     //料理
-    [SerializeField] Text nameText;
+    //[SerializeField] Text nameText;
     [SerializeField] Text calText;
 
 
@@ -24,6 +25,8 @@ public class CardView : MonoBehaviour
 
     [SerializeField] GameObject selectObject;
 
+    [SerializeField] Image costBG;
+
 
 
     public void SetCard(CardModel cardModel)
@@ -35,27 +38,47 @@ public class CardView : MonoBehaviour
 
         calText.text = cardModel.cal + "Kcal";
 
+
         if (cardModel.kind == KIND.RED)
         {
-            nutrientColor.color = Color.red;
+            costBG.color = new Color(248f / 255f, 132f / 255f, 132f / 255f, 1f);
         }
         else if (cardModel.kind == KIND.YELLOW)
         {
-            nutrientColor.color = Color.yellow;
-
+            costBG.color = new Color(238f / 255f, 248f / 255f, 132f / 255f, 1f);
         }
         else if (cardModel.kind == KIND.GREEN)
         {
-            nutrientColor.color = Color.green;
-
+            costBG.color = new Color(132f / 255f, 248f / 255f, 141f / 255f, 1f);
         }
 
-        rareBG.SetActive(cardModel.isRare);
+        //if (cardModel.kind == KIND.RED)
+        //{
+        //    nutrientColor.color = Color.red;
+        //}
+        //else if (cardModel.kind == KIND.YELLOW)
+        //{
+        //    nutrientColor.color = Color.yellow;
+
+        //}
+        //else if (cardModel.kind == KIND.GREEN)
+        //{
+        //    nutrientColor.color = Color.green;
+
+        //}
+
+        //rareBG.SetActive(cardModel.isRare);
 
         iconImage.sprite = cardModel.icon;
 
 
 
+    }
+
+    public void SetCookingCard(CardModel cardModel)
+    {
+        iconImage.sprite = cardModel.icon;
+        statusObject.SetActive(false);
     }
 
 
